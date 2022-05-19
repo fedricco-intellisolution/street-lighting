@@ -4779,7 +4779,7 @@ textarea.form-control-lg {
   float: left;
   padding-right: 0.5rem;
   color: #a9acb3;
-  content: var(--bs-breadcrumb-divider, ">") /* rtl: var(--bs-breadcrumb-divider, "/") */;
+  content: var(--bs-breadcrumb-divider, "/") /* rtl: var(--bs-breadcrumb-divider, "/") */;
 }
 .breadcrumb-item.active {
   color: #a9acb3;
