@@ -7,10 +7,10 @@ import { store } from "./redux/store";
 import "./i18n";
 import routes from "./routes";
 
-import { ThemeProvider } from "contexts/ThemeContext";
-import { SidebarProvider } from "contexts/SidebarContext";
-import { LayoutProvider } from "contexts/LayoutContext";
-import { AuthProvider } from "contexts/JWTContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { SidebarProvider } from "./contexts/SidebarContext";
+import { LayoutProvider } from "./contexts/LayoutContext";
+import { AuthProvider } from "./contexts/JWTContext";
 
 import "./assets/custom-style.css"
 const App = () => {

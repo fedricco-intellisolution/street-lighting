@@ -4,24 +4,24 @@ import React from "react";
 // loaded asynchronously, to keep the initial JS bundle to a minimum size
 
 // Layouts
-import AuthLayout from "./layouts/AuthLayout";
-import PrivateLayout from "./layouts/PrivateLayout";
+import AuthLayout from "@layouts/AuthLayout";
+import PrivateLayout from "@layouts/PrivateLayout";
 
 // // Guards
 // import AuthGuard from "./components/guards/AuthGuard";
 
 // Auth
-import Page500 from "./pages/auth/Page500";
-import Page404 from "./pages/auth/Page404";
-import SignIn from "./pages/auth/SignIn";
-import SignUp from "./pages/auth/SignUp";
-import ResetPassword from "./pages/auth/ResetPassword";
+import Page500 from "@auth/Page500";
+import Page404 from "@auth/Page404";
+import SignIn from "@auth/SignIn";
+import SignUp from "@auth/SignUp";
+import ResetPassword from "@auth/ResetPassword";
 
 //Settings
-import Users from "./pages/settings/users/Users";
-import AddEditUser from "./pages/settings/users/AddEditUser";
-import Groups from "./pages/settings/groups/Groups";
-import Permissions from "./pages/settings/permissions/Permissions";
+import Users from "@users/Users";
+import AddEditUser from "@users/AddEditUser";
+import Groups from "@groups/Groups";
+import Permissions from "@permissions/Permissions";
 
 const routes = [
   {
@@ -78,11 +78,11 @@ const routes = [
       },
       {
         path: "groups",
-        element: <Groups/>
+        element: <Groups />
       },
       {
         path: "permissions",
-        element: <Permissions/>
+        element: <Permissions />
       },
     ],
   },

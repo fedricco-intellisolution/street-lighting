@@ -2,10 +2,10 @@ import React from "react";
 
 import PerfectScrollbar from "react-perfect-scrollbar";
 
-import useSidebar from "hooks/useSidebar";
-import SidebarNav from "SidebarNav";
+import useSidebar from "@hooks/useSidebar";
+import SidebarNav from "./SidebarNav";
 
-import Logo from "assets/img/nea-logo.png"
+import Logo from "@images/nea-logo.png"
 
 const Sidebar = ({ items, showFooter = true }) => {
   const { isOpen } = useSidebar();

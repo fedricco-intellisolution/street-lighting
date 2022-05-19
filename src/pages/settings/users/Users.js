@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import {UserPlus } from "react-feather";
+import { UserPlus } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
 import UsersTable from "./components/UsersTable";
 
@@ -53,7 +53,7 @@ const Users = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [filter, setFilter] = useState('');
-   
+
     return (
         <React.Fragment>
             <Helmet title="Users" />
@@ -76,7 +76,7 @@ const Users = () => {
                                 <Button
                                     variant="primary"
                                     className="me-1 mb-1"
-                                    onClick={() => navigate(location.pathname+'/add')}
+                                    onClick={() => navigate(location.pathname + '/add')}
                                 >
                                     <UserPlus className="align-middle me-1" size={16} />
                                     Create new user
@@ -85,7 +85,7 @@ const Users = () => {
                         </Row>
                     </Card.Header>
                     <Card.Body>
-                        <UsersTable data={users} columns={tableColumns} />          
+                        <UsersTable data={users} columns={tableColumns} />
                     </Card.Body>
                 </Card>
             </Container>

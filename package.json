@@ -12,8 +12,9 @@
     "build:js": "react-scripts build",
     "watch:css": "npm-run-all sass:watch",
     "watch:js": "react-scripts start",
-    "start": "npm-run-all -p build:css watch:*",
-    "build": "npm-run-all build:css build:js",
+    "start": "craco start",  
+    "build": "craco build",    
+    "test": "craco test",
     "lint": "eslint src --ext .js,.jsx --fix"
   },
   "eslintConfig": {
@@ -36,6 +37,7 @@
     "not Explorer <= 11"
   ],
   "dependencies": {
+    "@craco/craco": "^6.4.3",
     "@fortawesome/fontawesome-svg-core": "1.2.36",
     "@fortawesome/free-brands-svg-icons": "5.15.4",
     "@fortawesome/free-regular-svg-icons": "5.15.4",
@@ -100,3 +102,5 @@
     "sass": "1.51.0"
   }
 }
+
+
