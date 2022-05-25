@@ -1,7 +1,9 @@
 import { createContext, useEffect, useReducer } from "react";
 
-import axios from "../utils/axios";
+import api from "../utils/api";
 import { isValidToken, setSession } from "../utils/jwt";
+import * as authApi from "../api/authApi";
+import * as usersApi from "../api/usersApi";
 
 const INITIALIZE = "INITIALIZE";
 const SIGN_IN = "SIGN_IN";
@@ -11,7 +13,7 @@ const SIGN_UP = "SIGN_UP";
 const initialState = {
   isAuthenticated: false,
   isInitialized: false,
-  user: null,
+  uid: null,
 };
 
 const JWTReducer = (state, action) => {
@@ -26,7 +28,7 @@ const JWTReducer = (state, action) => {
       return {
         ...state,
         isAuthenticated: true,
-        user: action.payload.user,
+        uid: action.payload.uid,
       };
     case SIGN_OUT:
       return {
@@ -51,7 +53,7 @@ const AuthContext = createContext(null);
 
 function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(JWTReducer, initialState);
-
+  console.log(state)
   useEffect(() => {
     const initialize = async () => {
       try {
@@ -59,10 +61,9 @@ function AuthProvider({ children }) {
 
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
-
-          const response = await axios.get("/api/auth/my-account");
+          const response = await usersApi.readUser('9655524d-4362-49e3-8b0e-d57427a5ff28');
           const { user } = response.data;
-
+          console.log(response.data.data)
           dispatch({
             type: INITIALIZE,
             payload: {
@@ -70,6 +71,7 @@ function AuthProvider({ children }) {
               user,
             },
           });
+          
         } else {
           dispatch({
             type: INITIALIZE,
@@ -88,6 +90,7 @@ function AuthProvider({ children }) {
             user: null,
           },
         });
+        
       }
     };
 
@@ -95,17 +98,18 @@ function AuthProvider({ children }) {
   }, []);
 
   const signIn = async (email, password) => {
-    const response = await axios.post("/api/auth/sign-in", {
-      email,
-      password,
-    });
-    const { accessToken, user } = response.data;
-
-    setSession(accessToken);
+    let payload = {
+      username: 'jaine',
+      password : 'qwerty'
+    }
+    const response = await authApi.logIn(payload)
+    console.log(response)
+    setSession(response.data.data.token);
+    const uid = response.data.data.uid
     dispatch({
       type: SIGN_IN,
       payload: {
-        user,
+        uid,
       },
     });
   };
@@ -116,7 +120,7 @@ function AuthProvider({ children }) {
   };
 
   const signUp = async (email, password, firstName, lastName) => {
-    const response = await axios.post("/api/auth/sign-up", {
+    const response = await api.post("/api/auth/sign-up", {
       email,
       password,
       firstName,

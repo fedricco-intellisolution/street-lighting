@@ -5,9 +5,9 @@ import * as Yup from "yup";
 import { Formik } from "formik";
 import { Alert, Button, Form } from "react-bootstrap";
 
-import useAuth from "../../hooks/useAuth";
+import useAuth from "../../../hooks/useAuth";
 
-function SignIn() {
+const SignInForm = () => {
   const navigate = useNavigate();
   const { signIn } = useAuth();
 
@@ -29,7 +29,7 @@ function SignIn() {
         try {
           await signIn(values.email, values.password);
 
-          navigate("/private");
+          navigate("/");
         } catch (error) {
           const message = error.message || "Something went wrong";
 
@@ -121,4 +121,4 @@ function SignIn() {
   );
 }
 
-export default SignIn;
+export default SignInForm;

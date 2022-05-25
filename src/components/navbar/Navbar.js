@@ -19,9 +19,6 @@ import NavbarDropdownItem from "./NavbarDropdownItem";
 import NavbarUser from "./NavbarUser";
 
 import avatar1 from "../../assets/img/avatars/avatar.jpg";
-import avatar3 from "../../assets/img/avatars/avatar-3.jpg";
-import avatar4 from "../../assets/img/avatars/avatar-4.jpg";
-import avatar5 from "../../assets/img/avatars/avatar-5.jpg";
 
 const notifications = [
   {
@@ -52,29 +49,11 @@ const notifications = [
 
 const messages = [
   {
-    name: "Ashley Briggs",
-    avatar: avatar5,
-    description: "Nam pretium turpis et arcu. Duis arcu tortor.",
-    time: "15m ago",
-  },
-  {
     name: "Chris Wood",
     avatar: avatar1,
     description: "Curabitur ligula sapien euismod vitae.",
     time: "2h ago",
-  },
-  {
-    name: "Stacie Hall",
-    avatar: avatar4,
-    description: "Pellentesque auctor neque nec urna.",
-    time: "4h ago",
-  },
-  {
-    name: "Bertha Martin",
-    avatar: avatar3,
-    description: "Aenean tellus metus, bibendum sed, posuere ac, mattis non.",
-    time: "5h ago",
-  },
+  }
 ];
 
 const NavbarComponent = () => {
