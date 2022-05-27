@@ -1,42 +1,87 @@
-import React from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ErrorMessage } from '@hookform/error-message';
 import * as yup from "yup";
+import * as usersApi from "../../../../api/usersApi"; 
+import { useNavigate, useParams } from "react-router-dom";
+import NotyfContext from "../../../../contexts/NotyfContext";
 
-const schema = yup.object().shape({
-    full_name: yup
-        .string()
-        .required("This field is required"),
-    username: yup
-        .string()
-        .required("This field is required"),
-    email: yup
-        .string()
-        .email('Invalid email address')
-        .required("This field is required"),
-    password: yup
-        .string()
-        .required('This field is required')
-        .matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-            'Length must be at least 8 characters \nMust contain at least one uppercase letter \nMust contain at least one lowercase letter \nMust contain at least one special character '),
-});
 
-const BasicInformationTab = () => {
+
+const BasicInformationTab = (props) => {
+    const navigate = useNavigate();
+    const notyf = useContext(NotyfContext);
+    const { id } = useParams();
+    const add_page = id === 'add' ? true : false;
+    const schema = yup.object().shape({
+        full_name: yup
+            .string()
+            .required("This field is required"),
+        username: yup
+            .string()
+            .required("This field is required"),
+        email: yup
+            .string()
+            .email('Invalid email address')
+            .required("This field is required"),
+        password: add_page
+                ? yup
+                    .string()
+                    .required('This field is required')
+                    .matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+                        'Length must be at least 8 characters \nMust contain at least one uppercase letter \nMust contain at least one lowercase letter \nMust contain at least one special character ')
+                : null
+    });
     const {
         handleSubmit,
         control,
+        reset,
         formState: { errors },
     } = useForm({
         mode: "onTouched",
         resolver: yupResolver(schema),
     });
 
-    const saveUser = (data) => {
-        console.log(data)
+    const saveUser = async (data) => {
+        try {
+            const response = await usersApi.createUser(data)
+            if (response.data.status === 'SUCCESS') {
+                notyf.open({
+                    type : 'success',
+                    message: response.data.message,
+                })
+                navigate('/settings/users')
+            }
+        } catch (error) {
+            console.log(error)            
+        }
     }
 
+    const updateUser = async (data) => {
+        try {
+            const response = await usersApi.updateUser(id, data)
+            if (response.data.status === 'SUCCESS') {
+                notyf.open({
+                    type : 'success',
+                    message: response.data.message,
+                })
+            }
+        } catch (error) {
+            console.log(error)            
+        }
+    }
+
+    const getUser = useCallback(async () => {
+        const response = await usersApi.getUser(id);
+        reset(response.data.data)
+    }, [id, reset])
+
+    useEffect(() => {
+        if (!add_page) getUser()
+    }, [getUser, add_page])
+    
     return (
         <Form>
             <Row>
@@ -121,29 +166,31 @@ const BasicInformationTab = () => {
                     </Form.Group>
                 </Col>
                 <Col md={6}>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Password</Form.Label>
-                        <Controller
-                            control={control}
-                            name="password"
-                            defaultValue=""
-                            render={({ field: { value, onChange, onBlur } }) => (
-                                <Form.Control
-                                    type="password"
+                    { add_page &&
+                        <Form.Group className="mb-3">
+                            <Form.Label>Password</Form.Label>
+                            <Controller
+                                control={control}
+                                name="password"
+                                defaultValue=""
+                                render={({ field: { value, onChange, onBlur } }) => (
+                                    <Form.Control
+                                        type="password"
                                         placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
-                                    value={value}
-                                    onChange={onChange}
-                                    onBlur={onBlur}
-                                    className={(errors.password && 'is-invalid')}
-                                />
-                            )}
-                        />
-                        <ErrorMessage
-                            errors={errors}
-                            name="password"
-                            render={({ message }) => <small className="text-danger" style={{whiteSpace: "pre-wrap" }}>{message}</small>}
-                        />
-                    </Form.Group>
+                                        value={value}
+                                        onChange={onChange}
+                                        onBlur={onBlur}
+                                        className={(errors.password && 'is-invalid')}
+                                    />
+                                )}
+                            />
+                            <ErrorMessage
+                                errors={errors}
+                                name="password"
+                                render={({ message }) => <small className="text-danger" style={{ whiteSpace: "pre-wrap" }}>{message}</small>}
+                            />
+                        </Form.Group>
+                    }
                 </Col>
             </Row>
             <Row className="pt-4">
@@ -223,8 +270,17 @@ const BasicInformationTab = () => {
                 </Col>
             </Row>
             <Row className="pt-4">
-                <Col md={{ span: 3, offset: 9 }} className="text-end">
-                    <Button variant="primary" onClick={handleSubmit(saveUser)}>
+                <Col className="text-end">
+                    <Button variant="secondary" className="me-2" onClick={() => navigate('/settings/users')}>
+                            Cancel
+                    </Button>
+                    <Button
+                        variant="primary"
+                        onClick={
+                            add_page
+                                ? handleSubmit(saveUser)
+                                : handleSubmit(updateUser)
+                        }>
                         Submit
                     </Button>
                 </Col>

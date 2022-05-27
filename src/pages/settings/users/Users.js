@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { UserPlus } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
 import UsersTable from "./components/UsersTable";
+import * as usersApi from "../../../api/usersApi";
 
 const tableColumns = [
     {
-        Header: "S/N",
-        accessor: "sequence_no",
+        Header: "Actions",
+        accessor: "actions",
     },
     {
         Header: "Name",
@@ -22,37 +23,22 @@ const tableColumns = [
         Header: "Designation",
         accessor: "designation",
     },
-    {
-        Header: "Actions",
-        accessor: "actions",
-    }
-]
 
-const users = [
-    {
-        id: 1,
-        full_name: 'Jaine Amorante',
-        email: 'jainelith.amorante@intellisolution.tech',
-        designation: 'Admin'
-    },
-    {
-        id: 2,
-        full_name: 'Jp Bandalaria',
-        email: 'jp.bandalaria@intellisolution.tech',
-        designation: 'Admin'
-    },
-    {
-        id: 3,
-        full_name: 'Lyra Bona-og',
-        email: 'lyra.bonaog@intellisolution.tech',
-        designation: 'Technician'
-    }
 ]
-
 const Users = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [filter, setFilter] = useState('');
+    const [users, setUsers] = useState([]);
+
+    const getUsers = useCallback(async() => {
+        const response = await usersApi.getUsers();
+        setUsers(response.data.data)
+    }, [])
+
+    useEffect(() => {
+       getUsers();
+    }, [getUsers])
 
     return (
         <React.Fragment>

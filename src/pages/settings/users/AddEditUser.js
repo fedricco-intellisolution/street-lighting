@@ -2,14 +2,12 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 import { Container,Nav, Tab } from "react-bootstrap";
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
-import { useParams } from "react-router-dom";
-
-//Components
+import { useNavigate, useParams } from "react-router-dom";
 import BasicInformationTab from "./components/BasicInformationTab";
 import PrivacySecurityTab from "./components/PrivacySecurityTab";  
 
 const AddEditUser = () => {
-   
+    const navigate = useNavigate()
     const { id } = useParams();
     const add_page = id === 'add' ? true : false;
 
@@ -18,7 +16,7 @@ const AddEditUser = () => {
             <Helmet title="Create new user" />
             <Container fluid className="p-0">
                 <Breadcrumb>
-                    <Breadcrumb.Item href="/settings/users">Users</Breadcrumb.Item>
+                    <Breadcrumb.Item onClick={ () => navigate('/settings/users')}>Users</Breadcrumb.Item>
                     <Breadcrumb.Item active>{add_page ? 'Add user' : 'Edit user'}</Breadcrumb.Item>
                 </Breadcrumb>
                 <div className="tab custom-tab tab-vertical">

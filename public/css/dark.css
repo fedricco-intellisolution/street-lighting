@@ -4770,6 +4770,7 @@ textarea.form-control-lg {
   padding: 0 0;
   margin-bottom: 1rem;
   list-style: none;
+  justify-content: right;
 }
 
 .breadcrumb-item + .breadcrumb-item {
@@ -4779,7 +4780,7 @@ textarea.form-control-lg {
   float: left;
   padding-right: 0.5rem;
   color: #a9acb3;
-  content: var(--bs-breadcrumb-divider, "/") /* rtl: var(--bs-breadcrumb-divider, "/") */;
+  content: var(--bs-breadcrumb-divider, ">") /* rtl: var(--bs-breadcrumb-divider, "/") */;
 }
 .breadcrumb-item.active {
   color: #a9acb3;

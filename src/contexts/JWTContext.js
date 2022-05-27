@@ -61,7 +61,7 @@ function AuthProvider({ children }) {
 
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
-          const response = await usersApi.readUser('9655524d-4362-49e3-8b0e-d57427a5ff28');
+          const response = await usersApi.getUser('9655524d-4362-49e3-8b0e-d57427a5ff28');
           const { user } = response.data;
           console.log(response.data.data)
           dispatch({
