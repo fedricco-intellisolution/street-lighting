@@ -7,9 +7,16 @@ const pagesSection = [
     title: "Dashboard",
   },
   {
-    href: "/faults",
+    href: "/fault",
     icon: Zap,
-    title: "Fault",
+    title: "Fault Management",
+    children: [
+      {
+        href: "/faults",
+        title: "Faults",
+      },
+      
+    ]
   },
   {
     href: "/settings",

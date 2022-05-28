@@ -23,6 +23,13 @@ import AddEditUser from "@users/AddEditUser";
 import Groups from "@groups/Groups";
 import Permissions from "@permissions/Permissions";
 
+
+//Fault
+import RegisterFault from "./pages/fault/RegisterFault";
+import FaultList from "./pages/fault/FaultList";
+import ViewFault from "./pages/fault/ViewFault";
+
+
 const routes = [
   {
     path: "auth",
@@ -86,6 +93,26 @@ const routes = [
       },
     ],
   },
+  {
+    path: "faults",
+    element: <PrivateLayout />,
+    children: [
+      {
+        path: "",
+        element: <FaultList />
+      },
+      {
+        path: "register",
+        element: <RegisterFault />
+      },
+      {
+        path: ":id",
+        element: <ViewFault />
+      },
+      
+      
+    ]
+  },    
 ];
 
 export default routes;
