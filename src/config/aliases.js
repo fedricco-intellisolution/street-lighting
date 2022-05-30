@@ -7,6 +7,8 @@ const aliases = (prefix = `src`) => ({
     '@users': `${prefix}/pages/settings/users`,
     '@groups': `${prefix}/pages/settings/groups`,
     '@permissions': `${prefix}/pages/settings/permissions`,
+    '@sector': `${prefix}/pages/property-management/sector`,
+    '@service': `${prefix}/service`,
 });
 
 module.exports = aliases;

@@ -23,6 +23,10 @@ import AddEditUser from "@users/AddEditUser";
 import Groups from "@groups/Groups";
 import Permissions from "@permissions/Permissions";
 
+//property management
+import Sector  from "@sector/Sector";
+import AddEditSector  from "@sector/AddEditSector";
+
 const routes = [
   {
     path: "auth",
@@ -63,6 +67,20 @@ const routes = [
   {
     path: "/",
     element: <PrivateLayout />,
+  },
+  {
+    path: "property-management",
+    element: <PrivateLayout />,
+    children: [
+      {
+        path: "sector",
+        element: <Sector />
+      },
+      {
+        path: "sector/:id",
+        element: <AddEditSector />
+      }
+    ],
   },
   {
     path: "settings",
