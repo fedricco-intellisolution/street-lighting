@@ -24,8 +24,13 @@ import Groups from "@groups/Groups";
 import Permissions from "@permissions/Permissions";
 
 //property management
-import Sector  from "@sector/Sector";
-import AddEditSector  from "@sector/AddEditSector";
+import Sectors from "@sector/Sectors";
+import AddEditSector from "@sector/AddEditSector";
+
+//Fault
+import RegisterFault from "./pages/fault/RegisterFault";
+import FaultList from "./pages/fault/FaultList";
+import ViewFault from "./pages/fault/ViewFault";
 
 const routes = [
   {
@@ -73,13 +78,13 @@ const routes = [
     element: <PrivateLayout />,
     children: [
       {
-        path: "sector",
-        element: <Sector />
+        path: "sectors",
+        element: <Sectors />,
       },
       {
-        path: "sector/:id",
-        element: <AddEditSector />
-      }
+        path: "sectors/:id",
+        element: <AddEditSector />,
+      },
     ],
   },
   {
@@ -88,7 +93,7 @@ const routes = [
     children: [
       {
         path: "users",
-        element: <Users />
+        element: <Users />,
       },
       {
         path: "users/:id",
@@ -96,11 +101,29 @@ const routes = [
       },
       {
         path: "groups",
-        element: <Groups />
+        element: <Groups />,
       },
       {
         path: "permissions",
-        element: <Permissions />
+        element: <Permissions />,
+      },
+    ],
+  },
+  {
+    path: "faults",
+    element: <PrivateLayout />,
+    children: [
+      {
+        path: "",
+        element: <FaultList />,
+      },
+      {
+        path: "register",
+        element: <RegisterFault />,
+      },
+      {
+        path: ":id",
+        element: <ViewFault />,
       },
     ],
   },

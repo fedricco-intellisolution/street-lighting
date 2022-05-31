@@ -81,62 +81,62 @@ const SectorTable = (props) => {
           })}
         </tbody>
       </Table>
-      {/* <Row>
-                <Col md="6">
-                    <span className="mx-2">
-                        Page{" "}
-                        <strong>
-                            {pageIndex + 1} of {pageOptions.length}
-                        </strong>
-                    </span>
-                    <span className="ms-3 me-2">Show:</span>
-                    <Form.Select
-                        className="d-inline-block w-auto"
-                        value={pageSize}
-                        onChange={(e) => {
-                            setPageSize(Number(e.target.value));
-                        }}
-                    >
-                        {[10, 20, 30, 40, 50].map((pageSize) => (
-                            <option key={pageSize} value={pageSize}>
-                                {pageSize}
-                            </option>
-                        ))}
-                    </Form.Select>
+      <Row>
+        <Col md="6">
+          <span className="mx-2">
+            Page{" "}
+            <strong>
+              {pageIndex + 1} of {pageOptions.length}
+            </strong>
+          </span>
+          <span className="ms-3 me-2">Show:</span>
+          <Form.Select
+            className="d-inline-block w-auto"
+            value={pageSize}
+            onChange={(e) => {
+              setPageSize(Number(e.target.value));
+            }}
+          >
+            {[10, 20, 30, 40, 50].map((pageSize) => (
+              <option key={pageSize} value={pageSize}>
+                {pageSize}
+              </option>
+            ))}
+          </Form.Select>
 
-                    <span className="ms-3 me-2">Go to page:</span>
-                    <Form.Control
-                        className="d-inline-block"
-                        type="number"
-                        defaultValue={pageIndex + 1}
-                        onChange={(e) => {
-                            const page = e.target.value ? Number(e.target.value) - 1 : 0;
-                            gotoPage(page);
-                        }}
-                        style={{ width: "75px" }}
-                    />
-                </Col>
-                <Col md="6">
-                    <Pagination className="float-end">
-                        <Pagination.First
-                            onClick={() => gotoPage(0)}
-                            disabled={!canPreviousPage}
-                        />
-                        <Pagination.Prev
-                            onClick={() => previousPage()}
-                            disabled={!canPreviousPage}
-                        />
-                        <Pagination.Next
-                            onClick={() => nextPage()}
-                            disabled={!canNextPage}
-                        />
-                        <Pagination.Last
-                            onClick={() => gotoPage(pageCount - 1)}
-                            disabled={!canNextPage}
-                        />
-                    </Pagination>
-                </Col>
-            </Row> */}
+          <span className="ms-3 me-2">Go to page:</span>
+          <Form.Control
+            className="d-inline-block"
+            type="number"
+            defaultValue={pageIndex + 1}
+            onChange={(e) => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0;
+              gotoPage(page);
+            }}
+            style={{ width: "75px" }}
+          />
+        </Col>
+        <Col md="6">
+          <Pagination className="float-end">
+            <Pagination.First
+              onClick={() => gotoPage(0)}
+              disabled={!canPreviousPage}
+            />
+            <Pagination.Prev
+              onClick={() => previousPage()}
+              disabled={!canPreviousPage}
+            />
+            <Pagination.Next
+              onClick={() => nextPage()}
+              disabled={!canNextPage}
+            />
+            <Pagination.Last
+              onClick={() => gotoPage(pageCount - 1)}
+              disabled={!canNextPage}
+            />
+          </Pagination>
+        </Col>
+      </Row>
     </>
   );
 };

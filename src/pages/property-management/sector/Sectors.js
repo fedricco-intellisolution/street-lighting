@@ -3,18 +3,18 @@ import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Map } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
-import api from "@service/api";
+import * as propertyManagementApi from "@api/propertyManagementApi";
 import SectorTable from "./SectorTable";
 
-const Sector = () => {
+const Sectors = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [filter, setFilter] = useState();
   const [sectors, setSectors] = useState([]);
   const tableColumns = [
     {
-      Header: "ID",
-      accessor: "id",
+      Header: "Actions",
+      accessor: "actions",
     },
     {
       Header: "Code",
@@ -32,11 +32,8 @@ const Sector = () => {
 
   //call get sectors api
   const getSectorsApi = useCallback(async () => {
-    const response = await api.get("sector");
-
-    if (response) {
-      setSectors(response);
-    }
+    const response = await propertyManagementApi.getSectors();
+    setSectors(response.data.data);
   }, []);
 
   useEffect(() => {
@@ -82,4 +79,4 @@ const Sector = () => {
   );
 };
 
-export default Sector;
+export default Sectors;
