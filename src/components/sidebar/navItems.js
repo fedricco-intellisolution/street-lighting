@@ -10,6 +10,7 @@ import {
   MapPin,
   Grid,
   Flag,
+  Shield
 } from "react-feather";
 
 const pagesSection = [
@@ -52,6 +53,28 @@ const pagesSection = [
         href: "/settings/permissions",
         title: "Area",
         icon: Flag,
+      },
+    ],
+  },
+  {
+    icon: Shield,
+    title: "Preventive maintenance",
+    children: [
+      {
+        href: "/preventive-maintenance/checklist-type",
+        title: "Checklist type",
+      },
+      {
+        href: "/preventive-maintenance/checklist-items",
+        title: "Checklist items",
+      },
+      {
+        href: "/preventive-maintenance/checklist-sub-items",
+        title: "Checklist sub items",
+      },
+      {
+        href: "/preventive-maintenance/checklist-build",
+        title: "Build checklist",
       },
     ],
   },
