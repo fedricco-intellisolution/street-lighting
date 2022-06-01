@@ -1,49 +1,50 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import { UserPlus } from "react-feather";
+import { Map } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
-import UsersTable from "./components/UsersTable";
-import * as usersApi from "@api/usersApi";
+import * as propertyManagementApi from "@api/propertyManagementApi";
+import SectorTable from "./SectorTable";
 
-const tableColumns = [
-  {
-    Header: "Actions",
-    accessor: "actions",
-  },
-  {
-    Header: "Name",
-    accessor: "full_name",
-  },
-  {
-    Header: "Email",
-    accessor: "email",
-  },
-  {
-    Header: "Designation",
-    accessor: "designation",
-  },
-];
-const Users = () => {
+const Sectors = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [filter, setFilter] = useState("");
-  const [users, setUsers] = useState([]);
+  const [filter, setFilter] = useState();
+  const [sectors, setSectors] = useState([]);
+  const tableColumns = [
+    {
+      Header: "Actions",
+      accessor: "actions",
+    },
+    {
+      Header: "Code",
+      accessor: "code",
+    },
+    {
+      Header: "Name",
+      accessor: "name",
+    },
+    {
+      Header: "Description",
+      accessor: "description",
+    },
+  ];
 
-  const getUsers = useCallback(async () => {
-    const response = await usersApi.getUsers();
-    setUsers(response.data.data);
+  //call get sectors api
+  const getSectorsApi = useCallback(async () => {
+    const response = await propertyManagementApi.getSectors();
+    setSectors(response.data.data);
   }, []);
 
   useEffect(() => {
-    getUsers();
-  }, [getUsers]);
+    getSectorsApi();
+  }, [getSectorsApi]);
 
   return (
     <React.Fragment>
-      <Helmet title="Users" />
+      <Helmet title="Sectors" />
       <Container fluid className="p-0">
-        <h1 className="h3 mb-3">Users</h1>
+        <h1 className="h3 mb-3">Sectors</h1>
         <Card>
           <Card.Header className="pb-0">
             <Row>
@@ -63,14 +64,14 @@ const Users = () => {
                   className="me-1 mb-1"
                   onClick={() => navigate(location.pathname + "/add")}
                 >
-                  <UserPlus className="align-middle me-1" size={16} />
-                  Create new user
+                  <Map className="align-middle me-1" size={16} />
+                  Create new sector
                 </Button>
               </Col>
             </Row>
           </Card.Header>
           <Card.Body>
-            <UsersTable data={users} columns={tableColumns} />
+            <SectorTable data={sectors} columns={tableColumns} />
           </Card.Body>
         </Card>
       </Container>
@@ -78,4 +79,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Sectors;

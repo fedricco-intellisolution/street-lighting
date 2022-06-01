@@ -23,6 +23,13 @@ import AddEditUser from "@users/AddEditUser";
 import Groups from "@groups/Groups";
 import Permissions from "@permissions/Permissions";
 
+//property management
+import Sectors from "@sector/Sectors";
+import AddEditSector from "@sector/AddEditSector";
+import Sites from "@sites/Sites";
+import AddEditSite from "@sites/AddEditSite";
+import Levels from "@levels/Levels";
+import AddEditLevel from "@levels/AddEditLevel";
 
 //Fault
 import CallCentreFaultList from "./pages/fault/CallCentreFaultList";
@@ -36,7 +43,6 @@ import FaultVerificationTOView from "./pages/fault/FaultVerificationTOView";
 
 import FaultVerificationNEAList from "./pages/fault/FaultVerificationNEAList";
 import FaultVerificationNEAView from "./pages/fault/FaultVerificationNEAView";
-
 
 const routes = [
   {
@@ -80,12 +86,42 @@ const routes = [
     element: <PrivateLayout />,
   },
   {
+    path: "property-management",
+    element: <PrivateLayout />,
+    children: [
+      {
+        path: "sectors",
+        element: <Sectors />,
+      },
+      {
+        path: "sectors/:id",
+        element: <AddEditSector />,
+      },
+      {
+        path: "sites",
+        element: <Sites />,
+      },
+      {
+        path: "sites/:id",
+        element: <AddEditSite />,
+      },
+      {
+        path: "levels",
+        element: <Levels />,
+      },
+      {
+        path: "levels/:id",
+        element: <AddEditLevel />,
+      },
+    ],
+  },
+  {
     path: "settings",
     element: <PrivateLayout />,
     children: [
       {
         path: "users",
-        element: <Users />
+        element: <Users />,
       },
       {
         path: "users/:id",
@@ -93,11 +129,11 @@ const routes = [
       },
       {
         path: "groups",
-        element: <Groups />
+        element: <Groups />,
       },
       {
         path: "permissions",
-        element: <Permissions />
+        element: <Permissions />,
       },
     ],
   },
@@ -137,10 +173,8 @@ const routes = [
         path: "verification-nea/:id",
         element: <FaultVerificationNEAView />
       },
-      
-      
-    ]
-  },    
+    ],
+  },
 ];
 
 export default routes;

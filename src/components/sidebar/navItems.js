@@ -1,4 +1,16 @@
-import { Briefcase, Key, Settings, Sliders, Users, Zap } from "react-feather";
+import {
+  Briefcase,
+  Key,
+  Settings,
+  Sliders,
+  Users,
+  Zap,
+  Home,
+  Map,
+  MapPin,
+  Grid,
+  Flag,
+} from "react-feather";
 
 const pagesSection = [
   {
@@ -31,7 +43,33 @@ const pagesSection = [
         href: "/faults/rectified",
         title: "Fault rectified",
       },
-    ]
+    ],
+  },
+  {
+    icon: Home,
+    title: "Property management",
+    children: [
+      {
+        href: "/property-management/sectors",
+        title: "Sector",
+        icon: Map,
+      },
+      {
+        href: "/property-management/sites",
+        title: "Site",
+        icon: MapPin,
+      },
+      {
+        href: "/property-management/levels",
+        title: "Level",
+        icon: Grid,
+      },
+      {
+        href: "/property-management/areas",
+        title: "Area",
+        icon: Flag,
+      },
+    ],
   },
   {
     href: "/settings",
@@ -48,20 +86,20 @@ const pagesSection = [
         title: "Groups",
         icon: Briefcase,
       },
-       {
+      {
         href: "/settings/permissions",
         title: "Permissions",
         icon: Key,
-      }
+      },
     ],
   },
 ];
 
 const navItems = [
   {
-    title :"Pages",
-    pages : pagesSection,
-  }
+    title: "Pages",
+    pages: pagesSection,
+  },
 ];
 
 export default navItems;
