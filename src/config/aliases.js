@@ -8,6 +8,8 @@ const aliases = (prefix = `src`) => ({
   "@groups": `${prefix}/pages/settings/groups`,
   "@permissions": `${prefix}/pages/settings/permissions`,
   "@sector": `${prefix}/pages/property-management/sector`,
+  "@sites": `${prefix}/pages/property-management/site`,
+  "@levels": `${prefix}/pages/property-management/level`,
   "@api": `${prefix}/api`,
 });
 

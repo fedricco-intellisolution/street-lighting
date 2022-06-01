@@ -26,6 +26,10 @@ import Permissions from "@permissions/Permissions";
 //property management
 import Sectors from "@sector/Sectors";
 import AddEditSector from "@sector/AddEditSector";
+import Sites from "@sites/Sites";
+import AddEditSite from "@sites/AddEditSite";
+import Levels from "@levels/Levels";
+import AddEditLevel from "@levels/AddEditLevel";
 
 //Fault
 import RegisterFault from "./pages/fault/RegisterFault";
@@ -84,6 +88,22 @@ const routes = [
       {
         path: "sectors/:id",
         element: <AddEditSector />,
+      },
+      {
+        path: "sites",
+        element: <Sites />,
+      },
+      {
+        path: "sites/:id",
+        element: <AddEditSite />,
+      },
+      {
+        path: "levels",
+        element: <Levels />,
+      },
+      {
+        path: "levels/:id",
+        element: <AddEditLevel />,
       },
     ],
   },
