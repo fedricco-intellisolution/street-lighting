@@ -32,6 +32,15 @@ import RegisterFault from "./pages/fault/RegisterFault";
 import FaultList from "./pages/fault/FaultList";
 import ViewFault from "./pages/fault/ViewFault";
 
+// Preventive maintenance
+import { ChecklistBuild } from "pages/preventive-maintenance/checklist-build/ChecklistBuild";
+import { ChecklistType } from "pages/preventive-maintenance/checklist-type/ChecklistType";
+import { ChecklistItems } from "pages/preventive-maintenance/checklist-items/ChecklistItems";
+import { ChecklistSubItems } from "pages/preventive-maintenance/checklist-sub-items/ChecklistSubItems";
+import { ChecklistTypeAddEdit } from "pages/preventive-maintenance/checklist-type/ChecklistTypeAddEdit";
+import { ChecklistItemsAddEdit } from "pages/preventive-maintenance/checklist-items/ChecklistItemsAddEdit";
+import { ChecklistSubItemsAddEdit } from "pages/preventive-maintenance/checklist-sub-items/ChecklistSubItemsAddEdit";
+
 const routes = [
   {
     path: "auth",
@@ -124,6 +133,40 @@ const routes = [
       {
         path: ":id",
         element: <ViewFault />,
+      },
+    ],
+  },
+  {
+    path: "preventive-maintenance",
+    element: <PrivateLayout />,
+    children: [
+      {
+        path: "checklist-type",
+        element: <ChecklistType />,
+      },
+	  {
+        path: "checklist-type/:action",
+        element: <ChecklistTypeAddEdit />,
+      },
+      {
+        path: "checklist-items",
+        element: <ChecklistItems />,
+      },
+	  {
+        path: "checklist-items/:action",
+        element: <ChecklistItemsAddEdit />,
+      },
+	  {
+        path: "checklist-sub-items",
+        element: <ChecklistSubItems />,
+      },
+	  {
+        path: "checklist-sub-items/:action",
+        element: <ChecklistSubItemsAddEdit />,
+      },
+	  {
+        path: "checklist-build",
+        element: <ChecklistBuild />,
       },
     ],
   },
