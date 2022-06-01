@@ -36,21 +36,21 @@ const pagesSection = [
     children: [
       {
         href: "/property-management/sectors",
-        title: "Sectors",
+        title: "Sector",
         icon: Map,
       },
       {
-        href: "/settings/groups",
+        href: "/property-management/sites",
         title: "Site",
         icon: MapPin,
       },
       {
-        href: "/settings/permissions",
+        href: "/property-management/levels",
         title: "Level",
         icon: Grid,
       },
       {
-        href: "/settings/permissions",
+        href: "/property-management/areas",
         title: "Area",
         icon: Flag,
       },
