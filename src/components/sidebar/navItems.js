@@ -12,10 +12,25 @@ const pagesSection = [
     title: "Fault Management",
     children: [
       {
-        href: "/faults",
-        title: "Faults",
+        href: "/faults/callcentre",
+        title: "Faults registration",
       },
-      
+      {
+        href: "/faults/response",
+        title: "Fault response",
+      },
+      {
+        href: "/faults/verification-to",
+        title: "Fault verification (TO)",
+      },
+      {
+        href: "/faults/verification-nea",
+        title: "Fault verification (NEA)",
+      },
+      {
+        href: "/faults/rectified",
+        title: "Fault rectified",
+      },
     ]
   },
   {

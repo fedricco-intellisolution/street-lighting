@@ -53,7 +53,6 @@ const AuthContext = createContext(null);
 
 function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(JWTReducer, initialState);
-  console.log(state)
   useEffect(() => {
     const initialize = async () => {
       try {
@@ -63,7 +62,6 @@ function AuthProvider({ children }) {
           setSession(accessToken);
           const response = await usersApi.getUser('9655524d-4362-49e3-8b0e-d57427a5ff28');
           const { user } = response.data;
-          console.log(response.data.data)
           dispatch({
             type: INITIALIZE,
             payload: {
@@ -82,7 +80,6 @@ function AuthProvider({ children }) {
           });
         }
       } catch (err) {
-        console.error(err);
         dispatch({
           type: INITIALIZE,
           payload: {

@@ -1,15 +1,12 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Button, Col, Form, Row, } from "react-bootstrap";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ErrorMessage } from '@hookform/error-message';
 import * as yup from "yup";
-import { useNavigate, useParams } from "react-router-dom";
-import * as faultApi from "../../../api/faultApi";
-import NotyfContext from "../../../contexts/NotyfContext";
-import { useLocation } from "react-router-dom";
+
 const schema = yup.object().shape({
-    building_id: yup
+    site_id: yup
         .string()
         .required("This field is required"),
     complainant: yup.object().shape({
@@ -34,21 +31,17 @@ const schema = yup.object().shape({
         .required("This field is required"),
     response_time: yup
         .string()
+        .nullable()
         .required("This field is required"),
     
 });
 
 const CallCentreForm = (props) => {
-    const navigate = useNavigate();
-    const notyf = useContext(NotyfContext)
-    const { id } = useParams();
-    const location = useLocation();
-    const register_page = location.pathname === '/faults/register' ? true : false;
-    const [current_time, setCurrentTime] = useState(new Date().toLocaleString());
     const {
         handleSubmit,
         control,
         reset,
+        setValue,
         formState: { errors },
     } = useForm({
         mode: "onTouched",
@@ -56,51 +49,16 @@ const CallCentreForm = (props) => {
     });
     
     useEffect(() => {
-        setInterval(() => {
-            setCurrentTime(new Date().toLocaleString())
-        }, 1000)
-    })
-
-    const registerFault = async (data) => {
-        data.status = 'FOR_RESPONSE'
-        try {
-            const response = await faultApi.registerFault(data)
-            if (response.data.status === 'SUCCESS') {
-                notyf.open({
-                    type: 'success',
-                    message: response.data.message,
-                })
-                navigate('/faults')
-            }
-        } catch (error) {
-            console.log(error)
+        if (props.mode === 'register') {
+            setInterval(() => {
+                setValue('complaint_at', new Date().toLocaleString())
+            }, 1000)
         }
-    }    
-
-    const updateFault = async (data) => {
-        try {
-            const response = await faultApi.updateFaultRegistration(id, data)
-            if (response.data.status === 'SUCCESS') {
-                notyf.open({
-                    type: 'success',
-                    message: response.data.message,
-                })
-                navigate('/faults')
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    } 
+    }, [props.mode, setValue])
     
-    const getFault = useCallback(async () => {
-        const response = await faultApi.getFault(id);
-        reset(response.data.data)
-    }, [id, reset])
-
-    useEffect(() => {
-        console.log(register_page)
-        if (!register_page) getFault()
-    }, [getFault, register_page])
+    useEffect(() => {   
+        reset(props.fault)
+    }, [reset, props.fault])
 
     return (
 
@@ -111,7 +69,7 @@ const CallCentreForm = (props) => {
                         <Form.Label>Site</Form.Label>
                         <Controller
                             control={control}
-                            name="building_id"
+                            name="site_id"
                             defaultValue=""
                             render={({ field: { value, onChange, onBlur } }) => (
                                 <Form.Select
@@ -119,7 +77,7 @@ const CallCentreForm = (props) => {
                                     value={value}
                                     onChange={onChange}
                                     onBlur={onBlur}
-                                    className={(errors.building_id && 'is-invalid')}
+                                    className={(errors.site_id && 'is-invalid')}
                                     disabled={!props.editable}
                                 >
                                     <option value="">Choose an option</option>
@@ -129,7 +87,7 @@ const CallCentreForm = (props) => {
                         />
                         <ErrorMessage
                             errors={errors}
-                            name="building_id"
+                            name="site_id"
                             render={({ message }) => <small className="text-danger">{message}</small>}
                         />
                     </Form.Group>
@@ -139,23 +97,17 @@ const CallCentreForm = (props) => {
                         <Form.Label>Complaint date</Form.Label>
                         <Controller
                             control={control}
-                            name="complaint_date"
-                            defaultValue={current_time}
+                            name="complaint_at"
+                            defaultValue={new Date().toLocaleString()}
                             render={({ field: { value, onChange, onBlur } }) => (
                                 <Form.Control
                                     type="text"
-                                    value={current_time}
+                                    value={value}
                                     onChange={onChange}
                                     onBlur={onBlur}
-                                    className={(errors.complaint_date && 'is-invalid')}
                                     disabled
                                 />
                             )}
-                        />
-                        <ErrorMessage
-                            errors={errors}
-                            name="complaint_date"
-                            render={({ message }) => <small className="text-danger">{message}</small>}
                         />
                     </Form.Group>
                 </Col>
@@ -190,7 +142,7 @@ const CallCentreForm = (props) => {
                 </Col>
                 <Col md={3}>
                     <Form.Group className="mb-3">
-                        <Form.Label>Complainant contact no.</Form.Label>
+                        <Form.Label>Contact no.</Form.Label>
                         <Controller
                             control={control}
                             name="complainant.contact_no"
@@ -347,7 +299,7 @@ const CallCentreForm = (props) => {
                                     className={(errors.response_time && 'is-invalid')}
                                     disabled={!props.editable}
                                 >
-                                    <option value={null}>Choose an option</option>
+                                    <option value="">Choose an option</option>
                                     <option value="1">Response time 1</option>
                                     <option value="2">Response time 2</option>
                                     <option value="3">Response time 3</option>
@@ -366,16 +318,13 @@ const CallCentreForm = (props) => {
             {props.editable && 
                 <Row className="pt-4">
                     <Col className="text-end">
-                        <Button variant="secondary" className="me-2" onClick={() => navigate('/faults')}>
+                        <Button variant="secondary" className="me-2" onClick={props.onCancel}>
                             Cancel
                         </Button>
                         <Button
                             variant="primary"
-                            onClick={
-                                register_page
-                                ? handleSubmit(registerFault)
-                                : handleSubmit(updateFault)
-                            }>
+                            onClick={handleSubmit(props.onSubmit)}
+                        >
                             Submit
                         </Button>
                     </Col>

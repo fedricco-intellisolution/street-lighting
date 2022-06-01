@@ -1,15 +1,22 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import { Zap } from "react-feather";
+import { Card, Col, Container, Form, Row } from "react-bootstrap";
+import { Camera, Eye } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
-import FaultTable from "./components/FaultTable";
+import DynamicTable from "../../components/ui/DynamicTable";
 import * as faultApi from "../../api/faultApi";
 
-const tableColumns = [
+const FaultResponseList = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [filter, setFilter] = useState('');
+    const [tableData, setTableData] = useState([])
+
+    const tableColumns = [
         {
             Header: "Actions",
             accessor: "actions",
+            
         },
         {
             Header: "Site",
@@ -21,7 +28,7 @@ const tableColumns = [
         },
         {
             Header: "Complaint date",
-            accessor: "complaint_at",
+            accessor: "complaint_date",
         },
         {
             Header: "Nature of fault",
@@ -31,18 +38,40 @@ const tableColumns = [
             Header: "Job type",
             accessor: "job_type",
         },
-]
+        
+    ]
 
-const FaultList = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const [filter, setFilter] = useState('');
-    const [faults, setFaults] = useState([]);
-
-    const getFaults = useCallback(async() => {
+    const getFaults = useCallback(async () => {
         const response = await faultApi.getFaults();
-        setFaults(response.data.data)
-    }, [])
+        const faults = response.data.data
+        const data = [];
+        faults.forEach((fault) => {
+            data.push({
+                actions: (
+                    <>
+                        <Eye
+                            className="align-middle me-2"
+                            size={16}
+                            onClick={() => navigate(location.pathname+'/'+fault.id)}
+                        />
+                        <Camera
+                            className="align-middle me-1"
+                            size={16}
+                            onClick={() => {}}
+                        />
+                    </>
+                ),
+                id: fault.id,
+                site: fault.site,
+                complainant: fault.complainant,
+                complaint_date: fault.complaint_at,
+                nature_of_fault: fault.nature_of_fault,
+                job_type : fault.job_type
+
+            })
+        })
+        setTableData(data)
+    }, [navigate, location.pathname])
 
     useEffect(() => {
        getFaults();
@@ -50,9 +79,9 @@ const FaultList = () => {
 
     return (
         <React.Fragment>
-            <Helmet title="Faults" />
+            <Helmet title="Fault Response" />
             <Container fluid className="p-0">
-                <h1 className="h3 mb-3">Faults</h1>
+                <h1 className="h3 mb-3">Fault response</h1>
                 <Card>
                     <Card.Header className="pb-0">
                         <Row>
@@ -66,20 +95,10 @@ const FaultList = () => {
                                     className="d-inline-block"
                                 />
                             </Col>
-                            <Col md={{ span: 3, offset: 6 }} className="text-end">
-                                <Button
-                                    variant="primary"
-                                    className="me-1 mb-1"
-                                    onClick={() => navigate(location.pathname + '/register')}
-                                >
-                                    <Zap className="align-middle me-1" size={16} />
-                                    Register a fault
-                                </Button>
-                            </Col>
                         </Row>
                     </Card.Header>
                     <Card.Body>
-                        <FaultTable data={faults} columns={tableColumns} />
+                        <DynamicTable data={tableData} columns={tableColumns} />
                     </Card.Body>
                 </Card>
             </Container>
@@ -87,4 +106,4 @@ const FaultList = () => {
     )
 }
 
-export default FaultList;
+export default FaultResponseList;

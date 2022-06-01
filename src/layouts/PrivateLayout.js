@@ -10,22 +10,26 @@ import Footer from "../components/Footer";
 import Settings from "../components/Settings";
 
 import navItems from "../components/sidebar/navItems";
-
-const PrivateLayout = ({ children }) => (
-  <React.Fragment>
-    <Wrapper>
-      <Sidebar items={navItems} />
-      <Main>
-        <Navbar />
-        <Content>
-          {children}
-          <Outlet />
-        </Content>
-        <Footer />
-      </Main>
-    </Wrapper>
-    <Settings />
-  </React.Fragment>
-);
+import { Helmet } from "react-helmet-async";
+const PrivateLayout = ({ children }) => {
+  return (
+    <React.Fragment>
+      <Wrapper>
+        <Sidebar items={navItems} />
+        <Main>
+          <Navbar />
+          <Content>
+            <Helmet title="Register fault" />
+            {children}
+            <Outlet />
+          </Content>
+          <Footer />
+        </Main>
+      </Wrapper>
+      <Settings />
+    </React.Fragment>
+  )
+ 
+};
 
 export default PrivateLayout;
