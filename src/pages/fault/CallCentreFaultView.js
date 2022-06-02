@@ -5,8 +5,8 @@ import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import { useNavigate } from "react-router-dom";
 import CallCentreForm from "./components/CallCentreForm";
 import { useParams } from "react-router-dom";
-import * as faultApi from "../../api/faultApi";
-import NotyfContext from "../../contexts/NotyfContext";
+import * as faultApi from "@api/faultApi";
+import NotyfContext from "@contexts/NotyfContext";
 
 const CallCentreFaultView = () => {
     const navigate = useNavigate();

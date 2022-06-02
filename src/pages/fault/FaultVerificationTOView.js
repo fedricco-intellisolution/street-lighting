@@ -4,12 +4,12 @@ import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import { useNavigate, useParams } from "react-router-dom";
 import CallCentreForm from "./components/CallCentreForm";
-import * as faultApi from "../../api/faultApi";
 import TechnicianForm from "./components/TechnicianForm";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import NotyfContext from "../../contexts/NotyfContext";
+import * as faultApi from "@api/faultApi";
+import NotyfContext from "@contexts/NotyfContext";
 
 const schema = yup.object().shape({
     action_taken: yup
@@ -42,9 +42,18 @@ const FaultVerificationTOView = () => {
         getFault()
     }, [getFault])
 
-    const saveHandler = (data) => {
-        console.log('onSave')
-        console.log(data)
+    const saveHandler = async (data) => {
+        try {
+            const response = await faultApi.updateFaultTO(id, data)
+            if (response.data.status === 'SUCCESS') {
+                notyf.open({
+                    type : 'success',
+                    message: response.data.message,
+                })
+            }
+        } catch (error) {
+            console.log(error)            
+        }
     }
 
     const forwardToTechnicianHandler = () => {
@@ -54,11 +63,19 @@ const FaultVerificationTOView = () => {
         })
     }
 
-    const faultVerificationHandler = () => {
-        notyf.open({
-            type: 'success',
-            message: 'Fault verification called'
-        })
+    const faultVerificationHandler = async(data) => {
+        try {
+            const response = await faultApi.forVerificationNEA(id, data)
+            if (response.data.status === 'SUCCESS') {
+                notyf.open({
+                    type : 'success',
+                    message: response.data.message,
+                })
+                navigate('/faults/verification-to')
+            }
+        } catch (error) {
+            console.log(error)            
+        }
     }
 
     return (

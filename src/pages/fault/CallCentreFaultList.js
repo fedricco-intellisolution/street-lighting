@@ -3,14 +3,14 @@ import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Edit2, Zap } from "react-feather";
 import { useNavigate } from "react-router-dom";
-import DynamicTable from "../../components/ui/DynamicTable";
-import * as faultApi from "../../api/faultApi";
+import DynamicTable from "@components/ui/DynamicTable";
+import * as faultApi from "@api/faultApi";
 
 const CallCentreFaultList = () => {
     const navigate = useNavigate();
     const [filter, setFilter] = useState({
-        filter: {
-            status: 'FAULT_RESPONSE'
+        search: {
+            status: 'FOR_RESPONSE'
         }
     });
     const [tableData, setTableData] = useState([])
@@ -45,7 +45,6 @@ const CallCentreFaultList = () => {
     ]
 
     const getFaults = useCallback(async () => {
-
         const response = await faultApi.getFaults(filter);
         const faults = response.data.data
         const data = [];

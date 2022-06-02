@@ -3,13 +3,17 @@ import { Helmet } from "react-helmet-async";
 import { Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Edit2 } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
-import DynamicTable from "../../components/ui/DynamicTable";
-import * as faultApi from "../../api/faultApi";
+import DynamicTable from "@components/ui/DynamicTable";
+import * as faultApi from "@api/faultApi";
 
 const FaultVerificationTOList = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const [filter, setFilter] = useState('');
+    const [filter, setFilter] = useState({
+        search: {
+            status: 'FOR_VERIFICATION_TO'
+        }
+    });
     const [tableData, setTableData] = useState([])
 
     const tableColumns = [
@@ -42,7 +46,7 @@ const FaultVerificationTOList = () => {
     ]
 
     const getFaults = useCallback(async () => {
-        const response = await faultApi.getFaults();
+        const response = await faultApi.getFaults(filter);
         const faults = response.data.data
         const data = [];
         faults.forEach((fault) => {
@@ -66,7 +70,7 @@ const FaultVerificationTOList = () => {
             })
         })
         setTableData(data)
-    }, [navigate, location.pathname])
+    }, [navigate, location.pathname, filter])
 
     useEffect(() => {
        getFaults();
@@ -82,10 +86,8 @@ const FaultVerificationTOList = () => {
                         <Row>
                             <Col md={3}>
                                 <Form.Control
-                                    value={filter || ""}
-                                    onChange={(e) => {
-                                        setFilter(e.target.value || undefined);
-                                    }}
+                                    value=""
+                                    onChange={() => {}}
                                     placeholder="Search keyword"
                                     className="d-inline-block"
                                 />

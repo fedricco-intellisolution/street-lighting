@@ -4,12 +4,12 @@ import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import { useNavigate, useParams } from "react-router-dom";
 import CallCentreForm from "./components/CallCentreForm";
-import * as faultApi from "../../api/faultApi";
 import TechnicianForm from "./components/TechnicianForm";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import NotyfContext from "../../contexts/NotyfContext";
+import * as faultApi from "@api/faultApi";
+import NotyfContext from "@contexts/NotyfContext";
 
 const schema = yup.object().shape({
     action_taken: yup
@@ -72,6 +72,7 @@ const FaultResponseView = () => {
                     type : 'success',
                     message: response.data.message,
                 })
+                navigate('/faults/response')
             }
         } catch (error) {
             console.log(error)            

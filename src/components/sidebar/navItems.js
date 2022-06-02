@@ -25,11 +25,11 @@ const pagesSection = [
     children: [
       {
         href: "/faults/callcentre",
-        title: "Faults registration",
+        title: "Faults registration"
       },
       {
         href: "/faults/response",
-        title: "Fault response",
+        title: "Fault response"
       },
       {
         href: "/faults/verification-to",

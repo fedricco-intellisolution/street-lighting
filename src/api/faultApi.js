@@ -8,9 +8,8 @@ export const updateFaultRegistration = (id, data) => {
     return api.put('/fault/register/'+ id, data);
 }
 
-export const getFaults = (filter) => {
-    console.log(filter)
-    return api.get('/fault');
+export const getFaults = (filter) => {    
+    return api.get('/fault', {params : filter});
 }
 
 export const getFault = (id) => {
@@ -30,5 +29,5 @@ export const updateFaultTO = (id, data) => {
 }
 
 export const forVerificationNEA = (id, data) => {
-    return api.post('/fault/technician/for_verification_nea/'+id, data)
+    return api.post('/fault/to/for_verification_nea/'+id, data)
 }
