@@ -2,24 +2,27 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Map } from "react-feather";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import AreaTable from "./AreaTable";
 import * as propertyManagementApi from "@api/propertyManagementApi";
-import SectorTable from "./SectorTable";
-import debounce from "debounce";
 
-const Sectors = () => {
+const Areas = () => {
+  const [filter, setFilter] = useState();
   const navigate = useNavigate();
   const location = useLocation();
-  const [filter, setFilter] = useState();
-  const [sectors, setSectors] = useState([]);
+  const [areas, setAreas] = useState([]);
   const tableColumns = [
     {
       Header: "Actions",
       accessor: "actions",
     },
     {
-      Header: "Code",
-      accessor: "code",
+      Header: "Site",
+      accessor: "level.site.name",
+    },
+    {
+      Header: "Level",
+      accessor: "level.name",
     },
     {
       Header: "Name",
@@ -31,34 +34,30 @@ const Sectors = () => {
     },
   ];
 
-  //call get sectors api
-  const getSectorsApi = useCallback(async () => {
-    const response = await propertyManagementApi.getSectors(filter);
-    setSectors(response.data.data);
-  }, [filter]);
+  //get areas
+  const getAreas = useCallback(async () => {
+    const response = await propertyManagementApi.getAreas();
+    setAreas(response.data.data);
+  }, []);
 
   useEffect(() => {
-    getSectorsApi();
-  }, [getSectorsApi]);
+    getAreas();
+  }, [getAreas]);
 
   return (
     <React.Fragment>
-      <Helmet title="Sectors" />
+      <Helmet title="Areas" />
       <Container fluid className="p-0">
-        <h1 className="h3 mb-3">Sectors</h1>
+        <h1 className="h3 mb-3">Areas</h1>
         <Card>
           <Card.Header className="pb-0">
             <Row>
               <Col md={3}>
                 <Form.Control
-                  onChange={debounce((e) => {
-                    const searchValue = {
-                      search: {
-                        keyword: e.target.value || undefined,
-                      },
-                    };
-                    setFilter(searchValue);
-                  }, 1000)}
+                  value={filter || ""}
+                  onChange={(e) => {
+                    setFilter(e.target.value || undefined);
+                  }}
                   placeholder="Search keyword"
                   className="d-inline-block"
                 />
@@ -70,13 +69,13 @@ const Sectors = () => {
                   onClick={() => navigate(location.pathname + "/add")}
                 >
                   <Map className="align-middle me-1" size={16} />
-                  Create new sector
+                  Create new area
                 </Button>
               </Col>
             </Row>
           </Card.Header>
           <Card.Body>
-            <SectorTable data={sectors} columns={tableColumns} />
+            <AreaTable data={areas} columns={tableColumns} />
           </Card.Body>
         </Card>
       </Container>
@@ -84,4 +83,4 @@ const Sectors = () => {
   );
 };
 
-export default Sectors;
+export default Areas;
