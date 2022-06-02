@@ -37,13 +37,14 @@ import FaultList from "./pages/fault/FaultList";
 import ViewFault from "./pages/fault/ViewFault";
 
 // Preventive maintenance
-import { ChecklistBuild } from "pages/preventive-maintenance/checklist-build/ChecklistBuild";
-import { ChecklistType } from "pages/preventive-maintenance/checklist-type/ChecklistType";
-import { ChecklistItems } from "pages/preventive-maintenance/checklist-items/ChecklistItems";
-import { ChecklistSubItems } from "pages/preventive-maintenance/checklist-sub-items/ChecklistSubItems";
-import { ChecklistTypeAddEdit } from "pages/preventive-maintenance/checklist-type/ChecklistTypeAddEdit";
-import { ChecklistItemsAddEdit } from "pages/preventive-maintenance/checklist-items/ChecklistItemsAddEdit";
-import { ChecklistSubItemsAddEdit } from "pages/preventive-maintenance/checklist-sub-items/ChecklistSubItemsAddEdit";
+import { ChecklistBuild } from "@preventive/checklist-build/ChecklistBuild";
+import { ChecklistType } from "@preventive/checklist-type/ChecklistType";
+import { ChecklistItems } from "@preventive/checklist-items/ChecklistItems";
+import { ChecklistSubItems } from "@preventive/checklist-sub-items/ChecklistSubItems";
+import { ChecklistTypeAddEdit } from "@preventive/checklist-type/ChecklistTypeAddEdit";
+import { ChecklistItemsAddEdit } from "@preventive/checklist-items/ChecklistItemsAddEdit";
+import { ChecklistSubItemsAddEdit } from "@preventive/checklist-sub-items/ChecklistSubItemsAddEdit";
+import { ChecklistBuildAddEdit } from "pages/preventive-maintenance/checklist-build/ChecklistBuildAddEdit";
 
 const routes = [
   {
@@ -187,6 +188,10 @@ const routes = [
 	  {
         path: "checklist-build",
         element: <ChecklistBuild />,
+      },
+	  {
+        path: "checklist-build/:action",
+        element: <ChecklistBuildAddEdit />,
       },
     ],
   },

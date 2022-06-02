@@ -8,11 +8,15 @@ import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlusSquare, faWindowClose } from "@fortawesome/free-solid-svg-icons";
+
+import { MOCK_CHECKLIST_TYPE } from "../config/mockData";
 
 const schema = yup.object().shape({
-    checklistType: yup.string().required("This field is required"),
-    checklistItemName: yup.string().required("This field is required"),
-    sequenceNumber: yup.string().required("This field is required"),
+    checklistType     : yup.string().required("This field is required"),
+    checklistItemName : yup.string().required("This field is required"),
+    sequenceNumber    : yup.string().required("This field is required"),
 });
 
 export const ChecklistItemsAddEdit = () => {
@@ -22,8 +26,8 @@ export const ChecklistItemsAddEdit = () => {
         control,
         formState: { errors },
     } = useForm({
-        mode: "onTouched",
-        resolver: yupResolver(schema),
+        mode     : "onTouched",
+        resolver : yupResolver(schema),
     });
 
     //
@@ -66,8 +70,8 @@ export const ChecklistItemsAddEdit = () => {
                                         <Form.Label>Checklist type</Form.Label>
                                         <Controller
                                             control={control}
-                                            name="checklistType"
                                             defaultValue=""
+                                            name="checklistType"
                                             render={({
                                                 field: {
                                                     value,
@@ -75,13 +79,27 @@ export const ChecklistItemsAddEdit = () => {
                                                     onBlur,
                                                 },
                                             }) => (
-                                                <Form.Control
-                                                    type="text"
-                                                    value={value}
-                                                    onChange={onChange}
+                                                <Form.Select
+													id="checklistType"
+                                                    name="checklistType"
                                                     onBlur={onBlur}
-                                                    className={errors.name}
-                                                />
+                                                    onChange={onChange}
+                                                    value={value}
+                                                >
+                                                    <option></option>
+                                                    {MOCK_CHECKLIST_TYPE.map(
+                                                        (data, index) => {
+                                                            return (
+                                                                <option
+                                                                    key={index}
+                                                                    value={data}
+                                                                >
+                                                                    {data}
+                                                                </option>
+                                                            );
+                                                        }
+                                                    )}
+                                                </Form.Select>
                                             )}
                                         />
                                         <ErrorMessage
@@ -103,8 +121,8 @@ export const ChecklistItemsAddEdit = () => {
                                         </Form.Label>
                                         <Controller
                                             control={control}
-                                            name="checklistItemName"
                                             defaultValue=""
+                                            name="checklistItemName"
                                             render={({
                                                 field: {
                                                     value,
@@ -113,11 +131,11 @@ export const ChecklistItemsAddEdit = () => {
                                                 },
                                             }) => (
                                                 <Form.Control
+													className={errors.name}
+                                                    onBlur={onBlur}
+                                                    onChange={onChange}
                                                     type="text"
                                                     value={value}
-                                                    onChange={onChange}
-                                                    onBlur={onBlur}
-                                                    className={errors.name}
                                                 />
                                             )}
                                         />
@@ -142,17 +160,17 @@ export const ChecklistItemsAddEdit = () => {
                                             defaultValue=""
                                             render={({
                                                 field: {
-                                                    value,
-                                                    onChange,
                                                     onBlur,
+													onChange,
+                                                    value,
                                                 },
                                             }) => (
                                                 <Form.Control
+													className={errors.name}
+                                                    onBlur={onBlur}
+                                                    onChange={onChange}
                                                     type="text"
                                                     value={value}
-                                                    onChange={onChange}
-                                                    onBlur={onBlur}
-                                                    className={errors.name}
                                                 />
                                             )}
                                         />
@@ -168,11 +186,87 @@ export const ChecklistItemsAddEdit = () => {
                                     </Form.Group>
                                 </Col>
                             </Row>
+                            <Col md={12}>
+                                <h6 className="pt-2">Checklist columns</h6>
+                                <small>
+                                    <i>Default columns - check, clean</i>
+                                </small>
+                                <Row className="mt-2">
+                                    <Col md={6}>
+                                        <Form.Group className="mb-3">
+                                            <Controller
+                                                control={control}
+                                                defaultValue=""
+                                                name="checklistItem1"
+                                                render={({
+                                                    field: {
+                                                        onBlur,
+														onChange,
+                                                        value,
+                                                    },
+                                                }) => (
+                                                    <Form.Control
+														className={errors.name}
+                                                        onBlur={onBlur}
+                                                        onChange={onChange}
+                                                        type="text"
+                                                        value={value}
+                                                    />
+                                                )}
+                                            />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={1}>
+                                        <Button variant="primary">
+                                            <FontAwesomeIcon
+                                                icon={faWindowClose}
+                                            />
+                                        </Button>
+                                    </Col>
+                                </Row>
+                                <Row className="mt-2">
+                                    <Col md={6}>
+                                        <Form.Group className="mb-3">
+                                            <Controller
+                                                control={control}
+                                                defaultValue=""
+                                                name="checklistItem2"
+                                                render={({
+                                                    field: {
+														onBlur,
+                                                        onChange,
+                                                        value,
+                                                    },
+                                                }) => (
+                                                    <Form.Control
+														className={errors.name}
+                                                        onBlur={onBlur}
+                                                        onChange={onChange}
+                                                        type="text"
+                                                        value={value}
+                                                    />
+                                                )}
+                                            />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={1}>
+                                        <Button variant="primary">
+                                            <FontAwesomeIcon
+                                                icon={faWindowClose}
+                                            />
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </Col>
+                            <Button variant="secondary" className="m-0">
+                                <FontAwesomeIcon icon={faPlusSquare} /> Add new
+                                column
+                            </Button>
                             <Row className="pt-4">
                                 <Col className="text-end">
                                     <Button
-                                        variant="secondary"
                                         className="me-2"
+                                        variant="secondary"
                                         onClick={() =>
                                             navigate(
                                                 "/preventive-maintenance/checklist-items"

@@ -8,12 +8,20 @@ const tableColumns = [
         accessor : "id",
     },
     {
-        Header   : "Sequence no",
-        accessor : "sequence_no",
+        Header   : "Checklist name",
+        accessor : "checklist_name",
     },
     {
         Header   : "Checklist type",
         accessor : "checklist_type",
+    },
+    {
+        Header   : "Frequency",
+        accessor : "frequency",
+    },
+    {
+        Header   : "Active",
+        accessor : "active",
     },
     {
         Header   : "Action",
@@ -28,18 +36,24 @@ const tableData = {
     data: [
         {
             id             : "1",
-            sequence_no    : "1",
+            checklist_name : "Horticultural abortist (Monthly)",
             checklist_type : "HORTICULTURAL",
+            frequency      : "Monthly",
+            active         : "Yes",
         },
         {
             id             : "2",
-            sequence_no    : "2233",
+            checklist_name : "Security system - Tree prunning (Yearly)",
             checklist_type : "SECURITY SYSTEM",
+            frequency      : "Yearly",
+            active         : "Yes",
         },
         {
             id             : "3",
-            sequence_no    : "2233",
+            checklist_name : "Plumbing and sanitary - External CCTV (Weekly)",
             checklist_type : "PLUMBING AND SANITARY",
+            frequency      : "Weekly",
+            active         : "No",
         },
     ],
     meta: {

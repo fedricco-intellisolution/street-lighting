@@ -9,33 +9,38 @@ import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import { MOCK_CHECKLIST_ITEMS, MOCK_CHECKLIST_TYPE } from "../config/mockData";
+import { ChecklistBuildPreview } from "./checklist-preview/ChecklistBuildPreview";
+import {
+    MOCK_CHECKLIST_ITEMS,
+    MOCK_CHECKLIST_SUB_ITEMS,
+    MOCK_CHECKLIST_TYPE,
+} from "../config/mockData";
 import { FREQUENCY } from "../config/options";
 
 const schema = yup.object().shape({
-    checklistType    : yup.string().required("This field is required"),
     checklistItem    : yup.string().required("This field is required"),
+    checklistName    : yup.string().required("This field is required"),
     checklistSubItem : yup.string().required("This field is required"),
-    sequenceNumber   : yup.string().required("This field is required"),
+    checklistType    : yup.string().required("This field is required"),
     frequency        : yup.string().required("This field is required"),
 });
 
-export const ChecklistSubItemsAddEdit = () => {
+export const ChecklistBuildAddEdit = () => {
     const navigate = useNavigate();
     const {
         handleSubmit,
         control,
         formState: { errors },
     } = useForm({
-        mode     : "onTouched",
-        resolver : yupResolver(schema),
+        mode: "onTouched",
+        resolver: yupResolver(schema),
     });
 
     //
     // Functions
     //
 
-    const addChecklistSubItems = (data) => {
+    const buildChecklist = (data) => {
         console.log(data);
     };
 
@@ -45,7 +50,7 @@ export const ChecklistSubItemsAddEdit = () => {
             <Container fluid className="p-0">
                 <Row>
                     <Col md={6}>
-                        <h1 className="h3 mb-3">Add checklist sub item</h1>
+                        <h1 className="h3 mb-3">Build checklist</h1>
                     </Col>
                     <Col md={6}>
                         <Breadcrumb>
@@ -56,9 +61,9 @@ export const ChecklistSubItemsAddEdit = () => {
                                     )
                                 }
                             >
-                                Checklist sub items
+                                Build checklist
                             </Breadcrumb.Item>
-                            <Breadcrumb.Item active>Add</Breadcrumb.Item>
+                            <Breadcrumb.Item active>Build</Breadcrumb.Item>
                         </Breadcrumb>
                     </Col>
                 </Row>
@@ -66,12 +71,126 @@ export const ChecklistSubItemsAddEdit = () => {
                     <Card.Body>
                         <Form>
                             <Row>
+                                <h6 className="py-2">Checklist information</h6>
                                 <Col md={4}>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Checklist name</Form.Label>
+                                        <Controller
+                                            control={control}
+                                            defaultValue=""
+                                            name="checklistName"
+                                            render={({
+                                                field: {
+                                                    value,
+                                                    onChange,
+                                                    onBlur,
+                                                },
+                                            }) => (
+                                                <Form.Control
+													className={errors.name}
+                                                    onBlur={onBlur}
+                                                    onChange={onChange}
+                                                    type="text"
+                                                    value={value}
+                                                />
+                                            )}
+                                        />
+                                        <ErrorMessage
+                                            errors={errors}
+                                            name="checklistName"
+                                            render={({ message }) => (
+                                                <small className="text-danger">
+                                                    {message}
+                                                </small>
+                                            )}
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col md={4}>
+                                    {" "}
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Frequency</Form.Label>
+                                        <Controller
+                                            control={control}
+                                            defaultValue=""
+                                            name="frequency"
+                                            render={({
+                                                field: {
+                                                    onBlur,
+													onChange,
+                                                    value,
+                                                },
+                                            }) => (
+                                                <Form.Select
+													id="frequency"
+													name="frequency"
+                                                    onChange={onChange}
+                                                    onBlur={onBlur}
+                                                    value={value}
+                                                >
+                                                    <option></option>
+                                                    {FREQUENCY.map(
+                                                        (data, index) => {
+                                                            return (
+                                                                <option
+                                                                    key={index}
+                                                                    value={data}
+                                                                >
+                                                                    {data}
+                                                                </option>
+                                                            );
+                                                        }
+                                                    )}
+                                                </Form.Select>
+                                            )}
+                                        />
+                                        <ErrorMessage
+                                            errors={errors}
+                                            name="frequency"
+                                            render={({ message }) => (
+                                                <small className="text-danger">
+                                                    {message}
+                                                </small>
+                                            )}
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col md={4}>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Active</Form.Label>
+                                        <br />
+                                        <Form.Check
+                                            checked
+                                            className="mb-2"
+                                            id="is_recurring"
+                                            inline
+                                            label="Yes"
+                                            name="is_recurring"
+											onChange={() => {}}
+                                            type="radio"
+                                            value="Yes"
+                                        />
+                                        <Form.Check
+                                            className="mb-2"
+                                            id="is_recurring"
+                                            inline
+                                            label="No"
+                                            name="is_recurring"
+                                            type="radio"
+                                            value="No"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <h6 className="py-2">Checklist blocks</h6>
+                            <Row>
+                                <Col md={4}>
+                                    {" "}
                                     <Form.Group className="mb-3">
                                         <Form.Label>Checklist type</Form.Label>
                                         <Controller
-                                            defaultValue=""
                                             control={control}
+                                            defaultValue=""
                                             name="checklistType"
                                             render={({
                                                 field: {
@@ -82,7 +201,7 @@ export const ChecklistSubItemsAddEdit = () => {
                                             }) => (
                                                 <Form.Select
 													id="checklistType"
-                                                    name="checklistType"
+													name="checklistType"
                                                     onBlur={onBlur}
                                                     onChange={onChange}
                                                     value={value}
@@ -132,8 +251,8 @@ export const ChecklistSubItemsAddEdit = () => {
                                                 <Form.Select
 													id="checklistItem"
                                                     name="checklistItem"
-                                                    onBlur={onBlur}
                                                     onChange={onChange}
+                                                    onBlur={onBlur}
                                                     value={value}
                                                 >
                                                     <option></option>
@@ -164,6 +283,7 @@ export const ChecklistSubItemsAddEdit = () => {
                                     </Form.Group>
                                 </Col>
                                 <Col md={4}>
+                                    {" "}
                                     <Form.Group className="mb-3">
                                         <Form.Label>
                                             Checklist sub item
@@ -174,129 +294,20 @@ export const ChecklistSubItemsAddEdit = () => {
                                             name="checklistSubItem"
                                             render={({
                                                 field: {
-                                                    onBlur,
-													onChange,
-                                                    value,
-                                                },
-                                            }) => (
-                                                <Form.Control
-													className={errors.name}
-                                                    onBlur={onBlur}
-                                                    onChange={onChange}
-                                                    type="text"
-                                                    value={value}
-                                                />
-                                            )}
-                                        />
-                                        <ErrorMessage
-                                            errors={errors}
-                                            name="checklistSubItem"
-                                            render={({ message }) => (
-                                                <small className="text-danger">
-                                                    {message}
-                                                </small>
-                                            )}
-                                        />
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col md={4}>
-                                    {" "}
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>
-                                            Sub item header *
-                                        </Form.Label>
-                                        <Controller
-                                            defaultValue=""
-                                            control={control}
-                                            name="subItemHeader"
-                                            render={({
-                                                field: {
                                                     value,
                                                     onChange,
                                                     onBlur,
-                                                },
-                                            }) => (
-                                                <Form.Control
-													className={errors.name}
-													onBlur={onBlur}
-													onChange={onChange}
-													type="text"
-													value={value}
-                                                />
-                                            )}
-                                        />
-                                        <ErrorMessage
-                                            errors={errors}
-                                            name="subItemHeader"
-                                            render={({ message }) => (
-                                                <small className="text-danger">
-                                                    {message}
-                                                </small>
-                                            )}
-                                        />
-                                    </Form.Group>
-                                </Col>
-                                <Col md={4}>
-                                    {" "}
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Sequence number</Form.Label>
-                                        <Controller
-                                            control={control}
-                                            defaultValue=""
-                                            name="sequenceNumber"
-                                            render={({
-                                                field: {
-                                                    value,
-                                                    onChange,
-                                                    onBlur,
-                                                },
-                                            }) => (
-                                                <Form.Control
-													className={errors.name}
-                                                    onChange={onChange}
-                                                    onBlur={onBlur}
-                                                    type="text"
-                                                    value={value}
-                                                />
-                                            )}
-                                        />
-                                        <ErrorMessage
-                                            errors={errors}
-                                            name="sequenceNumber"
-                                            render={({ message }) => (
-                                                <small className="text-danger">
-                                                    {message}
-                                                </small>
-                                            )}
-                                        />
-                                    </Form.Group>
-                                </Col>
-                                <Col md={4}>
-                                    {" "}
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Frequency</Form.Label>
-                                        <Controller
-                                            control={control}
-                                            defaultValue=""
-                                            name="frequency"
-                                            render={({
-                                                field: {
-													onBlur,
-                                                    onChange,
-                                                    value,
                                                 },
                                             }) => (
                                                 <Form.Select
-													id="frequency"
-                                                    name="frequency"
+													id="checklistSubItem"
+                                                    name="checklistSubItem"
                                                     onBlur={onBlur}
                                                     onChange={onChange}
                                                     value={value}
                                                 >
                                                     <option></option>
-                                                    {FREQUENCY.map(
+                                                    {MOCK_CHECKLIST_SUB_ITEMS.map(
                                                         (data, index) => {
                                                             return (
                                                                 <option
@@ -313,7 +324,7 @@ export const ChecklistSubItemsAddEdit = () => {
                                         />
                                         <ErrorMessage
                                             errors={errors}
-                                            name="frequency"
+                                            name="checklistSubItem"
                                             render={({ message }) => (
                                                 <small className="text-danger">
                                                     {message}
@@ -323,37 +334,40 @@ export const ChecklistSubItemsAddEdit = () => {
                                     </Form.Group>
                                 </Col>
                             </Row>
-                            <Row>
-                                <Col md={12}>
-                                    <small>* optional fields</small>
-                                </Col>
-                            </Row>
                             <Row className="pt-4">
+                                <Col className="text-start">
+                                    <Button
+                                        variant="success"
+                                        onClick={handleSubmit(buildChecklist)}
+                                    >
+                                        Preview checklist
+                                    </Button>
+                                </Col>
                                 <Col className="text-end">
                                     <Button
                                         className="me-2"
                                         variant="secondary"
                                         onClick={() =>
                                             navigate(
-                                                "/preventive-maintenance/checklist-sub-items"
+                                                "/preventive-maintenance/checklist-build"
                                             )
                                         }
                                     >
                                         Cancel
                                     </Button>
                                     <Button
+                                        className="me-2"
                                         variant="primary"
-                                        onClick={handleSubmit(
-                                            addChecklistSubItems
-                                        )}
+                                        onClick={handleSubmit(buildChecklist)}
                                     >
-                                        Submit
+                                        Save
                                     </Button>
                                 </Col>
                             </Row>
                         </Form>
                     </Card.Body>
                 </Card>
+                <ChecklistBuildPreview />
             </Container>
         </React.Fragment>
     );

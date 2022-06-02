@@ -47,7 +47,7 @@ export const TablePagination = ({
     //
 
     const gotoPage = (page) => {
-        parentApi({page});
+        parentApi({ page });
     };
 
     //
