@@ -1,37 +1,99 @@
-import React from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import { Controller, useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import { Helmet } from "react-helmet-async";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
+import * as preventiveMaintenanceApi from "@api/preventiveMaintenanceApi";
+import NotyfContext from "@contexts/NotyfContext";
+
 const schema = yup.object().shape({
-    name: yup.string().required("This field is required"),
-    sequenceNumber: yup.string().required("This field is required"),
+    name        : yup.string().required("This field is required"),
+    sequence_no : yup.string().required("This field is required"),
 });
 
 export const ChecklistTypeAddEdit = () => {
-    const navigate = useNavigate();
+    const navigate   = useNavigate();
+    const notyf      = useContext(NotyfContext);
+    const { action } = useParams();
+
     const {
         handleSubmit,
         control,
+        reset,
         formState: { errors },
     } = useForm({
-        mode: "onTouched",
-        resolver: yupResolver(schema),
+        mode     : "onTouched",
+        resolver : yupResolver(schema),
     });
 
     //
     // Functions
     //
 
-    const addChecklistType = (data) => {
-        console.log(data);
+    const addChecklistType = async (data) => {
+        try {
+            const response = await preventiveMaintenanceApi.createChecklistType(
+                data
+            );
+            if (response.data.status === "SUCCESS") {
+                notyf.open({
+                    type    : "success",
+                    message : response.data.message,
+                });
+                navigate("/preventive-maintenance/checklist-type");
+            }
+        } catch (error) {
+            notyf.open({
+                type    : "danger",
+                message : "Something went wrong with the server",
+            });
+        }
     };
+
+    const updateChecklistType = async (data) => {
+        try {
+            const response = await preventiveMaintenanceApi.updateChecklistType(
+                action,
+                data
+            );
+            if (response.data.status === "SUCCESS") {
+                notyf.open({
+                    type: "success",
+                    message: response.data.message,
+                });
+				navigate("/preventive-maintenance/checklist-type");
+            }
+        } catch (error) {
+            notyf.open({
+                type: "danger",
+                message: "Something went wrong with the server",
+            });
+        }
+    };
+
+    //
+    // UseEffects
+    //
+
+    const getChecklistType = useCallback(async () => {
+        const response = await preventiveMaintenanceApi.getChecklistType(
+            action
+        );
+        reset({
+            name: response.data.data.name,
+            sequence_no: response.data.data.sequence_no,
+        });
+    }, [action]);
+
+    useEffect(() => {
+        if (action !== "add") getChecklistType();
+    }, [getChecklistType, action]);
 
     return (
         <React.Fragment>
@@ -100,7 +162,7 @@ export const ChecklistTypeAddEdit = () => {
                                         <Form.Label>Sequence number</Form.Label>
                                         <Controller
                                             control={control}
-                                            name="sequenceNumber"
+                                            name="sequence_no"
                                             defaultValue=""
                                             render={({
                                                 field: {
@@ -120,7 +182,7 @@ export const ChecklistTypeAddEdit = () => {
                                         />
                                         <ErrorMessage
                                             errors={errors}
-                                            name="sequenceNumber"
+                                            name="sequence_no"
                                             render={({ message }) => (
                                                 <small className="text-danger">
                                                     {message}
@@ -145,7 +207,11 @@ export const ChecklistTypeAddEdit = () => {
                                     </Button>
                                     <Button
                                         variant="primary"
-                                        onClick={handleSubmit(addChecklistType)}
+                                        onClick={handleSubmit(
+                                            action === "add"
+                                                ? addChecklistType
+                                                : updateChecklistType
+                                        )}
                                     >
                                         Submit
                                     </Button>
