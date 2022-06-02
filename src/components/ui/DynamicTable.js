@@ -1,11 +1,7 @@
-import { Col, Form, OverlayTrigger, Pagination, Row, Table, Tooltip } from "react-bootstrap";
-import { Eye } from "react-feather";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Col, Form, Pagination, Row, Table } from "react-bootstrap";
 import { useTable, usePagination } from "react-table";
 
-const FaultTable = (props) => {
-    const navigate = useNavigate();
-    const location = useLocation();
+const DynamicTable = (props) => {
     const {
         getTableProps,
         getTableBodyProps,
@@ -45,48 +41,24 @@ const FaultTable = (props) => {
                     ))}
                 </thead>
                 <tbody {...getTableBodyProps()}>
-                    {props.data && props.data.length < 1 &&
-                        <tr className='text-center'>
-                            <td colSpan={4}>No records found</td>
-                        </tr>
-                    }
                     {page.map((row, i) => {
                         prepareRow(row);
                         return (
                             <tr {...row.getRowProps()}>
                                 {row.cells.map((cell) => {
-
-                                    if (cell.column.id === 'sequence_no') {
-                                        return <td key={cell.column.id}>{cell.row.index + 1}</td>
-                                    }
-
-                                    if (cell.column.id === 'actions') {
-                                        return (
-                                            <td className="table-action" key={cell.column.id} >
-                                                <OverlayTrigger
-                                                    placement="right"
-                                                    overlay={
-                                                        <Tooltip id="view">
-                                                            View fault
-                                                        </Tooltip>
-                                                    }
-                                                >
-                                                    <Eye
-                                                        className="align-middle me-1"
-                                                        size={18}
-                                                        onClick={() => navigate(location.pathname + '/' + cell.row.original.id)}
-                                                    />
-                                                </OverlayTrigger>
-                                            </td>
-                                        )
-                                    }
-                                    return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                    return <td className={cell.column.id === 'actions' ? 'table-action' : ''  } {...cell.getCellProps()}>{cell.render("Cell")}</td>
                                 })}
                             </tr>
                         );
                     })}
                 </tbody>
+               
+                    
+               
             </Table>
+            {props.data && props.data.length < 1 &&
+                <p className="text-center">No records found</p>
+            }
             <Row>
                 <Col md="6">
                     <span className="mx-2">
@@ -147,4 +119,4 @@ const FaultTable = (props) => {
         </>
     )
 }
-export default FaultTable;
+export default DynamicTable;

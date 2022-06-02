@@ -3,7 +3,9 @@ import api from "../utils/api";
 /**
  * @returns sectors
  */
-export const getSectors = () => api.get("/sector");
+export const getSectors = (filter) => {
+  return api.get("/sector", { params: filter ?? "" });
+};
 
 export const getSector = (data) => {
   return api.get("/sector/" + data);

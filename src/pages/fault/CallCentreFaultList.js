@@ -1,15 +1,25 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import { Zap } from "react-feather";
-import { useNavigate, useLocation } from "react-router-dom";
-import FaultTable from "./components/FaultTable";
-import * as faultApi from "../../api/faultApi";
+import { Edit2, Zap } from "react-feather";
+import { useNavigate } from "react-router-dom";
+import DynamicTable from "@components/ui/DynamicTable";
+import * as faultApi from "@api/faultApi";
 
-const tableColumns = [
+const CallCentreFaultList = () => {
+    const navigate = useNavigate();
+    const [filter, setFilter] = useState({
+        search: {
+            status: 'FOR_RESPONSE'
+        }
+    });
+    const [tableData, setTableData] = useState([])
+
+    const tableColumns = [
         {
             Header: "Actions",
             accessor: "actions",
+            
         },
         {
             Header: "Site",
@@ -21,7 +31,7 @@ const tableColumns = [
         },
         {
             Header: "Complaint date",
-            accessor: "complaint_at",
+            accessor: "complaint_date",
         },
         {
             Header: "Nature of fault",
@@ -31,18 +41,33 @@ const tableColumns = [
             Header: "Job type",
             accessor: "job_type",
         },
-]
+        
+    ]
 
-const FaultList = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const [filter, setFilter] = useState('');
-    const [faults, setFaults] = useState([]);
+    const getFaults = useCallback(async () => {
+        const response = await faultApi.getFaults(filter);
+        const faults = response.data.data
+        const data = [];
+        faults.forEach((fault) => {
+            data.push({
+                actions: (
+                    <Edit2
+                        className="align-middle me-1"
+                        size={16}
+                        onClick={() => navigate('/faults/callcentre/' + fault.id)}
+                    />
+                ),
+                id: fault.id,
+                site: fault.site,
+                complainant: fault.complainant,
+                complaint_date: fault.complaint_at,
+                nature_of_fault: fault.nature_of_fault,
+                job_type : fault.job_type
 
-    const getFaults = useCallback(async() => {
-        const response = await faultApi.getFaults();
-        setFaults(response.data.data)
-    }, [])
+            })
+        })
+        setTableData(data)
+    }, [navigate, filter])
 
     useEffect(() => {
        getFaults();
@@ -50,7 +75,7 @@ const FaultList = () => {
 
     return (
         <React.Fragment>
-            <Helmet title="Faults" />
+            <Helmet title="Fault Registration" />
             <Container fluid className="p-0">
                 <h1 className="h3 mb-3">Faults</h1>
                 <Card>
@@ -58,10 +83,8 @@ const FaultList = () => {
                         <Row>
                             <Col md={3}>
                                 <Form.Control
-                                    value={filter || ""}
-                                    onChange={(e) => {
-                                        setFilter(e.target.value || undefined);
-                                    }}
+                                    value=""
+                                    onChange={() => {}}
                                     placeholder="Search keyword"
                                     className="d-inline-block"
                                 />
@@ -70,7 +93,7 @@ const FaultList = () => {
                                 <Button
                                     variant="primary"
                                     className="me-1 mb-1"
-                                    onClick={() => navigate(location.pathname + '/register')}
+                                    onClick={() => navigate('/faults/callcentre/register')}
                                 >
                                     <Zap className="align-middle me-1" size={16} />
                                     Register a fault
@@ -79,7 +102,7 @@ const FaultList = () => {
                         </Row>
                     </Card.Header>
                     <Card.Body>
-                        <FaultTable data={faults} columns={tableColumns} />
+                        <DynamicTable data={tableData} columns={tableColumns} />
                     </Card.Body>
                 </Card>
             </Container>
@@ -87,4 +110,4 @@ const FaultList = () => {
     )
 }
 
-export default FaultList;
+export default CallCentreFaultList;

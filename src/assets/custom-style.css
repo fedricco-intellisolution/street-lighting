@@ -32,3 +32,36 @@ img {
     text-decoration: none;
     background-color: #f4f7f9;
 }
+
+.fault-image-holder {
+    margin: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 1px 1px 5px 0 #a2958a;
+    padding: 6px;
+    float: left;
+    display: inline-block;
+    width: 140px;
+    overflow: hidden;
+    position: relative;
+}
+
+.fault-image-holder img {
+    max-width: none;
+    width: 100%;
+    height: -webkit-fill-available;
+}
+
+.fault-image-holder small {
+    font-size: 70%;
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.fault-image-holder .close {
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-weight: 900;
+}

@@ -1,15 +1,45 @@
-import axios from "axios";
+import axios from 'axios';
+//import store from './store';
 
-const axiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_DEV_API,
-});
+const requestHandler = request => {
+    // //const state = store.getState();
 
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  (error) =>
-    Promise.reject(
-      (error.response && error.response.data) || "Something went wrong"
-    )
-);
+    // const AUTH_TOKEN = state.auth.token
 
-export default axiosInstance;
+    // if( AUTH_TOKEN != null) {
+    //     request.headers.Authorization = 'Bearer '+AUTH_TOKEN;  
+    // }
+    
+    // return request;
+};
+
+const responseHandler = response => {
+    return response;
+};
+
+const errorHandler = (error) => {
+    return Promise.reject(error);
+};
+
+
+const api = () => {
+
+    const instance = axios.create({
+      baseURL: process.env.REACT_APP_DEV_API,
+      
+    });
+
+    // instance.interceptors.request.use(
+    //     (request) => requestHandler(request),
+    //     (error) => errorHandler(error)
+    // );
+
+    instance.interceptors.response.use(
+        (response) => responseHandler(response),
+        (error) => errorHandler(error)
+     );
+
+    return instance;
+}
+
+export default api();

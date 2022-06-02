@@ -1,15 +1,15 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Button, Col, Form, Row, } from "react-bootstrap";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ErrorMessage } from '@hookform/error-message';
 import * as yup from "yup";
-import { useNavigate, useParams } from "react-router-dom";
-import * as faultApi from "../../../api/faultApi";
-import NotyfContext from "../../../contexts/NotyfContext";
-import { useLocation } from "react-router-dom";
+import * as propertyManagementApi from "@api/propertyManagementApi";
+import * as lookUpApi from "@api/lookUpApi";
+import Select from "react-select";
+
 const schema = yup.object().shape({
-    building_id: yup
+    site_id: yup
         .string()
         .required("This field is required"),
     complainant: yup.object().shape({
@@ -32,76 +32,108 @@ const schema = yup.object().shape({
     technician_id: yup
         .string()
         .required("This field is required"),
-    response_time: yup
-        .string()
-        .required("This field is required"),
     
 });
 
 const CallCentreForm = (props) => {
-    const navigate = useNavigate();
-    const notyf = useContext(NotyfContext)
-    const { id } = useParams();
-    const location = useLocation();
-    const register_page = location.pathname === '/faults/register' ? true : false;
-    const [current_time, setCurrentTime] = useState(new Date().toLocaleString());
     const {
         handleSubmit,
         control,
         reset,
+        setValue,
+        watch,
         formState: { errors },
     } = useForm({
         mode: "onTouched",
         resolver: yupResolver(schema),
     });
     
-    useEffect(() => {
-        setInterval(() => {
-            setCurrentTime(new Date().toLocaleString())
-        }, 1000)
-    })
-
-    const registerFault = async (data) => {
-        data.status = 'FOR_RESPONSE'
-        try {
-            const response = await faultApi.registerFault(data)
-            if (response.data.status === 'SUCCESS') {
-                notyf.open({
-                    type: 'success',
-                    message: response.data.message,
-                })
-                navigate('/faults')
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }    
-
-    const updateFault = async (data) => {
-        try {
-            const response = await faultApi.updateFaultRegistration(id, data)
-            if (response.data.status === 'SUCCESS') {
-                notyf.open({
-                    type: 'success',
-                    message: response.data.message,
-                })
-                navigate('/faults')
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    } 
+    const [sites, setSites] = useState([])
+    const [job_types, setJobTypes] = useState([])
+    const [call_types, setCallTypes] = useState([])
+    const [call_type_options, setCallTypeOptions] = useState([])
+    const [technicians, setTechnicians] = useState([])
     
-    const getFault = useCallback(async () => {
-        const response = await faultApi.getFault(id);
-        reset(response.data.data)
-    }, [id, reset])
+    const getSites = useCallback(async () => {
+        const response = await propertyManagementApi.getSites()
+        const data = response.data.data
+        const temp = []
+        data.forEach(item => {
+            temp.push({
+                label: item.name,
+                value: item.id
+            })
+        })
+        setSites(temp)
+    }, [])
+    
+    const getJobTypes = async () => {
+        const response = await lookUpApi.getLookUp({category:'JOB_TYPE'})
+        const data = response.data.data
+        const options = []
+        data.forEach(item => {
+            options.push({
+                label: item.name,
+                value: item.code
+            })
+        })
+        setJobTypes(options)
+    }
+
+    const getCallTypes = async () => {
+        const response = await lookUpApi.getLookUp({category:'CALL_TYPE'})
+        const data = response.data.data
+        setCallTypes(data)
+        const options = []
+        data.forEach(item => {
+            options.push({
+                label: item.name,
+                value: item.code
+            })
+        })
+        setCallTypeOptions(options)
+    }
 
     useEffect(() => {
-        console.log(register_page)
-        if (!register_page) getFault()
-    }, [getFault, register_page])
+        const selected_call_type = watch('call_type', 'value')
+        const result = call_types.find(item => item.code === selected_call_type)
+        setValue('response_time', result?.description)
+    },[watch('call_type'), setValue])
 
+    const getTechnicians = () => {
+        const data = [
+            {
+                label: 'Teck Ken Wong',
+                value: '15ad6e1b-df43-4911-bd50-350f83c23d7c'
+            },
+            {
+                label: 'Moorthy Samikannu',
+                value: '56a63643-1d10-4a71-a5f8-e04263524a31'
+            }
+        ]
+        setTechnicians(data)
+    }
+
+    useEffect(() => {
+        getSites()
+        getJobTypes()
+        getCallTypes()
+        getTechnicians()
+    }, [getSites])
+
+    useEffect(() => {
+        if (props.mode === 'register') {
+            setInterval(() => {
+                setValue('complaint_at', new Date().toLocaleString())
+            }, 1000)
+        }
+    }, [props.mode, setValue])
+    
+    useEffect(() => {   
+        reset(props.fault)
+    }, [reset, props.fault])
+
+    
     return (
 
         <Form>
@@ -111,25 +143,26 @@ const CallCentreForm = (props) => {
                         <Form.Label>Site</Form.Label>
                         <Controller
                             control={control}
-                            name="building_id"
+                            name="site_id"
                             defaultValue=""
                             render={({ field: { value, onChange, onBlur } }) => (
-                                <Form.Select
-                                    type="text"
-                                    value={value}
-                                    onChange={onChange}
+                                <Select
+                                    placeholder="Choose an option"
+                                    classNamePrefix="react-select"
+                                    options={sites}
                                     onBlur={onBlur}
-                                    className={(errors.building_id && 'is-invalid')}
-                                    disabled={!props.editable}
-                                >
-                                    <option value="">Choose an option</option>
-                                    <option value="96553078-cd16-4b35-a1b6-093b8a1b7649">Site 1</option>
-                                </Form.Select>
+                                    className={
+                                        "react-select-container" + errors.site_id && "is-invalid"
+                                    }
+                                    onChange={(val) => onChange(val.value)}
+                                    value={sites.filter((c) => value.includes(c.value))}
+                                    
+                                />
                             )}
                         />
                         <ErrorMessage
                             errors={errors}
-                            name="building_id"
+                            name="site_id"
                             render={({ message }) => <small className="text-danger">{message}</small>}
                         />
                     </Form.Group>
@@ -139,23 +172,17 @@ const CallCentreForm = (props) => {
                         <Form.Label>Complaint date</Form.Label>
                         <Controller
                             control={control}
-                            name="complaint_date"
-                            defaultValue={current_time}
+                            name="complaint_at"
+                            defaultValue={new Date().toLocaleString()}
                             render={({ field: { value, onChange, onBlur } }) => (
                                 <Form.Control
                                     type="text"
-                                    value={current_time}
+                                    value={value}
                                     onChange={onChange}
                                     onBlur={onBlur}
-                                    className={(errors.complaint_date && 'is-invalid')}
                                     disabled
                                 />
                             )}
-                        />
-                        <ErrorMessage
-                            errors={errors}
-                            name="complaint_date"
-                            render={({ message }) => <small className="text-danger">{message}</small>}
                         />
                     </Form.Group>
                 </Col>
@@ -190,7 +217,7 @@ const CallCentreForm = (props) => {
                 </Col>
                 <Col md={3}>
                     <Form.Group className="mb-3">
-                        <Form.Label>Complainant contact no.</Form.Label>
+                        <Form.Label>Contact no.</Form.Label>
                         <Controller
                             control={control}
                             name="complainant.contact_no"
@@ -251,19 +278,17 @@ const CallCentreForm = (props) => {
                             name="job_type"
                             defaultValue=""
                             render={({ field: { value, onChange, onBlur } }) => (
-                                <Form.Select
-                                    type="text"
-                                    value={value}
-                                    onChange={onChange}
+                                <Select
+                                    placeholder="Choose an option"
+                                    classNamePrefix="react-select"
+                                    options={job_types}
                                     onBlur={onBlur}
-                                    className={(errors.job_type && 'is-invalid')}
-                                    disabled={!props.editable}
-                                >
-                                    <option value="">Choose an option</option>
-                                    <option value="ELECTRICAL">Electrical</option>
-                                    <option value="2">Job type 2</option>
-                                    <option value="3">Job type 3</option>
-                                </Form.Select>
+                                    className={
+                                        "react-select-container" + errors.job_type && "is-invalid"
+                                    }
+                                    onChange={(val) => onChange(val.value)}
+                                    value={job_types.filter((c) => value.includes(c.value))}
+                                />
                             )}
                         />
                         <ErrorMessage
@@ -281,17 +306,17 @@ const CallCentreForm = (props) => {
                             name="call_type"
                             defaultValue=""
                             render={({ field: { value, onChange, onBlur } }) => (
-                                <Form.Select
-                                    type="text"
-                                    value={value}
-                                    onChange={onChange}
+                                <Select
+                                    placeholder="Choose an option"
+                                    classNamePrefix="react-select"
+                                    options={call_type_options}
                                     onBlur={onBlur}
-                                    className={(errors.call_type && 'is-invalid')}
-                                    disabled={!props.editable}
-                                >
-                                    <option value="">Choose an option</option>
-                                    <option value="NORMAL">Normal</option>
-                                </Form.Select>
+                                    className={
+                                        "react-select-container" + errors.call_type && "is-invalid"
+                                    }
+                                    onChange={(val) => onChange(val.value)}
+                                    value={call_type_options.filter((c) => value.includes(c.value))}
+                                />
                             )}
                         />
                         <ErrorMessage
@@ -311,17 +336,17 @@ const CallCentreForm = (props) => {
                             name="technician_id"
                             defaultValue=""
                             render={({ field: { value, onChange, onBlur } }) => (
-                                <Form.Select
-                                    type="text"
-                                    value={value}
-                                    onChange={onChange}
+                                <Select
+                                    placeholder="Choose an option"
+                                    classNamePrefix="react-select"
+                                    options={technicians}
                                     onBlur={onBlur}
-                                    className={(errors.technician_id && 'is-invalid')}
-                                    disabled={!props.editable}
-                                >
-                                    <option value="">Choose an option</option>
-                                    <option value="96553078-cd16-4b35-a1b6-093b8a1b7649">Technician 1</option>
-                                </Form.Select>
+                                    className={
+                                        "react-select-container" + errors.technician_id && "is-invalid"
+                                    }
+                                    onChange={(val) => onChange(val.value)}
+                                    value={technicians.filter((c) => value.includes(c.value))}
+                                />
                             )}
                         />
                         <ErrorMessage
@@ -338,26 +363,13 @@ const CallCentreForm = (props) => {
                             control={control}
                             name="response_time"
                             defaultValue=""
-                            render={({ field: { value, onChange, onBlur } }) => (
-                                <Form.Select
+                            render={({ field: { value} }) => (
+                                <Form.Control
                                     type="text"
                                     value={value}
-                                    onChange={onChange}
-                                    onBlur={onBlur}
-                                    className={(errors.response_time && 'is-invalid')}
-                                    disabled={!props.editable}
-                                >
-                                    <option value={null}>Choose an option</option>
-                                    <option value="1">Response time 1</option>
-                                    <option value="2">Response time 2</option>
-                                    <option value="3">Response time 3</option>
-                                </Form.Select>
+                                    disabled
+                                />
                             )}
-                        />
-                        <ErrorMessage
-                            errors={errors}
-                            name="response_time"
-                            render={({ message }) => <small className="text-danger">{message}</small>}
                         />
                     </Form.Group>
                 </Col>
@@ -366,16 +378,13 @@ const CallCentreForm = (props) => {
             {props.editable && 
                 <Row className="pt-4">
                     <Col className="text-end">
-                        <Button variant="secondary" className="me-2" onClick={() => navigate('/faults')}>
+                        <Button variant="secondary" className="me-2" onClick={props.onCancel}>
                             Cancel
                         </Button>
                         <Button
                             variant="primary"
-                            onClick={
-                                register_page
-                                ? handleSubmit(registerFault)
-                                : handleSubmit(updateFault)
-                            }>
+                            onClick={handleSubmit(props.onSubmit)}
+                        >
                             Submit
                         </Button>
                     </Col>

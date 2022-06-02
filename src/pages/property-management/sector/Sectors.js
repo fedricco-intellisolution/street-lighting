@@ -5,6 +5,7 @@ import { Map } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
 import * as propertyManagementApi from "@api/propertyManagementApi";
 import SectorTable from "./SectorTable";
+import debounce from "debounce";
 
 const Sectors = () => {
   const navigate = useNavigate();
@@ -32,9 +33,9 @@ const Sectors = () => {
 
   //call get sectors api
   const getSectorsApi = useCallback(async () => {
-    const response = await propertyManagementApi.getSectors();
+    const response = await propertyManagementApi.getSectors(filter);
     setSectors(response.data.data);
-  }, []);
+  }, [filter]);
 
   useEffect(() => {
     getSectorsApi();
@@ -50,10 +51,14 @@ const Sectors = () => {
             <Row>
               <Col md={3}>
                 <Form.Control
-                  value={filter || ""}
-                  onChange={(e) => {
-                    setFilter(e.target.value || undefined);
-                  }}
+                  onChange={debounce((e) => {
+                    const searchValue = {
+                      search: {
+                        keyword: e.target.value || undefined,
+                      },
+                    };
+                    setFilter(searchValue);
+                  }, 1000)}
                   placeholder="Search keyword"
                   className="d-inline-block"
                 />

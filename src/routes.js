@@ -34,9 +34,27 @@ import Areas from "@areas/Areas";
 import AddEditArea from "@areas/AddEditArea";
 
 //Fault
-import RegisterFault from "./pages/fault/RegisterFault";
-import FaultList from "./pages/fault/FaultList";
-import ViewFault from "./pages/fault/ViewFault";
+import CallCentreFaultList from "./pages/fault/CallCentreFaultList";
+import CallCentreFaultView from "./pages/fault/CallCentreFaultView";
+
+import FaultResponseList from "./pages/fault/FaultResponseList";
+import FaultResponseView from "./pages/fault/FaultResponseView";
+
+import FaultVerificationTOList from "./pages/fault/FaultVerificationTOList";
+import FaultVerificationTOView from "./pages/fault/FaultVerificationTOView";
+
+import FaultVerificationNEAList from "./pages/fault/FaultVerificationNEAList";
+import FaultVerificationNEAView from "./pages/fault/FaultVerificationNEAView";
+
+// Preventive maintenance
+import { ChecklistBuild } from "@preventive/checklist-build/ChecklistBuild";
+import { ChecklistType } from "@preventive/checklist-type/ChecklistType";
+import { ChecklistItems } from "@preventive/checklist-items/ChecklistItems";
+import { ChecklistSubItems } from "@preventive/checklist-sub-items/ChecklistSubItems";
+import { ChecklistTypeAddEdit } from "@preventive/checklist-type/ChecklistTypeAddEdit";
+import { ChecklistItemsAddEdit } from "@preventive/checklist-items/ChecklistItemsAddEdit";
+import { ChecklistSubItemsAddEdit } from "@preventive/checklist-sub-items/ChecklistSubItemsAddEdit";
+import { ChecklistBuildAddEdit } from "pages/preventive-maintenance/checklist-build/ChecklistBuildAddEdit";
 
 const routes = [
   {
@@ -144,16 +162,74 @@ const routes = [
     element: <PrivateLayout />,
     children: [
       {
-        path: "",
-        element: <FaultList />,
+        path: "callcentre",
+        element: <CallCentreFaultList />
       },
       {
-        path: "register",
-        element: <RegisterFault />,
+        path: "callcentre/:id",
+        element: <CallCentreFaultView />
       },
       {
-        path: ":id",
-        element: <ViewFault />,
+        path: "response",
+        element: <FaultResponseList />
+      },
+      {
+        path: "response/:id",
+        element: <FaultResponseView />
+      },
+      {
+        path: "verification-to",
+        element: <FaultVerificationTOList />
+      },
+      {
+        path: "verification-to/:id",
+        element: <FaultVerificationTOView />
+      },
+       {
+        path: "verification-nea",
+        element: <FaultVerificationNEAList />
+      },
+      {
+        path: "verification-nea/:id",
+        element: <FaultVerificationNEAView />
+      },
+    ],
+  },
+  {
+    path: "preventive-maintenance",
+    element: <PrivateLayout />,
+    children: [
+      {
+        path: "checklist-type",
+        element: <ChecklistType />,
+      },
+	  {
+        path: "checklist-type/:action",
+        element: <ChecklistTypeAddEdit />,
+      },
+      {
+        path: "checklist-items",
+        element: <ChecklistItems />,
+      },
+	  {
+        path: "checklist-items/:action",
+        element: <ChecklistItemsAddEdit />,
+      },
+	  {
+        path: "checklist-sub-items",
+        element: <ChecklistSubItems />,
+      },
+	  {
+        path: "checklist-sub-items/:action",
+        element: <ChecklistSubItemsAddEdit />,
+      },
+	  {
+        path: "checklist-build",
+        element: <ChecklistBuild />,
+      },
+	  {
+        path: "checklist-build/:action",
+        element: <ChecklistBuildAddEdit />,
       },
     ],
   },

@@ -11,7 +11,9 @@ const aliases = (prefix = `src`) => ({
   "@sites": `${prefix}/pages/property-management/site`,
   "@levels": `${prefix}/pages/property-management/level`,
   "@areas": `${prefix}/pages/property-management/area`,
+  "@preventive": `${prefix}/pages/preventive-maintenance`,
   "@api": `${prefix}/api`,
+  "@contexts": `${prefix}/contexts`,
 });
 
 module.exports = aliases;
