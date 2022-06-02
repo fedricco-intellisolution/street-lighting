@@ -50,3 +50,20 @@ export const createLevel = (data) => {
 export const updateLevel = (id, data) => {
   return api.put("/level/" + id, data);
 };
+
+/**
+ * @return areas
+ */
+export const getAreas = () => api.get("/area");
+
+export const createArea = (data) => {
+  return api.post("/area", data);
+};
+
+export const getArea = (id) => {
+  return api.get("/area/" + id);
+};
+
+export const updateArea = (id, data) => {
+  return api.put("/area/" + id, data);
+};

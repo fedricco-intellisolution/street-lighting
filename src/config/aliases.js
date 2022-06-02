@@ -10,6 +10,7 @@ const aliases = (prefix = `src`) => ({
   "@sector": `${prefix}/pages/property-management/sector`,
   "@sites": `${prefix}/pages/property-management/site`,
   "@levels": `${prefix}/pages/property-management/level`,
+  "@areas": `${prefix}/pages/property-management/area`,
   "@api": `${prefix}/api`,
 });
 
