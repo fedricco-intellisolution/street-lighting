@@ -13,13 +13,13 @@ import * as preventiveMaintenanceApi from "@api/preventiveMaintenanceApi";
 import NotyfContext from "@contexts/NotyfContext";
 
 const schema = yup.object().shape({
-    name        : yup.string().required("This field is required"),
-    sequence_no : yup.string().required("This field is required"),
+    name: yup.string().required("This field is required"),
+    sequence_no: yup.string().required("This field is required"),
 });
 
 export const ChecklistTypeAddEdit = () => {
-    const navigate   = useNavigate();
-    const notyf      = useContext(NotyfContext);
+    const navigate = useNavigate();
+    const notyf = useContext(NotyfContext);
     const { action } = useParams();
 
     const {
@@ -28,8 +28,8 @@ export const ChecklistTypeAddEdit = () => {
         reset,
         formState: { errors },
     } = useForm({
-        mode     : "onTouched",
-        resolver : yupResolver(schema),
+        mode: "onTouched",
+        resolver: yupResolver(schema),
     });
 
     //
@@ -43,15 +43,15 @@ export const ChecklistTypeAddEdit = () => {
             );
             if (response.data.status === "SUCCESS") {
                 notyf.open({
-                    type    : "success",
-                    message : response.data.message,
+                    type: "success",
+                    message: response.data.message,
                 });
                 navigate("/preventive-maintenance/checklist-type");
             }
         } catch (error) {
             notyf.open({
-                type    : "danger",
-                message : "Something went wrong with the server",
+                type: "danger",
+                message: "Something went wrong with the server",
             });
         }
     };
@@ -67,7 +67,7 @@ export const ChecklistTypeAddEdit = () => {
                     type: "success",
                     message: response.data.message,
                 });
-				navigate("/preventive-maintenance/checklist-type");
+                navigate("/preventive-maintenance/checklist-type");
             }
         } catch (error) {
             notyf.open({
@@ -89,7 +89,7 @@ export const ChecklistTypeAddEdit = () => {
             name: response.data.data.name,
             sequence_no: response.data.data.sequence_no,
         });
-    }, [action]);
+    }, [action, reset]);
 
     useEffect(() => {
         if (action !== "add") getChecklistType();
@@ -172,7 +172,7 @@ export const ChecklistTypeAddEdit = () => {
                                                 },
                                             }) => (
                                                 <Form.Control
-                                                    type="text"
+                                                    type="number"
                                                     value={value}
                                                     onChange={onChange}
                                                     onBlur={onBlur}

@@ -1,42 +1,150 @@
-import React from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import { Controller, useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import { Helmet } from "react-helmet-async";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare, faWindowClose } from "@fortawesome/free-solid-svg-icons";
 
-import { MOCK_CHECKLIST_TYPE } from "../config/mockData";
+import * as preventiveMaintenanceApi from "@api/preventiveMaintenanceApi";
+import NotyfContext from "contexts/NotyfContext";
 
 const schema = yup.object().shape({
-    checklistType     : yup.string().required("This field is required"),
-    checklistItemName : yup.string().required("This field is required"),
-    sequenceNumber    : yup.string().required("This field is required"),
+    checklist_id: yup.string().required("This field is required"),
+    name: yup.string().required("This field is required"),
+    sequence_no: yup.string().required("This field is required"),
 });
 
 export const ChecklistItemsAddEdit = () => {
     const navigate = useNavigate();
+    const { action } = useParams();
     const {
         handleSubmit,
         control,
+        reset,
+        getValues,
         formState: { errors },
     } = useForm({
-        mode     : "onTouched",
-        resolver : yupResolver(schema),
+        mode: "onTouched",
+        resolver: yupResolver(schema),
     });
+
+    //
+    // States
+    //
+    const [checklistTypes, setChecklistTypes] = useState([]);
+    const [columns, setColumn] = useState([]);
+    const notyf = useContext(NotyfContext);
 
     //
     // Functions
     //
 
-    const addChecklistItem = (data) => {
-        console.log(data);
+    const addChecklistItem = async (data) => {
+        try {
+            const response = await preventiveMaintenanceApi.createChecklistItem(
+                data
+            );
+            if (response.data.status === "SUCCESS") {
+                notyf.open({
+                    type: "success",
+                    message: response.data.message,
+                });
+                navigate("/preventive-maintenance/checklist-items");
+            }
+        } catch (error) {
+            notyf.open({
+                type: "danger",
+                message: "Something went wrong with the server",
+            });
+        }
     };
+
+    const updateChecklistItem = async (data) => {
+        try {
+            const response = await preventiveMaintenanceApi.updateChecklistItem(
+                action,
+                data
+            );
+            if (response.data.status === "SUCCESS") {
+                notyf.open({
+                    type: "success",
+                    message: response.data.message,
+                });
+                navigate("/preventive-maintenance/checklist-items");
+            }
+        } catch (error) {
+            notyf.open({
+                type: "danger",
+                message: "Something went wrong with the server",
+            });
+        }
+    };
+
+    const getChecklistTypes = useCallback(async () => {
+        const response = await preventiveMaintenanceApi.getChecklistTypes();
+        const checklistTypeData = response.data.data;
+        let checklitTypeOption = [];
+
+        checklistTypeData.map((data) => {
+            return (checklitTypeOption = [
+                ...checklitTypeOption,
+                {
+                    key: data.id,
+                    value: data.name,
+                },
+            ]);
+        });
+
+        setChecklistTypes(checklitTypeOption);
+    }, []);
+
+    const getChecklistItem = useCallback(async () => {
+        const response = await preventiveMaintenanceApi.getChecklistItem(
+            action
+        );
+
+        reset({
+            checklist_id: response.data.data.checklist_id,
+            name: response.data.data.name,
+            sequence_no: response.data.data.sequence_no,
+        });
+    }, [action, reset]);
+
+    const addColumn = () => {
+        setColumn([...getValues("columns"), ""]);
+    };
+
+    const removeColumn = (index) => {
+        let data = [...columns];
+        data.splice(index, 1);
+
+        setColumn([...data]);
+    };
+
+    //
+    // UseEffects
+    //
+
+    useEffect(() => {
+        getChecklistTypes();
+    }, [getChecklistTypes]);
+
+    useEffect(() => {
+        reset({
+            columns: ["", ""],
+        });
+        setColumn(getValues("columns"));
+    }, [reset, getValues]);
+
+    useEffect(() => {
+        if (action !== "add") getChecklistItem();
+    }, [getChecklistItem, action]);
 
     return (
         <React.Fragment>
@@ -71,7 +179,7 @@ export const ChecklistItemsAddEdit = () => {
                                         <Controller
                                             control={control}
                                             defaultValue=""
-                                            name="checklistType"
+                                            name="checklist_id"
                                             render={({
                                                 field: {
                                                     value,
@@ -80,21 +188,23 @@ export const ChecklistItemsAddEdit = () => {
                                                 },
                                             }) => (
                                                 <Form.Select
-													id="checklistType"
-                                                    name="checklistType"
+                                                    id="checklist_id"
+                                                    name="checklist_id"
                                                     onBlur={onBlur}
                                                     onChange={onChange}
                                                     value={value}
                                                 >
                                                     <option></option>
-                                                    {MOCK_CHECKLIST_TYPE.map(
+                                                    {checklistTypes.map(
                                                         (data, index) => {
                                                             return (
                                                                 <option
                                                                     key={index}
-                                                                    value={data}
+                                                                    value={
+                                                                        data.key
+                                                                    }
                                                                 >
-                                                                    {data}
+                                                                    {data.value}
                                                                 </option>
                                                             );
                                                         }
@@ -104,7 +214,7 @@ export const ChecklistItemsAddEdit = () => {
                                         />
                                         <ErrorMessage
                                             errors={errors}
-                                            name="checklistType"
+                                            name="checklist_id"
                                             render={({ message }) => (
                                                 <small className="text-danger">
                                                     {message}
@@ -122,7 +232,7 @@ export const ChecklistItemsAddEdit = () => {
                                         <Controller
                                             control={control}
                                             defaultValue=""
-                                            name="checklistItemName"
+                                            name="name"
                                             render={({
                                                 field: {
                                                     value,
@@ -131,7 +241,7 @@ export const ChecklistItemsAddEdit = () => {
                                                 },
                                             }) => (
                                                 <Form.Control
-													className={errors.name}
+                                                    className={errors.name}
                                                     onBlur={onBlur}
                                                     onChange={onChange}
                                                     type="text"
@@ -141,7 +251,7 @@ export const ChecklistItemsAddEdit = () => {
                                         />
                                         <ErrorMessage
                                             errors={errors}
-                                            name="checklistItemName"
+                                            name="name"
                                             render={({ message }) => (
                                                 <small className="text-danger">
                                                     {message}
@@ -156,27 +266,27 @@ export const ChecklistItemsAddEdit = () => {
                                         <Form.Label>Sequence number</Form.Label>
                                         <Controller
                                             control={control}
-                                            name="sequenceNumber"
+                                            name="sequence_no"
                                             defaultValue=""
                                             render={({
                                                 field: {
                                                     onBlur,
-													onChange,
+                                                    onChange,
                                                     value,
                                                 },
                                             }) => (
                                                 <Form.Control
-													className={errors.name}
+                                                    className={errors.name}
                                                     onBlur={onBlur}
                                                     onChange={onChange}
-                                                    type="text"
+                                                    type="number"
                                                     value={value}
                                                 />
                                             )}
                                         />
                                         <ErrorMessage
                                             errors={errors}
-                                            name="sequenceNumber"
+                                            name="sequence_no"
                                             render={({ message }) => (
                                                 <small className="text-danger">
                                                     {message}
@@ -192,73 +302,63 @@ export const ChecklistItemsAddEdit = () => {
                                     <i>Default columns - check, clean</i>
                                 </small>
                                 <Row className="mt-2">
-                                    <Col md={6}>
-                                        <Form.Group className="mb-3">
-                                            <Controller
-                                                control={control}
-                                                defaultValue=""
-                                                name="checklistItem1"
-                                                render={({
-                                                    field: {
-                                                        onBlur,
-														onChange,
-                                                        value,
-                                                    },
-                                                }) => (
-                                                    <Form.Control
-														className={errors.name}
-                                                        onBlur={onBlur}
-                                                        onChange={onChange}
-                                                        type="text"
-                                                        value={value}
-                                                    />
-                                                )}
-                                            />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col md={1}>
-                                        <Button variant="primary">
-                                            <FontAwesomeIcon
-                                                icon={faWindowClose}
-                                            />
-                                        </Button>
-                                    </Col>
-                                </Row>
-                                <Row className="mt-2">
-                                    <Col md={6}>
-                                        <Form.Group className="mb-3">
-                                            <Controller
-                                                control={control}
-                                                defaultValue=""
-                                                name="checklistItem2"
-                                                render={({
-                                                    field: {
-														onBlur,
-                                                        onChange,
-                                                        value,
-                                                    },
-                                                }) => (
-                                                    <Form.Control
-														className={errors.name}
-                                                        onBlur={onBlur}
-                                                        onChange={onChange}
-                                                        type="text"
-                                                        value={value}
-                                                    />
-                                                )}
-                                            />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col md={1}>
-                                        <Button variant="primary">
-                                            <FontAwesomeIcon
-                                                icon={faWindowClose}
-                                            />
-                                        </Button>
-                                    </Col>
+                                    {columns.map((data, index) => {
+                                        return (
+                                            <React.Fragment key={index}>
+                                                <Col md={6}>
+                                                    <Form.Group className="mb-3">
+                                                        <Controller
+                                                            control={control}
+                                                            defaultValue=""
+                                                            name={`columns.${index}`}
+                                                            render={({
+                                                                field: {
+                                                                    onBlur,
+                                                                    onChange,
+                                                                    value,
+                                                                },
+                                                            }) => (
+                                                                <Form.Control
+                                                                    className={
+                                                                        errors.name
+                                                                    }
+                                                                    onBlur={
+                                                                        onBlur
+                                                                    }
+                                                                    onChange={
+                                                                        onChange
+                                                                    }
+                                                                    type="text"
+                                                                    value={
+                                                                        value
+                                                                    }
+                                                                />
+                                                            )}
+                                                        />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col md={1}>
+                                                    <Button
+                                                        variant="primary"
+                                                        onClick={() =>
+                                                            removeColumn(index)
+                                                        }
+                                                    >
+                                                        <FontAwesomeIcon
+                                                            icon={faWindowClose}
+                                                        />
+                                                    </Button>
+                                                </Col>
+                                            </React.Fragment>
+                                        );
+                                    })}
                                 </Row>
                             </Col>
-                            <Button variant="secondary" className="m-0">
+                            <Button
+                                variant="secondary"
+                                className="m-0"
+                                onClick={addColumn}
+                            >
                                 <FontAwesomeIcon icon={faPlusSquare} /> Add new
                                 column
                             </Button>
@@ -277,7 +377,11 @@ export const ChecklistItemsAddEdit = () => {
                                     </Button>
                                     <Button
                                         variant="primary"
-                                        onClick={handleSubmit(addChecklistItem)}
+                                        onClick={handleSubmit(
+                                            action === "add"
+                                                ? addChecklistItem
+                                                : updateChecklistItem
+                                        )}
                                     >
                                         Submit
                                     </Button>

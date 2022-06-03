@@ -4,7 +4,7 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Edit2 } from "react-feather";
 import { useNavigate } from "react-router-dom";
 
-export const ChecklistButtons = ({ row, module }) => {
+export const ChecklistButtons = ({ row, module, route }) => {
     const navigate = useNavigate();
 
     return (
@@ -18,7 +18,7 @@ export const ChecklistButtons = ({ row, module }) => {
                     size={18}
                     onClick={() =>
                         navigate(
-                            `/preventive-maintenance/checklist-type/${row.original.id}`
+                            `/preventive-maintenance/${route}/${row.original.id}`
                         )
                     }
                 />
