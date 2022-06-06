@@ -20,8 +20,10 @@ const TechnicianForm = (props) => {
     const [beforePhotosURLs, setBeforePhotosURLs] = useState([]);
     const [afterPhotosURLs, setAfterPhotosURLs] = useState([]);
     
-    useEffect(() => {   
+    useEffect(() => {
         reset(fault)
+        setBeforePhotosURLs(fault.before_photos)
+        setAfterPhotosURLs(fault.after_photos)
     }, [reset, fault])
 
     const onChangeBeforePhotos = (e) => {
@@ -30,14 +32,12 @@ const TechnicianForm = (props) => {
 
     useEffect(() => {
         if (beforePhotos.length < 1) return;
-        const newBeforePhotosURLs = [];
         beforePhotos.forEach(image => {
-            newBeforePhotosURLs.push({
-                url: URL.createObjectURL(image),
-                name: image.name
-            })
+            setBeforePhotosURLs(prevState => [...prevState, {
+                full_path: URL.createObjectURL(image),
+                file_name: image.name
+            }]);
         })
-        setBeforePhotosURLs(newBeforePhotosURLs)
         setValue('before_photos', beforePhotos)
     }, [beforePhotos, setValue])
 
@@ -47,14 +47,12 @@ const TechnicianForm = (props) => {
 
     useEffect(() => {
         if (afterPhotos.length < 1) return;
-        const newAfterPhotosURLs = [];
         afterPhotos.forEach(image => {
-            newAfterPhotosURLs.push({
-                url: URL.createObjectURL(image),
-                name: image.name
-            })
+            setAfterPhotosURLs(prevState => [...prevState, {
+                full_path: URL.createObjectURL(image),
+                file_name: image.name
+            }]);
         })
-        setAfterPhotosURLs(newAfterPhotosURLs)
         setValue('after_photos', afterPhotos)
     }, [afterPhotos, setValue])
 
@@ -65,7 +63,6 @@ const TechnicianForm = (props) => {
         //     setBeforePhotos(prevState => prevState.splice(index, 1))
         // }
     }
-
     return (
         <>
             <Card>
@@ -164,17 +161,17 @@ const TechnicianForm = (props) => {
                                 />
                             </Form.Group>
                             
-                            {beforePhotosURLs.map((image, key) =>
+                            {beforePhotosURLs?.map((image, key) =>
                                 <div key={key} className="fault-image-holder mb-2">
-                                    <Image src={image.url} />
-                                    <small>{image.name}</small>
+                                    <Image src={image.full_path} />
+                                    <small>{image.file_name}</small>
                                     <div className="text-end mt-2">
                                         <Trash2 size={16} className="cursor-pointer me-1" onClick={()=>removeItem(image.name)}/>
                                         <ZoomIn size={16} className="cursor-pointer" />
                                     </div>
                                 </div>
-                                
                             )}
+
                         </Col>
                         <Col md={12}>
                             <Form.Group className="mb-3 mt-4">
@@ -196,10 +193,14 @@ const TechnicianForm = (props) => {
                                     )}
                                 />
                             </Form.Group>
-                            {afterPhotosURLs.map((image, key) =>
+                            {afterPhotosURLs?.map((image, key) =>
                                 <div key={key} className="fault-image-holder mb-2">
-                                    <Image src={image.url} />
-                                    <small>{image.name}</small>
+                                    <Image src={image.full_path} />
+                                    <small>{image.file_name}</small>
+                                    <div className="text-end mt-2">
+                                        <Trash2 size={16} className="cursor-pointer me-1" onClick={()=>removeItem(image.name)}/>
+                                        <ZoomIn size={16} className="cursor-pointer" />
+                                    </div>
                                 </div>
                             )}
                         </Col>

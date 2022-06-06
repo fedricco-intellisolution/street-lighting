@@ -45,12 +45,20 @@ const FaultResponseView = () => {
     }, [getFault])
 
     const saveHandler = async (data) => {
+        let before_photos = data.before_photos ? data.before_photos : []
+        let after_photos = data.after_photos ?  data.after_photos : []
         
-        let formData = new FormData()
+        const formData = new FormData()
         formData.append("action_taken", data.action_taken)
-        formData.append("before_photos", data.before_photos)
-        formData.append("after_photos", data.after_photos)
-
+        
+        before_photos.forEach(file => {
+            formData.append("before_photos[]", file);
+        })
+       
+        after_photos.forEach(file => {
+            formData.append("after_photos[]", file);
+        })
+       
         try {
             const response = await faultApi.updateFaultTechnician(id, formData)
             if (response.data.status === 'SUCCESS') {

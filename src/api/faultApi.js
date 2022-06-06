@@ -21,7 +21,7 @@ export const attendFault = (fault_id, site_id) => {
 }
 
 export const updateFaultTechnician = (id, data) => {
-    return api.put('/fault/technician/'+id, data)
+    return api.post('/fault/technician/'+id, data)
 }
 
 export const forVerificationTO = (id, data) => {
