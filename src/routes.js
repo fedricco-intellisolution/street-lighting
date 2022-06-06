@@ -34,15 +34,13 @@ import AddEditLevel from "@levels/AddEditLevel";
 //Fault
 import CallCentreFaultList from "./pages/fault/CallCentreFaultList";
 import CallCentreFaultView from "./pages/fault/CallCentreFaultView";
-
 import FaultResponseList from "./pages/fault/FaultResponseList";
 import FaultResponseView from "./pages/fault/FaultResponseView";
-
 import FaultVerificationTOList from "./pages/fault/FaultVerificationTOList";
 import FaultVerificationTOView from "./pages/fault/FaultVerificationTOView";
-
 import FaultVerificationNEAList from "./pages/fault/FaultVerificationNEAList";
 import FaultVerificationNEAView from "./pages/fault/FaultVerificationNEAView";
+import FaultRectifiedList from "./pages/fault/FaultRectifiedList";
 
 // Preventive maintenance
 import { ChecklistBuild } from "@preventive/checklist-build/ChecklistBuild";
@@ -182,6 +180,10 @@ const routes = [
       {
         path: "verification-nea/:id",
         element: <FaultVerificationNEAView />
+      },
+      {
+        path: "rectified",
+        element: <FaultRectifiedList />
       },
     ],
   },

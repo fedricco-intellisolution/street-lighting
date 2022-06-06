@@ -68,7 +68,7 @@ const CallCentreForm = (props) => {
     }, [])
     
     const getJobTypes = async () => {
-        const response = await lookUpApi.getLookUp({category:'JOB_TYPE'})
+        const response = await lookUpApi.getLookUp({search: { category: 'JOB_TYPE' }})
         const data = response.data.data
         const options = []
         data.forEach(item => {
@@ -81,7 +81,7 @@ const CallCentreForm = (props) => {
     }
 
     const getCallTypes = async () => {
-        const response = await lookUpApi.getLookUp({category:'CALL_TYPE'})
+        const response = await lookUpApi.getLookUp({search: { category: 'CALL_TYPE' }})
         const data = response.data.data
         setCallTypes(data)
         const options = []
@@ -98,7 +98,10 @@ const CallCentreForm = (props) => {
         const selected_call_type = watch('call_type', 'value')
         const result = call_types.find(item => item.code === selected_call_type)
         setValue('response_time', result?.description)
-    },[watch('call_type'), setValue])
+    }, [
+        watch('call_type'),
+        setValue, call_types
+    ])
 
     const getTechnicians = () => {
         const data = [
@@ -132,10 +135,8 @@ const CallCentreForm = (props) => {
     useEffect(() => {   
         reset(props.fault)
     }, [reset, props.fault])
-
     
     return (
-
         <Form>
             <Row>
                 <Col md={6}>
@@ -314,7 +315,12 @@ const CallCentreForm = (props) => {
                                     className={
                                         "react-select-container" + errors.call_type && "is-invalid"
                                     }
-                                    onChange={(val) => onChange(val.value)}
+                                    onChange={(val) => {
+                                            onChange(val.value)
+                                            console.log(val.value)
+                                            
+                                        }
+                                    }
                                     value={call_type_options.filter((c) => value.includes(c.value))}
                                 />
                             )}

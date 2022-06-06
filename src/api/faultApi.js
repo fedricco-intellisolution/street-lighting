@@ -16,6 +16,10 @@ export const getFault = (id) => {
     return api.get('/fault/'+id);
 }
 
+export const attendFault = (fault_id, site_id) => {
+    return api.post(`/fault/technician/attend/${fault_id}/${site_id}`);
+}
+
 export const updateFaultTechnician = (id, data) => {
     return api.put('/fault/technician/'+id, data)
 }
@@ -31,3 +35,8 @@ export const updateFaultTO = (id, data) => {
 export const forVerificationNEA = (id, data) => {
     return api.post('/fault/to/for_verification_nea/'+id, data)
 }
+
+export const verifyFault = (id) => {
+    return api.post('/fault/nea/verify/'+id)
+}
+

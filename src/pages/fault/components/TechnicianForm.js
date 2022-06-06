@@ -11,7 +11,8 @@ const TechnicianForm = (props) => {
         control,
         errors,
         reset,
-        fault
+        fault,
+        setValue
     } = props
 
     const [beforePhotos, setBeforePhotos] = useState([]);
@@ -37,8 +38,9 @@ const TechnicianForm = (props) => {
             })
         })
         setBeforePhotosURLs(newBeforePhotosURLs)
-    }, [beforePhotos])
-    
+        setValue('before_photos', beforePhotos)
+    }, [beforePhotos, setValue])
+
     const onChangeAfterPhotos = (e) => {
         setAfterPhotos(prevState => [...prevState, ...e.target.files]);
     }
@@ -53,7 +55,8 @@ const TechnicianForm = (props) => {
             })
         })
         setAfterPhotosURLs(newAfterPhotosURLs)
-    }, [afterPhotos])
+        setValue('after_photos', afterPhotos)
+    }, [afterPhotos, setValue])
 
     const removeItem = (name) => {
         // const index = beforePhotos.findIndex(item => item.name === name)
@@ -143,13 +146,21 @@ const TechnicianForm = (props) => {
                         <Col md={12}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Before photos </Form.Label>
-                                <Form.Control
-                                    type="file"
-                                    multiple
-                                    accept="image/*"
+                                <Controller
+                                    control={control}
                                     name="before_photos"
-                                    disabled={!editable}
-                                    onChange={onChangeBeforePhotos}
+                                    defaultValue=""
+                                    render={({ field: { value, onChange, onBlur } }) => (
+                                        <Form.Control
+                                           type="file"
+                                            multiple
+                                            accept="image/*"
+                                            name="before_photos"
+                                            disabled={!editable}
+                                            onChange={onChangeBeforePhotos}
+                                             className={(errors.before_photos && 'is-invalid')}
+                                        />
+                                    )}
                                 />
                             </Form.Group>
                             
@@ -168,13 +179,21 @@ const TechnicianForm = (props) => {
                         <Col md={12}>
                             <Form.Group className="mb-3 mt-4">
                                 <Form.Label>After photos </Form.Label>
-                                <Form.Control
-                                    type="file"
-                                    multiple
-                                    accept="image/*"
-                                    name="before_photos"
-                                    disabled={!editable}
-                                    onChange={onChangeAfterPhotos}
+                                <Controller
+                                    control={control}
+                                    name="after_photos"
+                                    defaultValue=""
+                                    render={({ field: { value, onChange, onBlur } }) => (
+                                        <Form.Control
+                                           type="file"
+                                            multiple
+                                            accept="image/*"
+                                            name="after_photos"
+                                            disabled={!editable}
+                                            onChange={onChangeAfterPhotos}
+                                            className={(errors.after_photos && 'is-invalid')}
+                                        />
+                                    )}
                                 />
                             </Form.Group>
                             {afterPhotosURLs.map((image, key) =>
@@ -207,12 +226,25 @@ const TechnicianForm = (props) => {
                         <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Fault case category</Form.Label>
-                                <Form.Select
-                                    type="text"
-                                    disabled={editable}
-                                >
-                                    <option value="">Choose an option</option>
-                                </Form.Select>
+                                <Controller
+                                    control={control}
+                                    name="case_category"
+                                    defaultValue=""
+                                    render={({ field: { value, onChange, onBlur } }) => (
+                                        <Form.Select
+                                            type="text"
+                                            disabled={editable}
+                                            className={(errors.case_category && 'is-invalid')}
+                                        >
+                                            <option value="">Choose an option</option>
+                                        </Form.Select>
+                                    )}
+                                />
+                                <ErrorMessage
+                                    errors={errors}
+                                    name="case_category"
+                                    render={({ message }) => <small className="text-danger">{message}</small>}
+                                />
                             </Form.Group>
                         </Col>
                       
@@ -228,17 +260,38 @@ const TechnicianForm = (props) => {
                         <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Supervisor</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    disabled
+                                <Controller
+                                    control={control}
+                                    name="supervisor"
+                                    defaultValue=""
+                                    render={({ field: { value, onChange, onBlur } }) => (
+                                        <Form.Control
+                                            type="text"
+                                            value={value}
+                                            onChange={onChange}
+                                            onBlur={onBlur}
+                                            disabled
+                                        />
+                                    )}
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>Comments</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    as="textarea"
-                                    rows={5}
+                                <Controller
+                                    control={control}
+                                    name="supervisor_comment"
+                                    defaultValue=""
+                                    render={({ field: { value, onChange, onBlur } }) => (
+                                        <Form.Control
+                                            type="text"
+                                            value={value}
+                                            as="textarea"
+                                            rows={5}
+                                            onChange={onChange}
+                                            onBlur={onBlur}
+                                            disabled
+                                        />
+                                    )}
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
@@ -248,18 +301,40 @@ const TechnicianForm = (props) => {
                         <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>NEA's Authorised</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    disabled
+                                <Controller
+                                    control={control}
+                                    name="nea_authorised"
+                                    defaultValue=""
+                                    render={({ field: { value, onChange, onBlur } }) => (
+                                        <Form.Control
+                                            type="text"
+                                            value={value}
+                                            onChange={onChange}
+                                            onBlur={onBlur}
+                                            disabled
+                                        />
+                                    )}
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>Comments</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    as="textarea"
-                                    rows={5}
+                                <Controller
+                                    control={control}
+                                    name="nea_authorised_comment"
+                                    defaultValue=""
+                                    render={({ field: { value, onChange, onBlur } }) => (
+                                        <Form.Control
+                                            type="text"
+                                            value={value}
+                                            as="textarea"
+                                            rows={5}
+                                            onChange={onChange}
+                                            onBlur={onBlur}
+                                            disabled
+                                        />
+                                    )}
                                 />
+                              
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>Signature</Form.Label>

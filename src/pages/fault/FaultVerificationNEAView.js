@@ -39,11 +39,18 @@ const FaultVerificationNEAView = () => {
         getFault()
     }, [getFault])
 
-    const verifyCompletionHandler = () => {
-        notyf.open({
-            type: 'success',
-            message: 'Verify completion called'
-        })
+    const verifyCompletionHandler = async () => {
+        try {
+            const response = await faultApi.verifyFault(id)
+            if (response.data.status === 'SUCCESS') {
+                 notyf.open({
+                    type: 'success',
+                    message: response.data.message
+                })
+            }
+        } catch (error) {
+            
+        }
     }
 
     return (

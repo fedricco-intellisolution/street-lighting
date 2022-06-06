@@ -27,6 +27,7 @@ const FaultVerificationTOView = () => {
         handleSubmit,
         control,
         reset,
+        setValue,
         formState: { errors },
     } = useForm({
         mode: "onTouched",
@@ -43,8 +44,14 @@ const FaultVerificationTOView = () => {
     }, [getFault])
 
     const saveHandler = async (data) => {
+
+        let formData = new FormData()
+        formData.append("action_taken", data.action_taken)
+        formData.append("before_photos", data.before_photos)
+        formData.append("after_photos", data.after_photos)
+
         try {
-            const response = await faultApi.updateFaultTO(id, data)
+            const response = await faultApi.updateFaultTO(id, formData)
             if (response.data.status === 'SUCCESS') {
                 notyf.open({
                     type : 'success',
@@ -111,6 +118,7 @@ const FaultVerificationTOView = () => {
                         errors={errors}
                         reset={reset}
                         fault={fault}
+                        setValue={setValue}
                     />
                      <Row>
                         <Col md={12} className="text-end">
