@@ -11,13 +11,15 @@ import { ErrorMessage } from "@hookform/error-message";
 import * as propertyManagementApi from "@api/propertyManagementApi";
 import NotyfContext from "../../../contexts/NotyfContext";
 
-const AddEditLevel = () => {
+const AddEditArea = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const add = id === "add" ? true : false;
   const [options, setOptions] = useState([]);
+  const [options2, setOptions2] = useState([]);
   const schema = yup.object().shape({
     site_id: yup.string().required("This field is required"),
+    level_id: yup.string().required("This field is required"),
     name: yup.string().required("This field is required"),
     description: yup.string().required("This field is required"),
   });
@@ -32,38 +34,6 @@ const AddEditLevel = () => {
     mode: "onTouched",
     resolver: yupResolver(schema),
   });
-
-  //create level
-  const createLevel = async (data) => {
-    try {
-      const response = await propertyManagementApi.createLevel(data);
-      if (response.status === 200) {
-        notyf.open({
-          type: "success",
-          message: response.data.message,
-        });
-        navigate("/property-management/levels");
-      }
-    } catch (error) {
-      throw new Error();
-    }
-  };
-
-  //update level
-  const updateLevel = async (data) => {
-    try {
-      const response = await propertyManagementApi.updateLevel(id, data);
-      if (response.status === 200) {
-        notyf.open({
-          type: "success",
-          message: response.data.message,
-        });
-        navigate("/property-management/levels");
-      }
-    } catch (error) {
-      throw new Error();
-    }
-  };
 
   //get sites
   const getSites = useCallback(async () => {
@@ -80,13 +50,62 @@ const AddEditLevel = () => {
     setOptions(temp);
   }, []);
 
-  //get level
-  const getLevel = useCallback(async () => {
-    const response = await propertyManagementApi.getLevel(id);
+  //get levels
+  const getLevels = useCallback(async () => {
+    const response = await propertyManagementApi.getLevels();
+    const levels = response.data.data;
+    let temp = [];
+    levels.forEach((level) => {
+      temp.push({
+        value: level.id,
+        label: level.name,
+      });
+    });
+
+    setOptions2(temp);
+  }, []);
+
+  //create area
+  const createArea = async (data) => {
+    try {
+      const response = await propertyManagementApi.createArea(data);
+      if (response.status === 200) {
+        notyf.open({
+          type: "success",
+          message: response.data.message,
+        });
+        navigate("/property-management/areas");
+      }
+    } catch (error) {
+      throw new Error();
+    }
+  };
+
+  //update area
+  const updateArea = async (data) => {
+    try {
+      const response = await propertyManagementApi.updateArea(id, data);
+      console.log(response);
+      if (response.status === 200) {
+        notyf.open({
+          type: "success",
+          message: response.data.message,
+        });
+        navigate("/property-management/areas");
+      }
+    } catch (error) {
+      throw new Error();
+    }
+  };
+
+  //get area
+  const getArea = useCallback(async () => {
+    const response = await propertyManagementApi.getArea(id);
 
     if (response.status === 200) {
       reset({
-        site_id: response.data.data.site_id,
+        site_id: response.data.data?.level?.site_id,
+        level_id: response.data.data?.level_id,
         name: response.data.data.name,
         description: response.data.data.description,
       });
@@ -96,17 +115,18 @@ const AddEditLevel = () => {
   //use effect
   useEffect(() => {
     getSites();
+    getLevels();
 
     if (!add) {
-      getLevel();
+      getArea();
     }
-  }, [getSites, getLevel, add]);
+  }, [getSites, getLevels, getArea, add]);
 
   return (
     <React.Fragment>
-      <Helmet title={add ? "Create level" : "Update level"} />
+      <Helmet title={add ? "Create area" : "Update area"} />
       <Container fluid className="p-0">
-        <h1 className="h3 mb-3">{add ? "Create" : "Update"} level</h1>
+        <h1 className="h3 mb-3">{add ? "Create" : "Update"} area</h1>
         <Card>
           <Card.Body>
             <Row>
@@ -139,6 +159,36 @@ const AddEditLevel = () => {
                 />
               </Form>
               <Form className="col-md-6 col-sm-12 mb-2">
+                <Form.Label>Level</Form.Label>
+                <Controller
+                  control={control}
+                  name="level_id"
+                  defaultValue=""
+                  render={({ field: { value, onChange, onBlur, ref } }) => (
+                    <Select
+                      inputRef={ref}
+                      classNamePrefix="react-select"
+                      options={options2}
+                      onBlur={onBlur}
+                      className={
+                        "react-select-container" + errors.sector && "is-invalid"
+                      }
+                      onChange={(val) => onChange(val.value)}
+                      value={options2.filter((c) => value.includes(c.value))}
+                    />
+                  )}
+                />
+                <ErrorMessage
+                  errors={errors}
+                  name="level_id"
+                  render={({ message }) => (
+                    <small className="text-danger">{message}</small>
+                  )}
+                />
+              </Form>
+            </Row>
+            <Row>
+              <Form className="col-md-6 col-sm-12 mb-2">
                 <Form.Label>Name</Form.Label>
                 <Controller
                   control={control}
@@ -162,9 +212,7 @@ const AddEditLevel = () => {
                   )}
                 />
               </Form>
-            </Row>
-            <Row>
-              <Form>
+              <Form className="col-md-6 col-sm-12 mb-2">
                 <Form.Label>Description</Form.Label>
                 <Controller
                   control={control}
@@ -194,14 +242,14 @@ const AddEditLevel = () => {
                 <Button
                   variant="secondary"
                   className="me-2"
-                  onClick={() => navigate("/property-management/levels")}
+                  onClick={() => navigate("/property-management/areas")}
                 >
                   Cancel
                 </Button>
                 <Button
                   variant="primary"
                   onClick={
-                    add ? handleSubmit(createLevel) : handleSubmit(updateLevel)
+                    add ? handleSubmit(createArea) : handleSubmit(updateArea)
                   }
                 >
                   Submit
@@ -215,4 +263,4 @@ const AddEditLevel = () => {
   );
 };
 
-export default AddEditLevel;
+export default AddEditArea;

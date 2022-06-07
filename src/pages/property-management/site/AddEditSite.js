@@ -107,7 +107,7 @@ const AddEditSite = () => {
 
   return (
     <React.Fragment>
-      <Helmet title="Create site" />
+      <Helmet title={add ? "Create site" : "Update site"} />
       <Container fluid className="p-0">
         <h1 className="h3 mb-3">{add ? "Create" : "Update"} site</h1>
         <Card>

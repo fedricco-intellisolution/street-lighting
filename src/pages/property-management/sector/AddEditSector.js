@@ -77,7 +77,7 @@ const AddEditSector = () => {
 
   return (
     <React.Fragment>
-      <Helmet title="Create sector" />
+      <Helmet title={add ? "Create sector" : "Update sector"} />
       <Container fluid className="p-0">
         <h1 className="h3 mb-3">{add ? "Create" : "Update"} sector</h1>
         <Card>

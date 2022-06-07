@@ -1,15 +1,39 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { PlusCircle } from "react-feather";
 
-import { TablePagination } from "components/TablePagination";
-import { tableColumns, tableData } from "./tableColumns";
+import { tableColumns } from "./tableColumns";
+import DynamicTable from "@components/ui/DynamicTable";
+import * as preventiveMaintenanceApi from "@api/preventiveMaintenanceApi";
 
 export const ChecklistType = () => {
     const navigate = useNavigate();
+
+    //
+    // States
+    //
+
+    const [tableData, setTableData] = useState([]);
+
+    //
+    // Functions
+    //
+
+    const getChecklistTypes = useCallback(async () => {
+        const response = await preventiveMaintenanceApi.getChecklistTypes();
+        setTableData(response.data.data);
+    }, []);
+
+	//
+	// UseEffects
+	//
+	
+    useEffect(() => {
+        getChecklistTypes();
+    }, [getChecklistTypes]);
 
     return (
         <>
@@ -48,11 +72,12 @@ export const ChecklistType = () => {
                         </Row>
                     </Card.Header>
                     <Card.Body>
-                        <TablePagination
-                            columns={tableColumns}
-                            module="Checklist type"
-                            rawData={tableData}
-                        />
+                        {tableData && (
+                            <DynamicTable
+                                columns={tableColumns}
+                                data={tableData}
+                            />
+                        )}
                     </Card.Body>
                 </Card>
             </React.Fragment>

@@ -3,7 +3,7 @@ import { Edit2 } from "react-feather";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTable, usePagination } from "react-table";
 
-const SiteTable = (props) => {
+const AreaTable = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const {
@@ -140,4 +140,4 @@ const SiteTable = (props) => {
     </>
   );
 };
-export default SiteTable;
+export default AreaTable;

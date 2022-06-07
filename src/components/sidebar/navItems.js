@@ -6,11 +6,7 @@ import {
   Users,
   Zap,
   Home,
-  Map,
-  MapPin,
-  Grid,
-  Flag,
-  Shield
+  Shield,
 } from "react-feather";
 
 const pagesSection = [
@@ -30,7 +26,7 @@ const pagesSection = [
       },
       {
         href: "/faults/response",
-        title: "Fault response"
+        title: "Fault response",
       },
       {
         href: "/faults/eot-requests",
@@ -61,22 +57,18 @@ const pagesSection = [
       {
         href: "/property-management/sectors",
         title: "Sector",
-        icon: Map,
       },
       {
         href: "/property-management/sites",
         title: "Site",
-        icon: MapPin,
       },
       {
         href: "/property-management/levels",
         title: "Level",
-        icon: Grid,
       },
       {
         href: "/property-management/areas",
         title: "Area",
-        icon: Flag,
       },
     ],
   },

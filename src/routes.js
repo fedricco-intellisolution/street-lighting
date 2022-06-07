@@ -30,6 +30,8 @@ import Sites from "@sites/Sites";
 import AddEditSite from "@sites/AddEditSite";
 import Levels from "@levels/Levels";
 import AddEditLevel from "@levels/AddEditLevel";
+import Areas from "@areas/Areas";
+import AddEditArea from "@areas/AddEditArea";
 
 //Fault
 import CallCentreFaultList from "@fault/CallCentreFaultList";
@@ -126,6 +128,14 @@ const routes = [
       {
         path: "levels/:id",
         element: <AddEditLevel />,
+      },
+      {
+        path: "areas",
+        element: <Areas />,
+      },
+      {
+        path: "areas/:id",
+        element: <AddEditArea />,
       },
     ],
   },
