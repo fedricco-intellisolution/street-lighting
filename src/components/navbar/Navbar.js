@@ -1,15 +1,11 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
-import { Button, Navbar, Nav, Form, InputGroup } from "react-bootstrap";
+import { Navbar, Nav } from "react-bootstrap";
 
 import {
   AlertCircle,
   Bell,
-  BellOff,
   Home,
-  MessageCircle,
   UserPlus,
-  Search,
 } from "react-feather";
 
 import useSidebar from "../../hooks/useSidebar";
@@ -17,8 +13,6 @@ import useSidebar from "../../hooks/useSidebar";
 import NavbarDropdown from "./NavbarDropdown";
 import NavbarDropdownItem from "./NavbarDropdownItem";
 import NavbarUser from "./NavbarUser";
-
-import avatar1 from "../../assets/img/avatars/avatar.jpg";
 
 const notifications = [
   {
@@ -47,17 +41,7 @@ const notifications = [
   },
 ];
 
-const messages = [
-  {
-    name: "Chris Wood",
-    avatar: avatar1,
-    description: "Curabitur ligula sapien euismod vitae.",
-    time: "2h ago",
-  }
-];
-
 const NavbarComponent = () => {
-  const { t } = useTranslation();
   const { isOpen, setIsOpen } = useSidebar();
 
   return (
@@ -71,18 +55,18 @@ const NavbarComponent = () => {
         <i className="hamburger align-self-center" />
       </span>
 
-      <Form inline="true" className="d-none d-sm-inline-block">
+      {/* <Form inline="true" className="d-none d-sm-inline-block">
         <InputGroup className="input-group-navbar">
           <Form.Control placeholder={t("Search")} aria-label="Search" />
           <Button variant="">
             <Search className="feather" />
           </Button>
         </InputGroup>
-      </Form>
+      </Form> */}
 
       <Navbar.Collapse>
         <Nav className="navbar-align">
-          <NavbarDropdown
+          {/* <NavbarDropdown
             header="New Messages"
             footer="Show all messages"
             icon={MessageCircle}
@@ -107,12 +91,12 @@ const NavbarComponent = () => {
                 />
               );
             })}
-          </NavbarDropdown>
+          </NavbarDropdown> */}
 
           <NavbarDropdown
             header="New Notifications"
             footer="Show all notifications"
-            icon={BellOff}
+            icon={Bell}
             count={notifications.length}
           >
             {notifications.map((item, key) => {

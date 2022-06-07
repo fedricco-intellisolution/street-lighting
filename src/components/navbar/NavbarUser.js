@@ -1,12 +1,19 @@
 import React from "react";
-
 import { Dropdown } from "react-bootstrap";
-
-import { PieChart, Settings, User } from "react-feather";
-
-import avatar1 from "../../assets/img/avatars/avatar.jpg";
+import { Settings } from "react-feather";
+import profile from "../../assets/img/avatars/profile.jpg";
+import useAuth from "../../hooks/useAuth";
 
 const NavbarUser = () => {
+  const { user, signOut } = useAuth();
+  
+  const signOutHandler = async() => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <Dropdown className="nav-item" align="end">
       <span className="d-inline-block d-sm-none">
@@ -17,26 +24,22 @@ const NavbarUser = () => {
       <span className="d-none d-sm-inline-block">
         <Dropdown.Toggle as="a" className="nav-link">
           <img
-            src={avatar1}
+            src={profile}
             className="avatar img-fluid rounded-circle me-1"
             alt="Chris Wood"
           />
-          <span className="text-dark">Chris Wood</span>
+          <span className="text-dark">{user?.full_name}</span>
         </Dropdown.Toggle>
       </span>
       <Dropdown.Menu drop="end">
         <Dropdown.Item>
-          <User size={18} className="align-middle me-2" />
-          Profile
-        </Dropdown.Item>
-        <Dropdown.Item>
-          <PieChart size={18} className="align-middle me-2" />
-          Analytics
+          My profile
         </Dropdown.Item>
         <Dropdown.Divider />
-        <Dropdown.Item>Settings & Privacy</Dropdown.Item>
-        <Dropdown.Item>Help</Dropdown.Item>
-        <Dropdown.Item>Sign out</Dropdown.Item>
+        <Dropdown.Item>
+          Theme settings
+        </Dropdown.Item>
+        <Dropdown.Item onClick={() => signOutHandler()}>Sign out</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );

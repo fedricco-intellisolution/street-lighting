@@ -1,9 +1,10 @@
-import { createContext, useEffect, useReducer } from "react";
-
+import { createContext, useContext, useEffect, useReducer, useCallback } from "react";
 import api from "../utils/api";
-import { isValidToken, setSession } from "../utils/jwt";
+import { isValidToken, setSession, setUID } from "../utils/jwt";
 import * as authApi from "../api/authApi";
 import * as usersApi from "../api/usersApi";
+import NotyfContext from "../contexts/NotyfContext";
+import { useNavigate } from "react-router-dom";
 
 const INITIALIZE = "INITIALIZE";
 const SIGN_IN = "SIGN_IN";
@@ -23,6 +24,7 @@ const JWTReducer = (state, action) => {
         isAuthenticated: action.payload.isAuthenticated,
         isInitialized: true,
         user: action.payload.user,
+        uid: action.payload.uid
       };
     case SIGN_IN:
       return {
@@ -34,6 +36,7 @@ const JWTReducer = (state, action) => {
       return {
         ...state,
         isAuthenticated: false,
+        uid: null,
         user: null,
       };
 
@@ -53,15 +56,18 @@ const AuthContext = createContext(null);
 
 function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(JWTReducer, initialState);
-  useEffect(() => {
-    const initialize = async () => {
+  const notyf = useContext(NotyfContext);
+  const navigate = useNavigate();
+
+  const initialize = useCallback(async () => {
+      console.log('initialize')
       try {
         const accessToken = window.localStorage.getItem("accessToken");
-
+        const uid = window.localStorage.getItem('uid')
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
-          const response = await usersApi.getUser('9655524d-4362-49e3-8b0e-d57427a5ff28');
-          const { user } = response.data;
+          const response = await usersApi.getUser(uid);
+          const user  = response.data.data;
           dispatch({
             type: INITIALIZE,
             payload: {
@@ -89,31 +95,55 @@ function AuthProvider({ children }) {
         });
         
       }
-    };
-
-    initialize();
   }, []);
+  
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
 
-  const signIn = async (email, password) => {
-    let payload = {
-      username: 'jaine',
-      password : 'qwerty'
+  const signIn = async (data) => {
+    const response = await authApi.logIn(data)
+    if (response.data.status === 'SUCCESS') {
+      setSession(response.data.data.token);
+      setUID(response.data.data.uid);
+      const uid = response.data.data.uid
+      dispatch({
+        type: SIGN_IN,
+        payload: {
+          uid,
+        },
+      });
+      navigate('/')
+      initialize()
     }
-    const response = await authApi.logIn(payload)
-    console.log(response)
-    setSession(response.data.data.token);
-    const uid = response.data.data.uid
-    dispatch({
-      type: SIGN_IN,
-      payload: {
-        uid,
-      },
-    });
+
+    if (response.data.status === 'ERROR') {
+        notyf.open({
+          type: "danger",
+          message: response.data.message,
+        });
+    }
+    
   };
 
   const signOut = async () => {
-    setSession(null);
-    dispatch({ type: SIGN_OUT });
+    try {
+      // const response = await authApi.logOut()
+        setSession(null);
+        setUID(null);
+        dispatch({ type: SIGN_OUT });
+        const accessToken = window.localStorage.getItem("accessToken"); 
+        if (!accessToken) {
+          navigate('/auth/sign-in')
+          notyf.open({
+            type: "success",
+            message: "You've successfully logout",
+          });
+        }
+    } catch (error) {
+      
+    }
+   
   };
 
   const signUp = async (email, password, firstName, lastName) => {
