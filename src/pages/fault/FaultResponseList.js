@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, useContext } from "react";
 import { Helmet } from "react-helmet-async";
-import { Card, Col, Container, Form, Row } from "react-bootstrap";
+import { Card, Col, Container, Form, Row, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Camera, Eye } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
 import DynamicTable from "@components/ui/DynamicTable";
@@ -58,17 +58,29 @@ const FaultResponseList = () => {
             data.push({
                 actions: (
                     <>
-                        <Eye
-                            className="align-middle me-2"
-                            size={16}
-                            onClick={() => navigate(location.pathname+'/'+fault.id)}
-                        />
-                        {!fault.attended_at &&
-                            <Camera
-                                className="align-middle me-1"
+                        <OverlayTrigger
+                            placement="bottom"
+                            overlay={<Tooltip>View fault</Tooltip>}
+                        >
+                            <Eye
+                                className="align-middle me-2"
                                 size={16}
-                                onClick={() => openScanner(fault.id)}
+                                onClick={() => navigate(location.pathname+'/'+fault.id)}
                             />
+                        </OverlayTrigger>
+                       
+                        {!fault.attended_at &&
+                            <OverlayTrigger
+                                placement="bottom"
+                                overlay={<Tooltip>Scan QR Code</Tooltip>}
+                            >
+                                <Camera
+                                    className="align-middle me-1"
+                                    size={16}
+                                    onClick={() => openScanner(fault.id)}
+                                />
+                            </OverlayTrigger>
+                           
                         }
                     </>
                 ),

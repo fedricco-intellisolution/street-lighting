@@ -1,17 +1,17 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Card, Col, Container, Form, Row, OverlayTrigger, Tooltip } from "react-bootstrap";
-import { Eye, FileText } from "react-feather";
+import { Eye } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
 import DynamicTable from "@components/ui/DynamicTable";
 import * as faultApi from "@api/faultApi";
 
-const FaultRectifiedList = () => {
+const FaultEOTRequestList = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [filter, setFilter] = useState({
         search: {
-            status: 'RECTIFIED'
+            status: 'FOR_EOT_APPLICATION'
         }
     });
     const [tableData, setTableData] = useState([])
@@ -63,16 +63,6 @@ const FaultRectifiedList = () => {
                                 onClick={() => navigate(location.pathname+'/'+fault.id)}
                             />
                         </OverlayTrigger>
-                        <OverlayTrigger
-                            placement="bottom"
-                            overlay={<Tooltip>Add incident report</Tooltip>}
-                        >
-                            <FileText
-                                className="align-middle me-2"
-                                size={16}
-                                onClick={() =>  {}}
-                            />
-                        </OverlayTrigger>
                         
                     </>
                 ),
@@ -94,9 +84,9 @@ const FaultRectifiedList = () => {
 
     return (
         <React.Fragment>
-            <Helmet title="Fault Rectified" />
+            <Helmet title="Fault EOT Requests" />
             <Container fluid className="p-0">
-                <h1 className="h3 mb-3">Fault rectified</h1>
+                <h1 className="h3 mb-3">Fault EOT request (TO)</h1>
                 <Card>
                     <Card.Header className="pb-0">
                         <Row>
@@ -119,4 +109,4 @@ const FaultRectifiedList = () => {
     )
 }
 
-export default FaultRectifiedList;
+export default FaultEOTRequestList;

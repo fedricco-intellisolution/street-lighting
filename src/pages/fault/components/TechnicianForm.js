@@ -24,6 +24,7 @@ const TechnicianForm = (props) => {
         reset(fault)
         setBeforePhotosURLs(fault.before_photos)
         setAfterPhotosURLs(fault.after_photos)
+        
     }, [reset, fault])
 
     const onChangeBeforePhotos = (e) => {
@@ -56,13 +57,18 @@ const TechnicianForm = (props) => {
         setValue('after_photos', afterPhotos)
     }, [afterPhotos, setValue])
 
-    const removeItem = (name) => {
-        // const index = beforePhotos.findIndex(item => item.name === name)
-        // console.log(index)
-        // if (index > -1) {
-        //     setBeforePhotos(prevState => prevState.splice(index, 1))
-        // }
+    const removeBeforePhoto = (index) => {
+        let temp = [...beforePhotosURLs]
+        temp.splice(index, 1)
+        setBeforePhotosURLs(temp)
     }
+
+    const removeAfterPhoto = (index) => {
+        let temp = [...afterPhotosURLs]
+        temp.splice(index, 1)
+        setAfterPhotosURLs(temp)
+    }
+
     return (
         <>
             <Card>
@@ -166,7 +172,7 @@ const TechnicianForm = (props) => {
                                     <Image src={image.full_path} />
                                     <small>{image.file_name}</small>
                                     <div className="text-end mt-2">
-                                        <Trash2 size={16} className="cursor-pointer me-1" onClick={()=>removeItem(image.name)}/>
+                                        <Trash2 size={16} className="cursor-pointer me-1" onClick={()=>removeBeforePhoto(key)}/>
                                         <ZoomIn size={16} className="cursor-pointer" />
                                     </div>
                                 </div>
@@ -182,7 +188,7 @@ const TechnicianForm = (props) => {
                                     defaultValue=""
                                     render={({ field: { value, onChange, onBlur } }) => (
                                         <Form.Control
-                                           type="file"
+                                            type="file"
                                             multiple
                                             accept="image/*"
                                             name="after_photos"
@@ -198,7 +204,7 @@ const TechnicianForm = (props) => {
                                     <Image src={image.full_path} />
                                     <small>{image.file_name}</small>
                                     <div className="text-end mt-2">
-                                        <Trash2 size={16} className="cursor-pointer me-1" onClick={()=>removeItem(image.name)}/>
+                                        <Trash2 size={16} className="cursor-pointer me-1" onClick={()=>removeAfterPhoto(key)}/>
                                         <ZoomIn size={16} className="cursor-pointer" />
                                     </div>
                                 </div>
@@ -234,7 +240,7 @@ const TechnicianForm = (props) => {
                                     render={({ field: { value, onChange, onBlur } }) => (
                                         <Form.Select
                                             type="text"
-                                            disabled={editable}
+                                            disabled={!editable}
                                             className={(errors.case_category && 'is-invalid')}
                                         >
                                             <option value="">Choose an option</option>

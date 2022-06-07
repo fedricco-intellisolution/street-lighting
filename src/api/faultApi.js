@@ -28,8 +28,12 @@ export const forVerificationTO = (id, data) => {
     return api.post('/fault/technician/for_verification_to/'+id, data)
 }
 
+export const requestEOT = (id) => {
+    return api.post('/fault/technician/request_eot/'+ id)
+}
+
 export const updateFaultTO = (id, data) => {
-    return api.put('/fault/to/'+id, data)
+    return api.post('/fault/to/'+id, data)
 }
 
 export const forVerificationNEA = (id, data) => {
@@ -39,4 +43,6 @@ export const forVerificationNEA = (id, data) => {
 export const verifyFault = (id) => {
     return api.post('/fault/nea/verify/'+id)
 }
+
+
 

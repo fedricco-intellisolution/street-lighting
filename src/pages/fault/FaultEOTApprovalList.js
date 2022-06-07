@@ -1,17 +1,17 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Card, Col, Container, Form, Row, OverlayTrigger, Tooltip } from "react-bootstrap";
-import { Eye, FileText } from "react-feather";
+import { Card, Col, Container, Form, Row } from "react-bootstrap";
+import { Edit2 } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
 import DynamicTable from "@components/ui/DynamicTable";
 import * as faultApi from "@api/faultApi";
 
-const FaultRectifiedList = () => {
+const FaultEOTApprovalList = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [filter, setFilter] = useState({
         search: {
-            status: 'RECTIFIED'
+            status: 'FOR_EOT_APPROVAL'
         }
     });
     const [tableData, setTableData] = useState([])
@@ -53,27 +53,11 @@ const FaultRectifiedList = () => {
             data.push({
                 actions: (
                     <>
-                        <OverlayTrigger
-                            placement="bottom"
-                            overlay={<Tooltip>View fault</Tooltip>}
-                        >
-                            <Eye
-                                className="align-middle me-2"
-                                size={16}
-                                onClick={() => navigate(location.pathname+'/'+fault.id)}
-                            />
-                        </OverlayTrigger>
-                        <OverlayTrigger
-                            placement="bottom"
-                            overlay={<Tooltip>Add incident report</Tooltip>}
-                        >
-                            <FileText
-                                className="align-middle me-2"
-                                size={16}
-                                onClick={() =>  {}}
-                            />
-                        </OverlayTrigger>
-                        
+                        <Edit2
+                            className="align-middle me-2"
+                            size={16}
+                            onClick={() => navigate(location.pathname+'/'+fault.id)}
+                        />
                     </>
                 ),
                 id: fault.id,
@@ -94,9 +78,9 @@ const FaultRectifiedList = () => {
 
     return (
         <React.Fragment>
-            <Helmet title="Fault Rectified" />
+            <Helmet title="Fault EOT Approval" />
             <Container fluid className="p-0">
-                <h1 className="h3 mb-3">Fault rectified</h1>
+                <h1 className="h3 mb-3">Fault EOT approval (NEA)</h1>
                 <Card>
                     <Card.Header className="pb-0">
                         <Row>
@@ -119,4 +103,4 @@ const FaultRectifiedList = () => {
     )
 }
 
-export default FaultRectifiedList;
+export default FaultEOTApprovalList;

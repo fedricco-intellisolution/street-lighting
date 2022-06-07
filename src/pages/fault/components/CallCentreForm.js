@@ -53,7 +53,8 @@ const CallCentreForm = (props) => {
     const [call_types, setCallTypes] = useState([])
     const [call_type_options, setCallTypeOptions] = useState([])
     const [technicians, setTechnicians] = useState([])
-    
+    const watchCallType = watch("call_type", 'value')
+
     const getSites = useCallback(async () => {
         const response = await propertyManagementApi.getSites()
         const data = response.data.data
@@ -95,13 +96,9 @@ const CallCentreForm = (props) => {
     }
 
     useEffect(() => {
-        const selected_call_type = watch('call_type', 'value')
-        const result = call_types.find(item => item.code === selected_call_type)
+        const result = call_types.find(item => item.code === watchCallType)
         setValue('response_time', result?.description)
-    }, [
-        watch('call_type'),
-        setValue, call_types
-    ])
+    }, [call_types, watchCallType, setValue])
 
     const getTechnicians = () => {
         const data = [
@@ -157,7 +154,7 @@ const CallCentreForm = (props) => {
                                     }
                                     onChange={(val) => onChange(val.value)}
                                     value={sites.filter((c) => value.includes(c.value))}
-                                    
+                                    isDisabled={!props.editable}
                                 />
                             )}
                         />
@@ -289,6 +286,7 @@ const CallCentreForm = (props) => {
                                     }
                                     onChange={(val) => onChange(val.value)}
                                     value={job_types.filter((c) => value.includes(c.value))}
+                                    isDisabled={!props.editable}
                                 />
                             )}
                         />
@@ -322,6 +320,7 @@ const CallCentreForm = (props) => {
                                         }
                                     }
                                     value={call_type_options.filter((c) => value.includes(c.value))}
+                                    isDisabled={!props.editable}
                                 />
                             )}
                         />
@@ -352,6 +351,7 @@ const CallCentreForm = (props) => {
                                     }
                                     onChange={(val) => onChange(val.value)}
                                     value={technicians.filter((c) => value.includes(c.value))}
+                                    isDisabled={!props.editable}
                                 />
                             )}
                         />

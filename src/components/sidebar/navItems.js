@@ -33,6 +33,14 @@ const pagesSection = [
         title: "Fault response"
       },
       {
+        href: "/faults/eot-requests",
+        title: "Fault EOT request (TO)"
+      },
+      {
+        href: "/faults/eot-approval",
+        title: "Fault EOT approval (NEA)"
+      },
+      {
         href: "/faults/verification-to",
         title: "Fault verification (TO)",
       },
