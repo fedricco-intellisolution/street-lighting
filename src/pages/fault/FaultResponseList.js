@@ -7,6 +7,7 @@ import DynamicTable from "@components/ui/DynamicTable";
 import * as faultApi from "@api/faultApi";
 import QRScanner from "../../components/QRScanner"
 import NotyfContext from "@contexts/NotyfContext";
+import debounce from 'debounce';
 
 const FaultResponseList = () => {
     const navigate = useNavigate();
@@ -143,10 +144,16 @@ const FaultResponseList = () => {
                         <Row>
                             <Col md={3}>
                                 <Form.Control
-                                    value=""
-                                    onChange={() => {}}
                                     placeholder="Search keyword"
                                     className="d-inline-block"
+                                    onChange={debounce((e) => {
+                                         setFilter(prevState => ({
+                                            search: {
+                                                ...prevState.search,
+                                                keyword : e.target.value
+                                            }
+                                        }));
+                                    }, 1000)}
                                 />
                             </Col>
                         </Row>

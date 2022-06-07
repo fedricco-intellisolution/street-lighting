@@ -5,7 +5,6 @@ import { Eye, Zap } from "react-feather";
 import { useLocation, useNavigate } from "react-router-dom";
 import DynamicTable from "@components/ui/DynamicTable";
 import * as faultApi from "@api/faultApi";
-import { useForm, Controller } from "react-hook-form";
 import debounce from 'debounce';
 
 const CallCentreFaultList = () => {
@@ -14,21 +13,9 @@ const CallCentreFaultList = () => {
     const [filter, setFilter] = useState({
         search: {
             status: 'FOR_RESPONSE',
-            keyword: '',
         }
     });
     const [tableData, setTableData] = useState([])
-        const {
-        handleSubmit,
-        control,
-        reset,
-        setValue,
-        watch,
-        formState: { errors },
-    } = useForm({
-        mode: "onTouched"
-    });
-
     const tableColumns = [
         {
             Header: "Actions",
@@ -92,16 +79,6 @@ const CallCentreFaultList = () => {
        getFaults();
     }, [getFaults])
 
-    const onSearch = (keyword) => {
-        console.log(keyword)
-        setValue('search', keyword)
-
-        setFilter(prevState => ({
-            ...prevState,
-            keyword: keyword
-        }))
-    }
-
     return (
         <React.Fragment>
             <Helmet title="Fault Registration" />
@@ -111,24 +88,18 @@ const CallCentreFaultList = () => {
                     <Card.Header className="pb-0">
                         <Row>
                             <Col md={3}>
-                                <Form.Group className="mb-3">
-                                    <Controller
-                                        control={control}
-                                        name="search"
-                                        defaultValue=""
-                                        render={({ field: { value, onChange, onBlur } }) => (
-                                            <Form.Control
-                                                type="text"
-                                                value={value}
-                                                onChange={debounce((e) => onSearch(e), 1000)}
-                                                onBlur={onBlur}
-                                                placeholder="Search keyword"
-                                                className="d-inline-block"
-                                            />
-                                        )}
-                                    />
-                                </Form.Group>
-                               
+                                <Form.Control
+                                    placeholder="Search keyword"
+                                    className="d-inline-block"
+                                    onChange={debounce((e) => {
+                                         setFilter(prevState => ({
+                                            search: {
+                                                ...prevState.search,
+                                                keyword : e.target.value
+                                            }
+                                        }));
+                                    }, 1000)}
+                                />
                             </Col>
                             <Col md={{ span: 3, offset: 6 }} className="text-end">
                                 <Button

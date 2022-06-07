@@ -5,6 +5,7 @@ import { Eye, FileText } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
 import DynamicTable from "@components/ui/DynamicTable";
 import * as faultApi from "@api/faultApi";
+import debounce from 'debounce';
 
 const FaultRectifiedList = () => {
     const navigate = useNavigate();
@@ -102,10 +103,16 @@ const FaultRectifiedList = () => {
                         <Row>
                             <Col md={3}>
                                 <Form.Control
-                                    value=""
-                                    onChange={() => {}}
                                     placeholder="Search keyword"
                                     className="d-inline-block"
+                                    onChange={debounce((e) => {
+                                         setFilter(prevState => ({
+                                            search: {
+                                                ...prevState.search,
+                                                keyword : e.target.value
+                                            }
+                                        }));
+                                    }, 1000)}
                                 />
                             </Col>
                         </Row>
