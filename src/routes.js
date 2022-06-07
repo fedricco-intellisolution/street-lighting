@@ -33,6 +33,14 @@ import AddEditLevel from "@levels/AddEditLevel";
 import Areas from "@areas/Areas";
 import AddEditArea from "@areas/AddEditArea";
 
+//contract management
+import Contracts from "@contract/contract/Contracts";
+import AddEditContract from "@contract/contract/AddEditContract";
+
+//asset management
+import Assets from "@asset/Assets";
+import CreateAsset from "@asset/CreateAsset";
+
 //Fault
 import CallCentreFaultList from "./pages/fault/CallCentreFaultList";
 import CallCentreFaultView from "./pages/fault/CallCentreFaultView";
@@ -98,6 +106,20 @@ const routes = [
     element: <PrivateLayout />,
   },
   {
+    path: "contract-management",
+    element: <PrivateLayout />,
+    children: [
+      {
+        path: "contracts",
+        element: <Contracts />,
+      },
+      {
+        path: "contracts/:id",
+        element: <AddEditContract />,
+      },
+    ],
+  },
+  {
     path: "property-management",
     element: <PrivateLayout />,
     children: [
@@ -136,6 +158,20 @@ const routes = [
     ],
   },
   {
+    path: "assets-management",
+    element: <PrivateLayout />,
+    children: [
+      {
+        path: "assets",
+        element: <Assets />,
+      },
+      {
+        path: "create-asset",
+        element: <CreateAsset />,
+      },
+    ],
+  },
+  {
     path: "settings",
     element: <PrivateLayout />,
     children: [
@@ -163,35 +199,35 @@ const routes = [
     children: [
       {
         path: "callcentre",
-        element: <CallCentreFaultList />
+        element: <CallCentreFaultList />,
       },
       {
         path: "callcentre/:id",
-        element: <CallCentreFaultView />
+        element: <CallCentreFaultView />,
       },
       {
         path: "response",
-        element: <FaultResponseList />
+        element: <FaultResponseList />,
       },
       {
         path: "response/:id",
-        element: <FaultResponseView />
+        element: <FaultResponseView />,
       },
       {
         path: "verification-to",
-        element: <FaultVerificationTOList />
+        element: <FaultVerificationTOList />,
       },
       {
         path: "verification-to/:id",
-        element: <FaultVerificationTOView />
+        element: <FaultVerificationTOView />,
       },
-       {
+      {
         path: "verification-nea",
-        element: <FaultVerificationNEAList />
+        element: <FaultVerificationNEAList />,
       },
       {
         path: "verification-nea/:id",
-        element: <FaultVerificationNEAView />
+        element: <FaultVerificationNEAView />,
       },
     ],
   },
@@ -203,7 +239,7 @@ const routes = [
         path: "checklist-type",
         element: <ChecklistType />,
       },
-	  {
+      {
         path: "checklist-type/:action",
         element: <ChecklistTypeAddEdit />,
       },
@@ -211,23 +247,23 @@ const routes = [
         path: "checklist-items",
         element: <ChecklistItems />,
       },
-	  {
+      {
         path: "checklist-items/:action",
         element: <ChecklistItemsAddEdit />,
       },
-	  {
+      {
         path: "checklist-sub-items",
         element: <ChecklistSubItems />,
       },
-	  {
+      {
         path: "checklist-sub-items/:action",
         element: <ChecklistSubItemsAddEdit />,
       },
-	  {
+      {
         path: "checklist-build",
         element: <ChecklistBuild />,
       },
-	  {
+      {
         path: "checklist-build/:action",
         element: <ChecklistBuildAddEdit />,
       },

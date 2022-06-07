@@ -7,6 +7,8 @@ import {
   Zap,
   Home,
   Shield,
+  FileText,
+  Package,
 } from "react-feather";
 
 const pagesSection = [
@@ -43,6 +45,16 @@ const pagesSection = [
     ],
   },
   {
+    icon: FileText,
+    title: "Contract management",
+    children: [
+      {
+        href: "/contract-management/contracts",
+        title: "Contract",
+      },
+    ],
+  },
+  {
     icon: Home,
     title: "Property management",
     children: [
@@ -61,6 +73,20 @@ const pagesSection = [
       {
         href: "/property-management/areas",
         title: "Area",
+      },
+    ],
+  },
+  {
+    icon: Package,
+    title: "Assets management",
+    children: [
+      {
+        href: "/assets-management/assets",
+        title: "Assets",
+      },
+      {
+        href: "/assets-management/create-asset",
+        title: "Create asset",
       },
     ],
   },
