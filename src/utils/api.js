@@ -1,17 +1,12 @@
 import axios from 'axios';
-//import store from './store';
 
-// const requestHandler = request => {
-//     const state = store.getState();
-
-//     const AUTH_TOKEN = state.auth.token
-
-//     if( AUTH_TOKEN != null) {
-//         request.headers.Authorization = 'Bearer '+AUTH_TOKEN;  
-//     }
-    
-//     return request;
-// };
+const requestHandler = request => {
+    const accessToken = window.localStorage.getItem("accessToken");
+    if( accessToken != null) {
+        request.headers.Authorization = 'Bearer '+accessToken;  
+    }
+    return request;
+};
 
 const responseHandler = response => {
     return response;
@@ -29,10 +24,10 @@ const api = () => {
       
     });
 
-    // instance.interceptors.request.use(
-    //     (request) => requestHandler(request),
-    //     (error) => errorHandler(error)
-    // );
+    instance.interceptors.request.use(
+        (request) => requestHandler(request),
+        (error) => errorHandler(error)
+    );
 
     instance.interceptors.response.use(
         (response) => responseHandler(response),
