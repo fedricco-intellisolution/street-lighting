@@ -4,13 +4,13 @@ import { THEME } from "../constants";
 import useSettingsState from "../hooks/useSettingsState";
 
 const initialState = {
-  theme: THEME.DEFAULT,
+  theme: THEME.LIGHT,
 };
 
 const ThemeContext = React.createContext(initialState);
 
 function ThemeProvider({ children }) {
-  const [theme, setTheme] = useSettingsState("theme", THEME.DEFAULT);
+  const [theme, setTheme] = useSettingsState("theme", THEME.LIGHT);
 
   return (
     <ThemeContext.Provider
