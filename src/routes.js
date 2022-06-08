@@ -34,17 +34,20 @@ import Areas from "@areas/Areas";
 import AddEditArea from "@areas/AddEditArea";
 
 //Fault
-import CallCentreFaultList from "./pages/fault/CallCentreFaultList";
-import CallCentreFaultView from "./pages/fault/CallCentreFaultView";
-
-import FaultResponseList from "./pages/fault/FaultResponseList";
-import FaultResponseView from "./pages/fault/FaultResponseView";
-
-import FaultVerificationTOList from "./pages/fault/FaultVerificationTOList";
-import FaultVerificationTOView from "./pages/fault/FaultVerificationTOView";
-
-import FaultVerificationNEAList from "./pages/fault/FaultVerificationNEAList";
-import FaultVerificationNEAView from "./pages/fault/FaultVerificationNEAView";
+import CallCentreFaultList from "@fault/CallCentreFaultList";
+import CallCentreFaultView from "@fault/CallCentreFaultView";
+import FaultResponseList from "@fault/FaultResponseList";
+import FaultResponseView from "@fault/FaultResponseView";
+import FaultVerificationTOList from "@fault/FaultVerificationTOList";
+import FaultVerificationTOView from "@fault/FaultVerificationTOView";
+import FaultVerificationNEAList from "@fault/FaultVerificationNEAList";
+import FaultVerificationNEAView from "@fault/FaultVerificationNEAView";
+import FaultRectifiedList from "@fault/FaultRectifiedList";
+import FaultEOTRequestList from "@fault/FaultEOTRequestList";
+import FaultEOTRequestView from "@fault/FaultEOTRequestView";
+import FaultEOTApprovalList from "@fault/FaultEOTApprovalList";
+import FaultEOTApprovalView from "@fault/FaultEOTApprovalView";
+import FaultRectifiedView from "@fault/FaultRectifiedView";
 
 // Preventive maintenance
 import { ChecklistBuild } from "@preventive/checklist-build/ChecklistBuild";
@@ -55,6 +58,7 @@ import { ChecklistTypeAddEdit } from "@preventive/checklist-type/ChecklistTypeAd
 import { ChecklistItemsAddEdit } from "@preventive/checklist-items/ChecklistItemsAddEdit";
 import { ChecklistSubItemsAddEdit } from "@preventive/checklist-sub-items/ChecklistSubItemsAddEdit";
 import { ChecklistBuildAddEdit } from "pages/preventive-maintenance/checklist-build/ChecklistBuildAddEdit";
+
 
 const routes = [
   {
@@ -192,6 +196,30 @@ const routes = [
       {
         path: "verification-nea/:id",
         element: <FaultVerificationNEAView />
+      },
+      {
+        path: "rectified",
+        element: <FaultRectifiedList />
+      },
+      {
+        path: "rectified/:id",
+        element: <FaultRectifiedView />
+      },
+      {
+        path: "eot-requests",
+        element: <FaultEOTRequestList />
+      },
+      {
+        path: "eot-requests/:id",
+        element: <FaultEOTRequestView />
+      },
+      {
+        path: "eot-approval",
+        element: <FaultEOTApprovalList />
+      },
+      {
+        path: "eot-approval/:id",
+        element: <FaultEOTApprovalView />
       },
     ],
   },

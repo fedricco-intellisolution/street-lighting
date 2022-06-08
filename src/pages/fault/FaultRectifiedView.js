@@ -1,6 +1,6 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import { Card, Col, Container, Form, Row } from "react-bootstrap";
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import { useNavigate, useParams } from "react-router-dom";
 import CallCentreForm from "./components/CallCentreForm";
@@ -9,21 +9,22 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import * as faultApi from "@api/faultApi";
-import NotyfContext from "@contexts/NotyfContext";
 
 const schema = yup.object().shape({
-
+    action_taken: yup
+        .string()
+        .required('This field is required')
     
 });
-const FaultVerificationNEAView = () => {
+const FaultRectifiedView = () => {
     const navigate = useNavigate();
     const { id } = useParams();
-    const notyf = useContext(NotyfContext);
     const [fault, setFault] = useState({});
 
     const {
         control,
         reset,
+        setValue,
         formState: { errors },
     } = useForm({
         mode: "onTouched",
@@ -39,20 +40,6 @@ const FaultVerificationNEAView = () => {
         getFault()
     }, [getFault])
 
-    const verifyCompletionHandler = async () => {
-        try {
-            const response = await faultApi.verifyFault(id)
-            if (response.data.status === 'SUCCESS') {
-                 notyf.open({
-                    type: 'success',
-                    message: response.data.message
-                })
-            }
-        } catch (error) {
-            
-        }
-    }
-
     return (
         <React.Fragment>
             <Helmet title="View fault" />
@@ -63,7 +50,7 @@ const FaultVerificationNEAView = () => {
                     </Col>
                     <Col md={6}>
                          <Breadcrumb>
-                            <Breadcrumb.Item onClick={() => navigate('/faults/verification-nea')}>Fault verification (NEA)</Breadcrumb.Item>
+                            <Breadcrumb.Item onClick={() => navigate('/faults/rectified')}>Fault rectified</Breadcrumb.Item>
                             <Breadcrumb.Item active>View</Breadcrumb.Item>
                         </Breadcrumb>
                     </Col>
@@ -81,27 +68,17 @@ const FaultVerificationNEAView = () => {
                 </Card>
                 <Form>
                     <TechnicianForm
-                        editable={true}
+                        editable={false}
                         control={control}
                         errors={errors}
                         reset={reset}
                         fault={fault}
+                        setValue={setValue}
                     />
-                     <Row>
-                        <Col md={12} className="text-end">
-                            <Button
-                                variant="success"
-                                onClick={() => verifyCompletionHandler()}
-                            >
-                                Verify completion
-                            </Button>
-                        </Col>
-                    </Row>
-                   
                 </Form>
             </Container>
         </React.Fragment>    
     )
 }
 
-export default FaultVerificationNEAView;
+export default FaultRectifiedView;

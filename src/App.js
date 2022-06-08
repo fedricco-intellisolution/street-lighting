@@ -9,6 +9,7 @@ import routes from "./routes";
 
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { SidebarProvider } from "./contexts/SidebarContext";
+import { SettingsProvider } from "./contexts/SettingsContext";
 import { LayoutProvider } from "./contexts/LayoutContext";
 import { AuthProvider } from "./contexts/JWTContext";
 
@@ -24,11 +25,13 @@ const App = () => {
       />
       <Provider store={store}>
         <ThemeProvider>
-          <SidebarProvider>
-            <LayoutProvider>
-              <AuthProvider>{content}</AuthProvider>
-            </LayoutProvider>
-          </SidebarProvider>
+          <SettingsProvider>
+            <SidebarProvider>
+              <LayoutProvider>
+                <AuthProvider>{content}</AuthProvider>
+              </LayoutProvider>
+            </SidebarProvider>
+          </SettingsProvider>
         </ThemeProvider>
       </Provider>
     </HelmetProvider>

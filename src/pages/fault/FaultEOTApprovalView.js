@@ -12,16 +12,12 @@ import * as faultApi from "@api/faultApi";
 import NotyfContext from "@contexts/NotyfContext";
 
 const schema = yup.object().shape({
-    action_taken: yup
-        .string()
-        .nullable()
-        .required('This field is required')
     
 });
-const FaultResponseView = () => {
+const FaultEOTApprovalView = () => {
     const navigate = useNavigate();
     const { id } = useParams();
-    const notyf = useContext(NotyfContext)
+    const notyf = useContext(NotyfContext);
     const [fault, setFault] = useState({});
 
     const {
@@ -44,62 +40,22 @@ const FaultResponseView = () => {
         getFault()
     }, [getFault])
 
-    const saveHandler = async (data) => {
-        let before_photos = data.before_photos ? data.before_photos : []
-        let after_photos = data.after_photos ?  data.after_photos : []
-        
-        const formData = new FormData()
-        formData.append("action_taken", data.action_taken)
-        
-        before_photos.forEach(file => {
-            formData.append("before_photos[]", file);
+    const approveHandler = async (data) => {
+
+        notyf.open({
+            type : 'success',
+            message: 'Approve handler called',
         })
-       
-        after_photos.forEach(file => {
-            formData.append("after_photos[]", file);
-        })
-       
-        try {
-            const response = await faultApi.updateFaultTechnician(id, formData)
-            if (response.data.status === 'SUCCESS') {
-                notyf.open({
-                    type : 'success',
-                    message: response.data.message,
-                })
-            }
-        } catch (error) {
-            console.log(error)            
-        }
+  
     }
 
-    const requestForEOTHandler = async() => {
+    const rejectHandler = async (data) => {
 
-        try {
-            const response = await faultApi.requestEOT(id)
-            if (response.data.status === 'SUCCESS') {
-                notyf.open({
-                    type : 'success',
-                    message: response.data.message,
-                })
-            }
-        } catch (error) {
-            console.log(error)            
-        }
-    }
-
-    const toVerifyHandler = async (data) => {
-        try {
-            const response = await faultApi.forVerificationTO(id, data)
-            if (response.data.status === 'SUCCESS') {
-                notyf.open({
-                    type : 'success',
-                    message: response.data.message,
-                })
-                navigate('/faults/response')
-            }
-        } catch (error) {
-            console.log(error)            
-        }
+        notyf.open({
+            type : 'success',
+            message: 'Reject handler called',
+        })
+  
     }
 
     return (
@@ -112,7 +68,7 @@ const FaultResponseView = () => {
                     </Col>
                     <Col md={6}>
                          <Breadcrumb>
-                            <Breadcrumb.Item onClick={() => navigate('/faults/response')}>Fault Response</Breadcrumb.Item>
+                            <Breadcrumb.Item onClick={() => navigate('/faults/eot-approval')}>Fault EOT approval (NEA)</Breadcrumb.Item>
                             <Breadcrumb.Item active>View</Breadcrumb.Item>
                         </Breadcrumb>
                     </Col>
@@ -137,34 +93,30 @@ const FaultResponseView = () => {
                         fault={fault}
                         setValue={setValue}
                     />
-                    <Row>
+                     <Row>
                         <Col md={12} className="text-end">
+                            <Button
+                                variant="danger"
+                                className="me-2"
+                                onClick={handleSubmit(rejectHandler)}
+                            >
+                                Reject
+                            </Button>
                             <Button
                                 variant="primary"
                                 className="me-2"
-                                onClick={handleSubmit(saveHandler)}
+                                onClick={handleSubmit(approveHandler)}
                             >
-                                Save
+                                Approve
                             </Button>
-                            <Button
-                                variant="warning"
-                                className="me-2"
-                                onClick={() => requestForEOTHandler()}
-                            >
-                                Request for EOT
-                            </Button>
-                            <Button
-                                variant="success"
-                                onClick={handleSubmit(toVerifyHandler)}
-                            >
-                                To Verify
-                            </Button>
+                            
                         </Col>
                     </Row>
+                   
                 </Form>
             </Container>
         </React.Fragment>    
     )
 }
 
-export default FaultResponseView;
+export default FaultEOTApprovalView;

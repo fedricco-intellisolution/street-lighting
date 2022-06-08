@@ -1,18 +1,18 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Card, Col, Container, Form, Row, OverlayTrigger, Tooltip } from "react-bootstrap";
-import { Eye } from "react-feather";
+import { Card, Col, Container, Form, Row } from "react-bootstrap";
+import { Edit2 } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
 import DynamicTable from "@components/ui/DynamicTable";
 import * as faultApi from "@api/faultApi";
 import debounce from 'debounce';
 
-const FaultVerificationTOList = () => {
+const FaultEOTApprovalList = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [filter, setFilter] = useState({
         search: {
-            status: 'FOR_VERIFICATION_TO'
+            status: 'FOR_EOT_APPROVAL'
         }
     });
     const [tableData, setTableData] = useState([])
@@ -54,17 +54,11 @@ const FaultVerificationTOList = () => {
             data.push({
                 actions: (
                     <>
-                        <OverlayTrigger
-                            placement="bottom"
-                            overlay={<Tooltip>View fault</Tooltip>}
-                        >
-                            <Eye
-                                className="align-middle me-2"
-                                size={16}
-                                onClick={() => navigate(location.pathname+'/'+fault.id)}
-                            />
-                        </OverlayTrigger>
-                        
+                        <Edit2
+                            className="align-middle me-2"
+                            size={16}
+                            onClick={() => navigate(location.pathname+'/'+fault.id)}
+                        />
                     </>
                 ),
                 id: fault.id,
@@ -85,9 +79,9 @@ const FaultVerificationTOList = () => {
 
     return (
         <React.Fragment>
-            <Helmet title="Fault Verification" />
+            <Helmet title="Fault EOT Approval" />
             <Container fluid className="p-0">
-                <h1 className="h3 mb-3">Fault verification (TO)</h1>
+                <h1 className="h3 mb-3">Fault EOT approval (NEA)</h1>
                 <Card>
                     <Card.Header className="pb-0">
                         <Row>
@@ -116,4 +110,4 @@ const FaultVerificationTOList = () => {
     )
 }
 
-export default FaultVerificationTOList;
+export default FaultEOTApprovalList;

@@ -53,7 +53,8 @@ const CallCentreForm = (props) => {
     const [call_types, setCallTypes] = useState([])
     const [call_type_options, setCallTypeOptions] = useState([])
     const [technicians, setTechnicians] = useState([])
-    
+    const watchCallType = watch("call_type", 'value')
+
     const getSites = useCallback(async () => {
         const response = await propertyManagementApi.getSites()
         const data = response.data.data
@@ -68,7 +69,7 @@ const CallCentreForm = (props) => {
     }, [])
     
     const getJobTypes = async () => {
-        const response = await lookUpApi.getLookUp({category:'JOB_TYPE'})
+        const response = await lookUpApi.getLookUp({search: { category: 'JOB_TYPE' }})
         const data = response.data.data
         const options = []
         data.forEach(item => {
@@ -81,7 +82,7 @@ const CallCentreForm = (props) => {
     }
 
     const getCallTypes = async () => {
-        const response = await lookUpApi.getLookUp({category:'CALL_TYPE'})
+        const response = await lookUpApi.getLookUp({search: { category: 'CALL_TYPE' }})
         const data = response.data.data
         setCallTypes(data)
         const options = []
@@ -95,10 +96,9 @@ const CallCentreForm = (props) => {
     }
 
     useEffect(() => {
-        const selected_call_type = watch('call_type', 'value')
-        const result = call_types.find(item => item.code === selected_call_type)
+        const result = call_types.find(item => item.code === watchCallType)
         setValue('response_time', result?.description)
-    },[watch('call_type'), setValue])
+    }, [call_types, watchCallType, setValue])
 
     const getTechnicians = () => {
         const data = [
@@ -132,10 +132,8 @@ const CallCentreForm = (props) => {
     useEffect(() => {   
         reset(props.fault)
     }, [reset, props.fault])
-
     
     return (
-
         <Form>
             <Row>
                 <Col md={6}>
@@ -156,7 +154,7 @@ const CallCentreForm = (props) => {
                                     }
                                     onChange={(val) => onChange(val.value)}
                                     value={sites.filter((c) => value.includes(c.value))}
-                                    
+                                    isDisabled={!props.editable}
                                 />
                             )}
                         />
@@ -288,6 +286,7 @@ const CallCentreForm = (props) => {
                                     }
                                     onChange={(val) => onChange(val.value)}
                                     value={job_types.filter((c) => value.includes(c.value))}
+                                    isDisabled={!props.editable}
                                 />
                             )}
                         />
@@ -314,8 +313,14 @@ const CallCentreForm = (props) => {
                                     className={
                                         "react-select-container" + errors.call_type && "is-invalid"
                                     }
-                                    onChange={(val) => onChange(val.value)}
+                                    onChange={(val) => {
+                                            onChange(val.value)
+                                            console.log(val.value)
+                                            
+                                        }
+                                    }
                                     value={call_type_options.filter((c) => value.includes(c.value))}
+                                    isDisabled={!props.editable}
                                 />
                             )}
                         />
@@ -346,6 +351,7 @@ const CallCentreForm = (props) => {
                                     }
                                     onChange={(val) => onChange(val.value)}
                                     value={technicians.filter((c) => value.includes(c.value))}
+                                    isDisabled={!props.editable}
                                 />
                             )}
                         />

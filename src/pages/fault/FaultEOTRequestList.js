@@ -7,12 +7,12 @@ import DynamicTable from "@components/ui/DynamicTable";
 import * as faultApi from "@api/faultApi";
 import debounce from 'debounce';
 
-const FaultVerificationTOList = () => {
+const FaultEOTRequestList = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [filter, setFilter] = useState({
         search: {
-            status: 'FOR_VERIFICATION_TO'
+            status: 'FOR_EOT_APPLICATION'
         }
     });
     const [tableData, setTableData] = useState([])
@@ -85,9 +85,9 @@ const FaultVerificationTOList = () => {
 
     return (
         <React.Fragment>
-            <Helmet title="Fault Verification" />
+            <Helmet title="Fault EOT Requests" />
             <Container fluid className="p-0">
-                <h1 className="h3 mb-3">Fault verification (TO)</h1>
+                <h1 className="h3 mb-3">Fault EOT request (TO)</h1>
                 <Card>
                     <Card.Header className="pb-0">
                         <Row>
@@ -116,4 +116,4 @@ const FaultVerificationTOList = () => {
     )
 }
 
-export default FaultVerificationTOList;
+export default FaultEOTRequestList;

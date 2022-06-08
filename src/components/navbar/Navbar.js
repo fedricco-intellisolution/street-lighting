@@ -1,24 +1,10 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
-import { Button, Navbar, Nav, Form, InputGroup } from "react-bootstrap";
-
-import {
-  AlertCircle,
-  Bell,
-  BellOff,
-  Home,
-  MessageCircle,
-  UserPlus,
-  Search,
-} from "react-feather";
-
+import { Navbar, Nav } from "react-bootstrap";
+import {AlertCircle, Bell, Home,UserPlus,} from "react-feather";
 import useSidebar from "../../hooks/useSidebar";
-
 import NavbarDropdown from "./NavbarDropdown";
 import NavbarDropdownItem from "./NavbarDropdownItem";
 import NavbarUser from "./NavbarUser";
-
-import avatar1 from "../../assets/img/avatars/avatar.jpg";
 
 const notifications = [
   {
@@ -47,105 +33,60 @@ const notifications = [
   },
 ];
 
-const messages = [
-  {
-    name: "Chris Wood",
-    avatar: avatar1,
-    description: "Curabitur ligula sapien euismod vitae.",
-    time: "2h ago",
-  }
-];
-
 const NavbarComponent = () => {
-  const { t } = useTranslation();
   const { isOpen, setIsOpen } = useSidebar();
-
   return (
-    <Navbar variant="light" expand className="navbar-bg">
-      <span
-        className="sidebar-toggle d-flex"
-        onClick={() => {
-          setIsOpen(!isOpen);
-        }}
-      >
-        <i className="hamburger align-self-center" />
-      </span>
-
-      <Form inline="true" className="d-none d-sm-inline-block">
-        <InputGroup className="input-group-navbar">
-          <Form.Control placeholder={t("Search")} aria-label="Search" />
-          <Button variant="">
-            <Search className="feather" />
-          </Button>
-        </InputGroup>
-      </Form>
-
-      <Navbar.Collapse>
-        <Nav className="navbar-align">
-          <NavbarDropdown
-            header="New Messages"
-            footer="Show all messages"
-            icon={MessageCircle}
-            count={messages.length}
-            showBadge
+      <Navbar variant="light" expand className="navbar-bg">
+          <span
+            className="sidebar-toggle d-flex"
+            onClick={() => {
+              setIsOpen(!isOpen);
+            }}
           >
-            {messages.map((item, key) => {
-              return (
-                <NavbarDropdownItem
-                  key={key}
-                  icon={
-                    <img
-                      className="avatar img-fluid rounded-circle"
-                      src={item.avatar}
-                      alt={item.name}
-                    />
+            <i className="hamburger align-self-center" />
+          </span>
+
+          <Navbar.Collapse>
+            <Nav className="navbar-align">
+
+              <NavbarDropdown
+                header="New Notifications"
+                footer="Show all notifications"
+                icon={Bell}
+                count={notifications.length}
+              >
+                {notifications.map((item, key) => {
+                  let icon = <Bell size={18} className="text-warning" />;
+
+                  if (item.type === "important") {
+                    icon = <AlertCircle size={18} className="text-danger" />;
                   }
-                  title={item.name}
-                  description={item.description}
-                  time={item.time}
-                  spacing
-                />
-              );
-            })}
-          </NavbarDropdown>
 
-          <NavbarDropdown
-            header="New Notifications"
-            footer="Show all notifications"
-            icon={BellOff}
-            count={notifications.length}
-          >
-            {notifications.map((item, key) => {
-              let icon = <Bell size={18} className="text-warning" />;
+                  if (item.type === "login") {
+                    icon = <Home size={18} className="text-primary" />;
+                  }
 
-              if (item.type === "important") {
-                icon = <AlertCircle size={18} className="text-danger" />;
-              }
+                  if (item.type === "request") {
+                    icon = <UserPlus size={18} className="text-success" />;
+                  }
 
-              if (item.type === "login") {
-                icon = <Home size={18} className="text-primary" />;
-              }
+                  return (
+                    <NavbarDropdownItem
+                      key={key}
+                      icon={icon}
+                      title={item.title}
+                      description={item.description}
+                      time={item.time}
+                    />
+                  );
+                })}
+              </NavbarDropdown>
 
-              if (item.type === "request") {
-                icon = <UserPlus size={18} className="text-success" />;
-              }
-
-              return (
-                <NavbarDropdownItem
-                  key={key}
-                  icon={icon}
-                  title={item.title}
-                  description={item.description}
-                  time={item.time}
-                />
-              );
-            })}
-          </NavbarDropdown>
-
-          <NavbarUser />
-        </Nav>
-      </Navbar.Collapse>
-    </Navbar>
+              <NavbarUser />
+            </Nav>
+          </Navbar.Collapse>
+      </Navbar>
+    
   );
 };
 
