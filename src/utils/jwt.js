@@ -37,4 +37,12 @@ const setSession = (accessToken) => {
   }
 };
 
-export { verify, sign, isValidToken, setSession };
+const setUID = (userId) => {
+  if (userId) {
+    localStorage.setItem("uid", userId);
+   } else {
+    localStorage.removeItem("uid");
+  }
+}
+
+export { verify, sign, isValidToken, setSession, setUID };

@@ -8,9 +8,7 @@ import Navbar from "../components/navbar/Navbar";
 import Content from "../components/Content";
 import Footer from "../components/Footer";
 import Settings from "../components/Settings";
-
 import navItems from "../components/sidebar/navItems";
-import { Helmet } from "react-helmet-async";
 const PrivateLayout = ({ children }) => {
   return (
     <React.Fragment>
@@ -19,7 +17,6 @@ const PrivateLayout = ({ children }) => {
         <Main>
           <Navbar />
           <Content>
-            <Helmet title="Register fault" />
             {children}
             <Outlet />
           </Content>

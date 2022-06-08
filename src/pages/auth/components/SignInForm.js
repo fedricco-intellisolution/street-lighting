@@ -1,123 +1,109 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import * as Yup from "yup";
-import { Formik } from "formik";
-import { Alert, Button, Form } from "react-bootstrap";
-
+import { Button, Form } from "react-bootstrap";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { ErrorMessage } from '@hookform/error-message';
+import * as yup from "yup";
 import useAuth from "../../../hooks/useAuth";
 
+
+const schema = yup.object().shape({
+    username: yup
+      .string()
+      .required("This field is required"),
+    password: yup
+      .string()
+      .required("This field is required")
+});
+
 const SignInForm = () => {
-  const navigate = useNavigate();
   const { signIn } = useAuth();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    mode: "onTouched",
+    resolver: yupResolver(schema),
+  });
 
+  const signInHandler = async(data) => {
+    try {
+      await signIn(data);
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
-    <Formik
-      initialValues={{
-        email: "demo@bootlab.io",
-        password: "unsafepassword",
-        submit: false,
-      }}
-      validationSchema={Yup.object().shape({
-        email: Yup.string()
-          .email("Must be a valid email")
-          .max(255)
-          .required("Email is required"),
-        password: Yup.string().max(255).required("Password is required"),
-      })}
-      onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-        try {
-          await signIn(values.email, values.password);
-
-          navigate("/");
-        } catch (error) {
-          const message = error.message || "Something went wrong";
-
-          setStatus({ success: false });
-          setErrors({ submit: message });
-          setSubmitting(false);
-        }
-      }}
-    >
-      {({
-        errors,
-        handleBlur,
-        handleChange,
-        handleSubmit,
-        isSubmitting,
-        touched,
-        values,
-      }) => (
-        <Form onSubmit={handleSubmit}>
-          {errors.submit && (
-            <Alert className="my-3" variant="danger">
-              <div className="alert-message">{errors.submit}</div>
-            </Alert>
-          )}
-
+    <Form>
           <Form.Group className="mb-3">
-            <Form.Label>Email</Form.Label>
-            <Form.Control
-              size="lg"
-              type="email"
-              name="email"
-              placeholder="Enter your email"
-              value={values.email}
-              isInvalid={Boolean(touched.email && errors.email)}
-              onBlur={handleBlur}
-              onChange={handleChange}
+            <Form.Label>Username</Form.Label>
+            <Controller
+              control={control}
+              name="username"
+              defaultValue=""
+              render={({ field: { value, onChange, onBlur } }) => (
+                <Form.Control
+                  size="lg"
+                  type="text"
+                  placeholder="Enter your username"
+                  value={value}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  className={errors.username && "is-invalid"}
+                />
+              )}
             />
-            {!!touched.email && (
-              <Form.Control.Feedback type="invalid">
-                {errors.email}
-              </Form.Control.Feedback>
-            )}
+            <ErrorMessage
+              errors={errors}
+              name="username"
+              render={({ message }) => (
+                <small className="text-danger">{message}</small>
+              )}
+            />
           </Form.Group>
 
           <Form.Group className="mb-3">
             <Form.Label>Password</Form.Label>
-            <Form.Control
-              size="lg"
-              type="password"
+            <Controller
+              control={control}
               name="password"
-              placeholder="Enter your password"
-              value={values.password}
-              isInvalid={Boolean(touched.password && errors.password)}
-              onBlur={handleBlur}
-              onChange={handleChange}
+              defaultValue=""
+              render={({ field: { value, onChange, onBlur } }) => (
+                <Form.Control
+                  size="lg"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={value}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  className={errors.password && "is-invalid"}
+                />
+              )}
             />
-            {!!touched.password && (
-              <Form.Control.Feedback type="invalid">
-                {errors.password}
-              </Form.Control.Feedback>
-            )}
-            <small>
+            <ErrorMessage
+              errors={errors}
+              name="password"
+              render={({ message }) => (
+                <small className="text-danger">{message}</small>
+              )}
+            />
+            <small className="d-block text-end">
               <Link to="/auth/reset-password">Forgot password?</Link>
             </small>
           </Form.Group>
 
-          <div>
-            <Form.Check
-              type="checkbox"
-              id="rememberMe"
-              label="Remember me next time"
-              defaultChecked
-            />
-          </div>
-
-          <div className="text-center mt-3">
+          <div className="text-end mt-3">
             <Button
-              type="submit"
               variant="primary"
               size="lg"
-              disabled={isSubmitting}
+              onClick={handleSubmit(signInHandler)}
             >
               Sign in
             </Button>
           </div>
         </Form>
-      )}
-    </Formik>
   );
 }
 
