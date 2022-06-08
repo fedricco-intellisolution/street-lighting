@@ -14,6 +14,7 @@ const aliases = (prefix = `src`) => ({
   "@preventive": `${prefix}/pages/preventive-maintenance`,
   "@contract": `${prefix}/pages/contract-management`,
   "@asset": `${prefix}/pages/assets-management`,
+  "@fault": `${prefix}/pages/fault`,
   "@api": `${prefix}/api`,
   "@contexts": `${prefix}/contexts`,
 });

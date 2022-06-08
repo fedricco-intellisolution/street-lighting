@@ -24,11 +24,19 @@ const pagesSection = [
     children: [
       {
         href: "/faults/callcentre",
-        title: "Faults registration",
+        title: "Fault registration"
       },
       {
         href: "/faults/response",
         title: "Fault response",
+      },
+      {
+        href: "/faults/eot-requests",
+        title: "Fault EOT request (TO)"
+      },
+      {
+        href: "/faults/eot-approval",
+        title: "Fault EOT approval (NEA)"
       },
       {
         href: "/faults/verification-to",

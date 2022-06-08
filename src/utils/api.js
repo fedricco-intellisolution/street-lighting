@@ -1,17 +1,17 @@
 import axios from 'axios';
 //import store from './store';
 
-const requestHandler = request => {
-    // //const state = store.getState();
+// const requestHandler = request => {
+//     const state = store.getState();
 
-    // const AUTH_TOKEN = state.auth.token
+//     const AUTH_TOKEN = state.auth.token
 
-    // if( AUTH_TOKEN != null) {
-    //     request.headers.Authorization = 'Bearer '+AUTH_TOKEN;  
-    // }
+//     if( AUTH_TOKEN != null) {
+//         request.headers.Authorization = 'Bearer '+AUTH_TOKEN;  
+//     }
     
-    // return request;
-};
+//     return request;
+// };
 
 const responseHandler = response => {
     return response;

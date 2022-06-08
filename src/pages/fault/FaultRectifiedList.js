@@ -1,18 +1,18 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Card, Col, Container, Form, Row, OverlayTrigger, Tooltip } from "react-bootstrap";
-import { Eye } from "react-feather";
+import { Eye, FileText } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
 import DynamicTable from "@components/ui/DynamicTable";
 import * as faultApi from "@api/faultApi";
 import debounce from 'debounce';
 
-const FaultVerificationTOList = () => {
+const FaultRectifiedList = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [filter, setFilter] = useState({
         search: {
-            status: 'FOR_VERIFICATION_TO'
+            status: 'RECTIFIED'
         }
     });
     const [tableData, setTableData] = useState([])
@@ -64,6 +64,16 @@ const FaultVerificationTOList = () => {
                                 onClick={() => navigate(location.pathname+'/'+fault.id)}
                             />
                         </OverlayTrigger>
+                        <OverlayTrigger
+                            placement="bottom"
+                            overlay={<Tooltip>Add incident report</Tooltip>}
+                        >
+                            <FileText
+                                className="align-middle me-2"
+                                size={16}
+                                onClick={() =>  {}}
+                            />
+                        </OverlayTrigger>
                         
                     </>
                 ),
@@ -85,9 +95,9 @@ const FaultVerificationTOList = () => {
 
     return (
         <React.Fragment>
-            <Helmet title="Fault Verification" />
+            <Helmet title="Fault Rectified" />
             <Container fluid className="p-0">
-                <h1 className="h3 mb-3">Fault verification (TO)</h1>
+                <h1 className="h3 mb-3">Fault rectified</h1>
                 <Card>
                     <Card.Header className="pb-0">
                         <Row>
@@ -116,4 +126,4 @@ const FaultVerificationTOList = () => {
     )
 }
 
-export default FaultVerificationTOList;
+export default FaultRectifiedList;

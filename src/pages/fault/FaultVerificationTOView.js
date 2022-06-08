@@ -27,6 +27,7 @@ const FaultVerificationTOView = () => {
         handleSubmit,
         control,
         reset,
+        setValue,
         formState: { errors },
     } = useForm({
         mode: "onTouched",
@@ -43,8 +44,23 @@ const FaultVerificationTOView = () => {
     }, [getFault])
 
     const saveHandler = async (data) => {
+
+        let before_photos = data.before_photos ? data.before_photos : []
+        let after_photos = data.after_photos ?  data.after_photos : []
+        
+        const formData = new FormData()
+        formData.append("action_taken", data.action_taken)
+        
+        before_photos.forEach(file => {
+            formData.append("before_photos[]", file);
+        })
+       
+        after_photos.forEach(file => {
+            formData.append("after_photos[]", file);
+        })
+
         try {
-            const response = await faultApi.updateFaultTO(id, data)
+            const response = await faultApi.updateFaultTO(id, formData)
             if (response.data.status === 'SUCCESS') {
                 notyf.open({
                     type : 'success',
@@ -111,6 +127,7 @@ const FaultVerificationTOView = () => {
                         errors={errors}
                         reset={reset}
                         fault={fault}
+                        setValue={setValue}
                     />
                      <Row>
                         <Col md={12} className="text-end">

@@ -11,7 +11,8 @@ const TechnicianForm = (props) => {
         control,
         errors,
         reset,
-        fault
+        fault,
+        setValue
     } = props
 
     const [beforePhotos, setBeforePhotos] = useState([]);
@@ -19,8 +20,11 @@ const TechnicianForm = (props) => {
     const [beforePhotosURLs, setBeforePhotosURLs] = useState([]);
     const [afterPhotosURLs, setAfterPhotosURLs] = useState([]);
     
-    useEffect(() => {   
+    useEffect(() => {
         reset(fault)
+        setBeforePhotosURLs(fault.before_photos)
+        setAfterPhotosURLs(fault.after_photos)
+        
     }, [reset, fault])
 
     const onChangeBeforePhotos = (e) => {
@@ -29,38 +33,40 @@ const TechnicianForm = (props) => {
 
     useEffect(() => {
         if (beforePhotos.length < 1) return;
-        const newBeforePhotosURLs = [];
         beforePhotos.forEach(image => {
-            newBeforePhotosURLs.push({
-                url: URL.createObjectURL(image),
-                name: image.name
-            })
+            setBeforePhotosURLs(prevState => [...prevState, {
+                full_path: URL.createObjectURL(image),
+                file_name: image.name
+            }]);
         })
-        setBeforePhotosURLs(newBeforePhotosURLs)
-    }, [beforePhotos])
-    
+        setValue('before_photos', beforePhotos)
+    }, [beforePhotos, setValue])
+
     const onChangeAfterPhotos = (e) => {
         setAfterPhotos(prevState => [...prevState, ...e.target.files]);
     }
 
     useEffect(() => {
         if (afterPhotos.length < 1) return;
-        const newAfterPhotosURLs = [];
         afterPhotos.forEach(image => {
-            newAfterPhotosURLs.push({
-                url: URL.createObjectURL(image),
-                name: image.name
-            })
+            setAfterPhotosURLs(prevState => [...prevState, {
+                full_path: URL.createObjectURL(image),
+                file_name: image.name
+            }]);
         })
-        setAfterPhotosURLs(newAfterPhotosURLs)
-    }, [afterPhotos])
+        setValue('after_photos', afterPhotos)
+    }, [afterPhotos, setValue])
 
-    const removeItem = (name) => {
-        // const index = beforePhotos.findIndex(item => item.name === name)
-        // console.log(index)
-        // if (index > -1) {
-        //     setBeforePhotos(prevState => prevState.splice(index, 1))
-        // }
+    const removeBeforePhoto = (index) => {
+        let temp = [...beforePhotosURLs]
+        temp.splice(index, 1)
+        setBeforePhotosURLs(temp)
+    }
+
+    const removeAfterPhoto = (index) => {
+        let temp = [...afterPhotosURLs]
+        temp.splice(index, 1)
+        setAfterPhotosURLs(temp)
     }
 
     return (
@@ -143,44 +149,64 @@ const TechnicianForm = (props) => {
                         <Col md={12}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Before photos </Form.Label>
-                                <Form.Control
-                                    type="file"
-                                    multiple
-                                    accept="image/*"
+                                <Controller
+                                    control={control}
                                     name="before_photos"
-                                    disabled={!editable}
-                                    onChange={onChangeBeforePhotos}
+                                    defaultValue=""
+                                    render={({ field: { value, onChange, onBlur } }) => (
+                                        <Form.Control
+                                           type="file"
+                                            multiple
+                                            accept="image/*"
+                                            name="before_photos"
+                                            disabled={!editable}
+                                            onChange={onChangeBeforePhotos}
+                                             className={(errors.before_photos && 'is-invalid')}
+                                        />
+                                    )}
                                 />
                             </Form.Group>
                             
-                            {beforePhotosURLs.map((image, key) =>
+                            {beforePhotosURLs?.map((image, key) =>
                                 <div key={key} className="fault-image-holder mb-2">
-                                    <Image src={image.url} />
-                                    <small>{image.name}</small>
+                                    <Image src={image.full_path} />
+                                    <small>{image.file_name}</small>
                                     <div className="text-end mt-2">
-                                        <Trash2 size={16} className="cursor-pointer me-1" onClick={()=>removeItem(image.name)}/>
+                                        <Trash2 size={16} className="cursor-pointer me-1" onClick={()=>removeBeforePhoto(key)}/>
                                         <ZoomIn size={16} className="cursor-pointer" />
                                     </div>
                                 </div>
-                                
                             )}
+
                         </Col>
                         <Col md={12}>
                             <Form.Group className="mb-3 mt-4">
                                 <Form.Label>After photos </Form.Label>
-                                <Form.Control
-                                    type="file"
-                                    multiple
-                                    accept="image/*"
-                                    name="before_photos"
-                                    disabled={!editable}
-                                    onChange={onChangeAfterPhotos}
+                                <Controller
+                                    control={control}
+                                    name="after_photos"
+                                    defaultValue=""
+                                    render={({ field: { value, onChange, onBlur } }) => (
+                                        <Form.Control
+                                            type="file"
+                                            multiple
+                                            accept="image/*"
+                                            name="after_photos"
+                                            disabled={!editable}
+                                            onChange={onChangeAfterPhotos}
+                                            className={(errors.after_photos && 'is-invalid')}
+                                        />
+                                    )}
                                 />
                             </Form.Group>
-                            {afterPhotosURLs.map((image, key) =>
+                            {afterPhotosURLs?.map((image, key) =>
                                 <div key={key} className="fault-image-holder mb-2">
-                                    <Image src={image.url} />
-                                    <small>{image.name}</small>
+                                    <Image src={image.full_path} />
+                                    <small>{image.file_name}</small>
+                                    <div className="text-end mt-2">
+                                        <Trash2 size={16} className="cursor-pointer me-1" onClick={()=>removeAfterPhoto(key)}/>
+                                        <ZoomIn size={16} className="cursor-pointer" />
+                                    </div>
                                 </div>
                             )}
                         </Col>
@@ -207,12 +233,25 @@ const TechnicianForm = (props) => {
                         <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Fault case category</Form.Label>
-                                <Form.Select
-                                    type="text"
-                                    disabled={editable}
-                                >
-                                    <option value="">Choose an option</option>
-                                </Form.Select>
+                                <Controller
+                                    control={control}
+                                    name="case_category"
+                                    defaultValue=""
+                                    render={({ field: { value, onChange, onBlur } }) => (
+                                        <Form.Select
+                                            type="text"
+                                            disabled={!editable}
+                                            className={(errors.case_category && 'is-invalid')}
+                                        >
+                                            <option value="">Choose an option</option>
+                                        </Form.Select>
+                                    )}
+                                />
+                                <ErrorMessage
+                                    errors={errors}
+                                    name="case_category"
+                                    render={({ message }) => <small className="text-danger">{message}</small>}
+                                />
                             </Form.Group>
                         </Col>
                       
@@ -228,17 +267,38 @@ const TechnicianForm = (props) => {
                         <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Supervisor</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    disabled
+                                <Controller
+                                    control={control}
+                                    name="supervisor"
+                                    defaultValue=""
+                                    render={({ field: { value, onChange, onBlur } }) => (
+                                        <Form.Control
+                                            type="text"
+                                            value={value}
+                                            onChange={onChange}
+                                            onBlur={onBlur}
+                                            disabled
+                                        />
+                                    )}
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>Comments</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    as="textarea"
-                                    rows={5}
+                                <Controller
+                                    control={control}
+                                    name="supervisor_comment"
+                                    defaultValue=""
+                                    render={({ field: { value, onChange, onBlur } }) => (
+                                        <Form.Control
+                                            type="text"
+                                            value={value}
+                                            as="textarea"
+                                            rows={5}
+                                            onChange={onChange}
+                                            onBlur={onBlur}
+                                            disabled
+                                        />
+                                    )}
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
@@ -248,18 +308,40 @@ const TechnicianForm = (props) => {
                         <Col md={6}>
                             <Form.Group className="mb-3">
                                 <Form.Label>NEA's Authorised</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    disabled
+                                <Controller
+                                    control={control}
+                                    name="nea_authorised"
+                                    defaultValue=""
+                                    render={({ field: { value, onChange, onBlur } }) => (
+                                        <Form.Control
+                                            type="text"
+                                            value={value}
+                                            onChange={onChange}
+                                            onBlur={onBlur}
+                                            disabled
+                                        />
+                                    )}
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>Comments</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    as="textarea"
-                                    rows={5}
+                                <Controller
+                                    control={control}
+                                    name="nea_authorised_comment"
+                                    defaultValue=""
+                                    render={({ field: { value, onChange, onBlur } }) => (
+                                        <Form.Control
+                                            type="text"
+                                            value={value}
+                                            as="textarea"
+                                            rows={5}
+                                            onChange={onChange}
+                                            onBlur={onBlur}
+                                            disabled
+                                        />
+                                    )}
                                 />
+                              
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>Signature</Form.Label>

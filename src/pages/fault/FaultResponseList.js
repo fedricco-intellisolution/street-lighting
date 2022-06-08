@@ -1,20 +1,26 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useContext } from "react";
 import { Helmet } from "react-helmet-async";
-import { Card, Col, Container, Form, Row } from "react-bootstrap";
+import { Card, Col, Container, Form, Row, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Camera, Eye } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
 import DynamicTable from "@components/ui/DynamicTable";
 import * as faultApi from "@api/faultApi";
+import QRScanner from "../../components/QRScanner"
+import NotyfContext from "@contexts/NotyfContext";
+import debounce from 'debounce';
 
 const FaultResponseList = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const notyf = useContext(NotyfContext);
     const [filter, setFilter] = useState({
         search: {
             status: 'FOR_RESPONSE'
         }
     });
     const [tableData, setTableData] = useState([])
+    const [showScanner, setShowScanner] = useState(false)
+    const [fault_id, setFaultID] = useState('')
 
     const tableColumns = [
         {
@@ -53,16 +59,30 @@ const FaultResponseList = () => {
             data.push({
                 actions: (
                     <>
-                        <Eye
-                            className="align-middle me-2"
-                            size={16}
-                            onClick={() => navigate(location.pathname+'/'+fault.id)}
-                        />
-                        <Camera
-                            className="align-middle me-1"
-                            size={16}
-                            onClick={() => {}}
-                        />
+                        <OverlayTrigger
+                            placement="bottom"
+                            overlay={<Tooltip>View fault</Tooltip>}
+                        >
+                            <Eye
+                                className="align-middle me-2"
+                                size={16}
+                                onClick={() => navigate(location.pathname+'/'+fault.id)}
+                            />
+                        </OverlayTrigger>
+                       
+                        {!fault.attended_at &&
+                            <OverlayTrigger
+                                placement="bottom"
+                                overlay={<Tooltip>Scan QR Code</Tooltip>}
+                            >
+                                <Camera
+                                    className="align-middle me-1"
+                                    size={16}
+                                    onClick={() => openScanner(fault.id)}
+                                />
+                            </OverlayTrigger>
+                           
+                        }
                     </>
                 ),
                 id: fault.id,
@@ -81,6 +101,39 @@ const FaultResponseList = () => {
        getFaults();
     }, [getFaults])
 
+    const openScanner = (id) => {
+        setFaultID(id)
+        setShowScanner(true)
+    }
+
+    const scanQRAttendance = async (site_id) => {
+        if (!!site_id) {
+            try {
+                const response = await faultApi.attendFault(fault_id, site_id)
+                if (response.data.status === 'SUCCESS') {
+                    notyf.open({
+                        type: 'success',
+                        message: response.data.message,
+                    })
+                    setShowScanner(false)
+                    navigate(location.pathname+'/'+fault_id)
+                }
+
+                if (response.data.status === 'ERROR') {
+                    notyf.open({
+                        type: 'danger',
+                        message: response.data.message,
+                    })
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        
+    }
+        
+
     return (
         <React.Fragment>
             <Helmet title="Fault Response" />
@@ -91,10 +144,16 @@ const FaultResponseList = () => {
                         <Row>
                             <Col md={3}>
                                 <Form.Control
-                                    value=""
-                                    onChange={() => {}}
                                     placeholder="Search keyword"
                                     className="d-inline-block"
+                                    onChange={debounce((e) => {
+                                         setFilter(prevState => ({
+                                            search: {
+                                                ...prevState.search,
+                                                keyword : e.target.value
+                                            }
+                                        }));
+                                    }, 1000)}
                                 />
                             </Col>
                         </Row>
@@ -104,6 +163,13 @@ const FaultResponseList = () => {
                     </Card.Body>
                 </Card>
             </Container>
+            <QRScanner
+                show={showScanner}
+                header="Scan QR Attendance"
+                onHide={() => setShowScanner(false)}
+                onScan={(result, error) => scanQRAttendance(result?.text) }
+
+            />
         </React.Fragment>    
     )
 }

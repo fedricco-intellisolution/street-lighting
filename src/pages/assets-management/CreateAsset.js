@@ -19,7 +19,7 @@ const CreateAsset = () => {
   const location = useLocation();
   const { id } = useParams();
   const add = id === "add" ? true : false;
-  const [options, setOptions] = useState([]);
+  const [sectors, setSectors] = useState([]);
   const [generateQRCode, setGenerateQRCode] = useState();
   const tableColumns = [
     {
@@ -81,10 +81,12 @@ const CreateAsset = () => {
     },
   ];
   const schema = yup.object().shape({
-    sector_id: yup.string().required("This field is required"),
-    name: yup.string().required("This field is required"),
-    generate_qr_code: yup.bool(),
-    address: yup.string().required("This field is required"),
+    sector: yup.string().required("This field is required"),
+    site: yup.string().required("This field is required"),
+    asset_name: yup.string().required("This field is required"),
+    asset_code: yup.string().required("This field is required"),
+    asset_type: yup.string().required("This field is required"),
+    condition: yup.string().required("This field is required"),
   });
   const notyf = useContext(NotyfContext);
   const {
@@ -97,8 +99,8 @@ const CreateAsset = () => {
     resolver: yupResolver(schema),
   });
 
-  //create site
-  const createSite = async (data) => {
+  //create asset
+  const createAsset = async (data) => {
     data.generate_qr_code = generateQRCode;
 
     try {
@@ -136,6 +138,7 @@ const CreateAsset = () => {
     const response = await propertyManagementApi.getSectors();
     const sectors = response.data.data;
     let temp = [];
+
     sectors.forEach((sector) => {
       temp.push({
         value: sector.id,
@@ -143,7 +146,7 @@ const CreateAsset = () => {
       });
     });
 
-    setOptions(temp);
+    setSectors(temp);
   }, []);
 
   //get site
@@ -183,9 +186,8 @@ const CreateAsset = () => {
                     defaultValue=""
                     render={({ field: { value, onChange, onBlur, ref } }) => (
                       <Select
-                        inputRef={ref}
                         classNamePrefix="react-select"
-                        options={options}
+                        options={sectors}
                         onBlur={onBlur}
                         className={
                           "react-select-container" + errors.sector &&
@@ -212,9 +214,8 @@ const CreateAsset = () => {
                     defaultValue=""
                     render={({ field: { value, onChange, onBlur, ref } }) => (
                       <Select
-                        inputRef={ref}
                         classNamePrefix="react-select"
-                        options={options}
+                        options={[]}
                         onBlur={onBlur}
                         className={
                           "react-select-container" + errors.site && "is-invalid"
@@ -236,16 +237,16 @@ const CreateAsset = () => {
                   <Form.Label>Level</Form.Label>
                   <Controller
                     control={control}
-                    name="site"
+                    name="level"
                     defaultValue=""
                     render={({ field: { value, onChange, onBlur, ref } }) => (
                       <Select
-                        inputRef={ref}
                         classNamePrefix="react-select"
-                        options={options}
+                        options={[]}
                         onBlur={onBlur}
                         className={
-                          "react-select-container" + errors.site && "is-invalid"
+                          "react-select-container" + errors.level &&
+                          "is-invalid"
                         }
                         onChange={onChange}
                         value={value}
@@ -254,7 +255,7 @@ const CreateAsset = () => {
                   />
                   <ErrorMessage
                     errors={errors}
-                    name="site"
+                    name="level"
                     render={({ message }) => (
                       <small className="text-danger">{message}</small>
                     )}
@@ -264,13 +265,12 @@ const CreateAsset = () => {
                   <Form.Label>Area</Form.Label>
                   <Controller
                     control={control}
-                    name="site"
+                    name="area"
                     defaultValue=""
                     render={({ field: { value, onChange, onBlur, ref } }) => (
                       <Select
-                        inputRef={ref}
                         classNamePrefix="react-select"
-                        options={options}
+                        options={[]}
                         onBlur={onBlur}
                         className={
                           "react-select-container" + errors.site && "is-invalid"
@@ -282,7 +282,7 @@ const CreateAsset = () => {
                   />
                   <ErrorMessage
                     errors={errors}
-                    name="site"
+                    name="area"
                     render={({ message }) => (
                       <small className="text-danger">{message}</small>
                     )}
@@ -292,7 +292,7 @@ const CreateAsset = () => {
                   <Form.Label>Asset name</Form.Label>
                   <Controller
                     control={control}
-                    name="name"
+                    name="asset_name"
                     defaultValue=""
                     render={({ field: { value, onChange, onBlur } }) => (
                       <Form.Control
@@ -300,13 +300,13 @@ const CreateAsset = () => {
                         value={value}
                         onChange={onChange}
                         onBlur={onBlur}
-                        className={errors.name && "is-invalid"}
+                        className={errors.asset_name && "is-invalid"}
                       />
                     )}
                   />
                   <ErrorMessage
                     errors={errors}
-                    name="name"
+                    name="asset_name"
                     render={({ message }) => (
                       <small className="text-danger">{message}</small>
                     )}
@@ -316,7 +316,7 @@ const CreateAsset = () => {
                   <Form.Label>Asset code</Form.Label>
                   <Controller
                     control={control}
-                    name="name"
+                    name="asset_code"
                     defaultValue=""
                     render={({ field: { value, onChange, onBlur } }) => (
                       <Form.Control
@@ -324,13 +324,13 @@ const CreateAsset = () => {
                         value={value}
                         onChange={onChange}
                         onBlur={onBlur}
-                        className={errors.name && "is-invalid"}
+                        className={errors.asset_code && "is-invalid"}
                       />
                     )}
                   />
                   <ErrorMessage
                     errors={errors}
-                    name="name"
+                    name="asset_code"
                     render={({ message }) => (
                       <small className="text-danger">{message}</small>
                     )}
@@ -340,16 +340,17 @@ const CreateAsset = () => {
                   <Form.Label>Asset type</Form.Label>
                   <Controller
                     control={control}
-                    name="site"
+                    name="asset_type"
                     defaultValue=""
                     render={({ field: { value, onChange, onBlur, ref } }) => (
                       <Select
                         inputRef={ref}
                         classNamePrefix="react-select"
-                        options={options}
+                        options={[]}
                         onBlur={onBlur}
                         className={
-                          "react-select-container" + errors.site && "is-invalid"
+                          "react-select-container" + errors.asset_type &&
+                          "is-invalid"
                         }
                         onChange={onChange}
                         value={value}
@@ -358,7 +359,7 @@ const CreateAsset = () => {
                   />
                   <ErrorMessage
                     errors={errors}
-                    name="site"
+                    name="asset_type"
                     render={({ message }) => (
                       <small className="text-danger">{message}</small>
                     )}
@@ -368,7 +369,7 @@ const CreateAsset = () => {
                   <Form.Label>Serial no</Form.Label>
                   <Controller
                     control={control}
-                    name="name"
+                    name="serial_no"
                     defaultValue=""
                     render={({ field: { value, onChange, onBlur } }) => (
                       <Form.Control
@@ -376,13 +377,13 @@ const CreateAsset = () => {
                         value={value}
                         onChange={onChange}
                         onBlur={onBlur}
-                        className={errors.name && "is-invalid"}
+                        className={errors.serial_no && "is-invalid"}
                       />
                     )}
                   />
                   <ErrorMessage
                     errors={errors}
-                    name="name"
+                    name="serial_no"
                     render={({ message }) => (
                       <small className="text-danger">{message}</small>
                     )}
@@ -392,7 +393,7 @@ const CreateAsset = () => {
                   <Form.Label>Brand</Form.Label>
                   <Controller
                     control={control}
-                    name="name"
+                    name="brand"
                     defaultValue=""
                     render={({ field: { value, onChange, onBlur } }) => (
                       <Form.Control
@@ -400,13 +401,13 @@ const CreateAsset = () => {
                         value={value}
                         onChange={onChange}
                         onBlur={onBlur}
-                        className={errors.name && "is-invalid"}
+                        className={errors.brand && "is-invalid"}
                       />
                     )}
                   />
                   <ErrorMessage
                     errors={errors}
-                    name="name"
+                    name="brand"
                     render={({ message }) => (
                       <small className="text-danger">{message}</small>
                     )}
@@ -416,7 +417,7 @@ const CreateAsset = () => {
                   <Form.Label>Model</Form.Label>
                   <Controller
                     control={control}
-                    name="name"
+                    name="model"
                     defaultValue=""
                     render={({ field: { value, onChange, onBlur } }) => (
                       <Form.Control
@@ -424,13 +425,13 @@ const CreateAsset = () => {
                         value={value}
                         onChange={onChange}
                         onBlur={onBlur}
-                        className={errors.name && "is-invalid"}
+                        className={errors.model && "is-invalid"}
                       />
                     )}
                   />
                   <ErrorMessage
                     errors={errors}
-                    name="name"
+                    name="model"
                     render={({ message }) => (
                       <small className="text-danger">{message}</small>
                     )}
@@ -440,16 +441,16 @@ const CreateAsset = () => {
                   <Form.Label>Condition</Form.Label>
                   <Controller
                     control={control}
-                    name="site"
+                    name="condition"
                     defaultValue=""
                     render={({ field: { value, onChange, onBlur, ref } }) => (
                       <Select
-                        inputRef={ref}
                         classNamePrefix="react-select"
-                        options={options}
+                        options={[]}
                         onBlur={onBlur}
                         className={
-                          "react-select-container" + errors.site && "is-invalid"
+                          "react-select-container" + errors.condition &&
+                          "is-invalid"
                         }
                         onChange={onChange}
                         value={value}
@@ -458,7 +459,7 @@ const CreateAsset = () => {
                   />
                   <ErrorMessage
                     errors={errors}
-                    name="site"
+                    name="condition"
                     render={({ message }) => (
                       <small className="text-danger">{message}</small>
                     )}
@@ -468,7 +469,7 @@ const CreateAsset = () => {
                   <Form.Label>Description</Form.Label>
                   <Controller
                     control={control}
-                    name="address"
+                    name="description"
                     defaultValue=""
                     render={({ field: { value, onChange, onBlur } }) => (
                       <Form.Control
@@ -476,13 +477,13 @@ const CreateAsset = () => {
                         value={value == null ? "" : value}
                         onChange={onChange}
                         onBlur={onBlur}
-                        className={errors.address && "is-invalid"}
+                        className={errors.description && "is-invalid"}
                       />
                     )}
                   />
                   <ErrorMessage
                     errors={errors}
-                    name="address"
+                    name="description"
                     render={({ message }) => (
                       <small className="text-danger">{message}</small>
                     )}
@@ -494,14 +495,14 @@ const CreateAsset = () => {
                   <Button
                     variant="secondary"
                     className="me-2"
-                    onClick={() => navigate("/property-management/sites")}
+                    onClick={() => navigate("/assets-management/assets")}
                   >
                     Cancel
                   </Button>
                   <Button
                     variant="primary"
                     onClick={
-                      add ? handleSubmit(createSite) : handleSubmit(updateSite)
+                      add ? handleSubmit(createAsset) : handleSubmit(updateSite)
                     }
                   >
                     Submit
