@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect} from "react";
 import { useLocation } from "react-router-dom";
-import { Sliders, BookOpen } from "react-feather";
-
 import {THEME} from "../constants";
-import useOuterClick from "../hooks/useOuterClick";
 import useTheme from "../hooks/useTheme";
 import useSidebar from "../hooks/useSidebar";
 import useLayout from "../hooks/useLayout";
+import useSettings from "../hooks/useSettings";
 
 const themeOptions = [
   {
@@ -31,17 +29,14 @@ function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
+
+
 const Settings = () => {
   const query = useQuery();
-  const [isOpen, setIsOpen] = useState(false);
-
+  const { isOpen, setIsOpen } = useSettings();
   const { theme, setTheme } = useTheme();
   const {  setPosition, setBehavior } = useSidebar();
   const { setLayout } = useLayout();
-
-  const innerRef = useOuterClick(() => {
-    setIsOpen(false);
-  });
 
   const setSettingByQueryParam = (name, set) => {
     const value = query.get(name);
@@ -49,6 +44,7 @@ const Settings = () => {
       set(value);
     }
   };
+  
 
   // Read from query parameter (e.g. ?theme=dark)
   // only for demo purposes
@@ -63,26 +59,9 @@ const Settings = () => {
 
   return (
     <div
-      ref={innerRef}
       className={`settings js-settings ${isOpen ? "open" : ""}`}
     >
-      <div className="settings-toggle">
-        <div
-          className="settings-toggle-option settings-toggle-option-text js-settings-toggle"
-          title="Theme Settings"
-          onClick={() => setIsOpen(true)}
-        >
-          <Sliders className="feather align-middle" /> Builder
-        </div>
-        <a
-          className="settings-toggle-option"
-          title="Documentation"
-          href="/docs"
-          target="_blank"
-        >
-          <BookOpen className="feather align-middle" />
-        </a>
-      </div>
+     
       <div className="settings-panel">
         <div className="settings-content">
           <div className="settings-title d-flex align-items-center">

@@ -3,15 +3,15 @@ import { Dropdown } from "react-bootstrap";
 import { Settings } from "react-feather";
 import profile from "../../assets/img/avatars/profile.jpg";
 import useAuth from "../../hooks/useAuth";
+import useSettings from "../../hooks/useSettings";
 
 const NavbarUser = () => {
   const { user, signOut } = useAuth();
-  
+  const { isOpen, setIsOpen } = useSettings();
   const signOutHandler = async() => {
     try {
       await signOut();
     } catch (error) {
-      console.log(error)
     }
   }
   return (
@@ -36,7 +36,7 @@ const NavbarUser = () => {
           My profile
         </Dropdown.Item>
         <Dropdown.Divider />
-        <Dropdown.Item>
+        <Dropdown.Item  onClick={() => {setIsOpen(!isOpen)}}>
           Theme settings
         </Dropdown.Item>
         <Dropdown.Item onClick={() => signOutHandler()}>Sign out</Dropdown.Item>

@@ -60,7 +60,6 @@ function AuthProvider({ children }) {
   const navigate = useNavigate();
 
   const initialize = useCallback(async () => {
-      console.log('initialize')
       try {
         const accessToken = window.localStorage.getItem("accessToken");
         const uid = window.localStorage.getItem('uid')
@@ -84,6 +83,7 @@ function AuthProvider({ children }) {
               user: null,
             },
           });
+          //navigate('/auth/sign-in')
         }
       } catch (err) {
         dispatch({
