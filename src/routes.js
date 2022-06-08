@@ -257,6 +257,30 @@ const routes = [
         path: "eot-approval/:id",
         element: <FaultEOTApprovalView />
       },
+      {
+        path: "rectified",
+        element: <FaultRectifiedList />
+      },
+      {
+        path: "rectified/:id",
+        element: <FaultRectifiedView />
+      },
+      {
+        path: "eot-requests",
+        element: <FaultEOTRequestList />
+      },
+      {
+        path: "eot-requests/:id",
+        element: <FaultEOTRequestView />
+      },
+      {
+        path: "eot-approval",
+        element: <FaultEOTApprovalList />
+      },
+      {
+        path: "eot-approval/:id",
+        element: <FaultEOTApprovalView />
+      },
     ],
   },
   {
