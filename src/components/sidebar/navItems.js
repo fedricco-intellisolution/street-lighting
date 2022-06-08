@@ -7,6 +7,8 @@ import {
   Zap,
   Home,
   Shield,
+  FileText,
+  Package,
 } from "react-feather";
 
 const pagesSection = [
@@ -16,37 +18,12 @@ const pagesSection = [
     title: "Dashboard",
   },
   {
-    href: "/fault",
-    icon: Zap,
-    title: "Fault Management",
+    icon: FileText,
+    title: "Contract management",
     children: [
       {
-        href: "/faults/callcentre",
-        title: "Fault registration"
-      },
-      {
-        href: "/faults/response",
-        title: "Fault response",
-      },
-      {
-        href: "/faults/eot-requests",
-        title: "Fault EOT request (TO)"
-      },
-      {
-        href: "/faults/eot-approval",
-        title: "Fault EOT approval (NEA)"
-      },
-      {
-        href: "/faults/verification-to",
-        title: "Fault verification (TO)",
-      },
-      {
-        href: "/faults/verification-nea",
-        title: "Fault verification (NEA)",
-      },
-      {
-        href: "/faults/rectified",
-        title: "Fault rectified",
+        href: "/contract-management/contracts",
+        title: "Contract",
       },
     ],
   },
@@ -69,6 +46,55 @@ const pagesSection = [
       {
         href: "/property-management/areas",
         title: "Area",
+      },
+    ],
+  },
+  {
+    icon: Package,
+    title: "Assets management",
+    children: [
+      {
+        href: "/assets-management/assets",
+        title: "Assets",
+      },
+      {
+        href: "/assets-management/create-asset",
+        title: "Create asset",
+      },
+    ],
+  },
+  {
+    href: "/fault",
+    icon: Zap,
+    title: "Fault Management",
+    children: [
+      {
+        href: "/faults/callcentre",
+        title: "Fault registration",
+      },
+      {
+        href: "/faults/response",
+        title: "Fault response",
+      },
+      {
+        href: "/faults/eot-requests",
+        title: "Fault EOT request (TO)",
+      },
+      {
+        href: "/faults/eot-approval",
+        title: "Fault EOT approval (NEA)",
+      },
+      {
+        href: "/faults/verification-to",
+        title: "Fault verification (TO)",
+      },
+      {
+        href: "/faults/verification-nea",
+        title: "Fault verification (NEA)",
+      },
+      {
+        href: "/faults/rectified",
+        title: "Fault rectified",
       },
     ],
   },

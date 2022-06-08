@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import { Map } from "react-feather";
+import { Map, Edit2 } from "react-feather";
 import { useLocation, useNavigate } from "react-router-dom";
-import AreaTable from "./AreaTable";
+import DynamicTable from "../../../components/ui/DynamicTable";
 import * as propertyManagementApi from "@api/propertyManagementApi";
 
 const Areas = () => {
@@ -15,6 +15,15 @@ const Areas = () => {
     {
       Header: "Actions",
       accessor: "actions",
+      Cell: (cell) => (
+        <Edit2
+          className="align-middle me-1"
+          size={18}
+          onClick={() =>
+            navigate(location.pathname + "/" + cell.row.original.id)
+          }
+        />
+      ),
     },
     {
       Header: "Site",
@@ -75,7 +84,7 @@ const Areas = () => {
             </Row>
           </Card.Header>
           <Card.Body>
-            <AreaTable data={areas} columns={tableColumns} />
+            <DynamicTable data={areas} columns={tableColumns} />
           </Card.Body>
         </Card>
       </Container>

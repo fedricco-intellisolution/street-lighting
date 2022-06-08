@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import { Map } from "react-feather";
+import { Map, Edit2 } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
 import * as propertyManagementApi from "@api/propertyManagementApi";
-import SectorTable from "./SectorTable";
 import debounce from "debounce";
+import DynamicTable from "../../../components/ui/DynamicTable";
 
 const Sectors = () => {
   const navigate = useNavigate();
@@ -16,6 +16,15 @@ const Sectors = () => {
     {
       Header: "Actions",
       accessor: "actions",
+      Cell: (cell) => (
+        <Edit2
+          className="align-middle me-1"
+          size={18}
+          onClick={() =>
+            navigate(location.pathname + "/" + cell.row.original.id)
+          }
+        />
+      ),
     },
     {
       Header: "Code",
@@ -76,7 +85,7 @@ const Sectors = () => {
             </Row>
           </Card.Header>
           <Card.Body>
-            <SectorTable data={sectors} columns={tableColumns} />
+            <DynamicTable data={sectors} columns={tableColumns} />
           </Card.Body>
         </Card>
       </Container>

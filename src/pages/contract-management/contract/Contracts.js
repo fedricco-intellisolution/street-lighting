@@ -2,15 +2,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Map, Edit2 } from "react-feather";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import * as contractManagementApi from "@api/contractManagementApi";
 import DynamicTable from "../../../components/ui/DynamicTable";
-import * as propertyManagementApi from "@api/propertyManagementApi";
 
-const Sites = () => {
-  const [filter, setFilter] = useState();
+const Contracts = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [sites, setSites] = useState([]);
+  const [sectors, setSectors] = useState([]);
   const tableColumns = [
     {
       Header: "Actions",
@@ -26,47 +25,48 @@ const Sites = () => {
       ),
     },
     {
-      Header: "Sector",
-      accessor: "sector.name",
-    },
-    {
-      Header: "Site",
+      Header: "Name",
       accessor: "name",
     },
     {
-      Header: "Address",
-      accessor: "address",
+      Header: "Contract no",
+      accessor: "contract_no",
     },
     {
-      Header: "QR code",
-      accessor: "qr_code_path",
+      Header: "Description",
+      accessor: "description",
+    },
+    {
+      Header: "Start date",
+      accessor: "start_date",
+    },
+    {
+      Header: "End date",
+      accessor: "end_date",
     },
   ];
 
-  //get sites
-  const getSites = useCallback(async () => {
-    const response = await propertyManagementApi.getSites();
-    setSites(response.data.data);
+  //call get sectors api
+  const getSectorsApi = useCallback(async () => {
+    const response = await contractManagementApi.getContracts();
+    setSectors(response.data.data);
   }, []);
 
   useEffect(() => {
-    getSites();
-  }, [getSites]);
+    getSectorsApi();
+  }, [getSectorsApi]);
 
   return (
     <React.Fragment>
-      <Helmet title="Sites" />
+      <Helmet title="Contracts" />
       <Container fluid className="p-0">
-        <h1 className="h3 mb-3">Sites</h1>
+        <h1 className="h3 mb-3">Contracts</h1>
         <Card>
           <Card.Header className="pb-0">
             <Row>
               <Col md={3}>
                 <Form.Control
-                  value={filter || ""}
-                  onChange={(e) => {
-                    setFilter(e.target.value || undefined);
-                  }}
+                  onChange={() => {}}
                   placeholder="Search keyword"
                   className="d-inline-block"
                 />
@@ -78,13 +78,13 @@ const Sites = () => {
                   onClick={() => navigate(location.pathname + "/add")}
                 >
                   <Map className="align-middle me-1" size={16} />
-                  Create new site
+                  Create new contract
                 </Button>
               </Col>
             </Row>
           </Card.Header>
           <Card.Body>
-            <DynamicTable data={sites} columns={tableColumns} />
+            <DynamicTable data={sectors} columns={tableColumns} />
           </Card.Body>
         </Card>
       </Container>
@@ -92,4 +92,4 @@ const Sites = () => {
   );
 };
 
-export default Sites;
+export default Contracts;

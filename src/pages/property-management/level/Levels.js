@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import { Map } from "react-feather";
+import { Map, Edit2 } from "react-feather";
 import { useLocation, useNavigate } from "react-router-dom";
-import LevelTable from "./LevelTable";
 import * as propertyManagementApi from "@api/propertyManagementApi";
+import DynamicTable from "../../../components/ui/DynamicTable";
 
 const Levels = () => {
   const [filter, setFilter] = useState();
@@ -15,6 +15,15 @@ const Levels = () => {
     {
       Header: "Actions",
       accessor: "actions",
+      Cell: (cell) => (
+        <Edit2
+          className="align-middle me-1"
+          size={18}
+          onClick={() =>
+            navigate(location.pathname + "/" + cell.row.original.id)
+          }
+        />
+      ),
     },
     {
       Header: "Site",
@@ -71,7 +80,7 @@ const Levels = () => {
             </Row>
           </Card.Header>
           <Card.Body>
-            <LevelTable data={levels} columns={tableColumns} />
+            <DynamicTable data={levels} columns={tableColumns} />
           </Card.Body>
         </Card>
       </Container>
