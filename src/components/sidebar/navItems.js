@@ -18,41 +18,6 @@ const pagesSection = [
     title: "Dashboard",
   },
   {
-    href: "/fault",
-    icon: Zap,
-    title: "Fault Management",
-    children: [
-      {
-        href: "/faults/callcentre",
-        title: "Fault registration"
-      },
-      {
-        href: "/faults/response",
-        title: "Fault response",
-      },
-      {
-        href: "/faults/eot-requests",
-        title: "Fault EOT request (TO)"
-      },
-      {
-        href: "/faults/eot-approval",
-        title: "Fault EOT approval (NEA)"
-      },
-      {
-        href: "/faults/verification-to",
-        title: "Fault verification (TO)",
-      },
-      {
-        href: "/faults/verification-nea",
-        title: "Fault verification (NEA)",
-      },
-      {
-        href: "/faults/rectified",
-        title: "Fault rectified",
-      },
-    ],
-  },
-  {
     icon: FileText,
     title: "Contract management",
     children: [
@@ -95,6 +60,41 @@ const pagesSection = [
       {
         href: "/assets-management/create-asset",
         title: "Create asset",
+      },
+    ],
+  },
+  {
+    href: "/fault",
+    icon: Zap,
+    title: "Fault Management",
+    children: [
+      {
+        href: "/faults/callcentre",
+        title: "Fault registration",
+      },
+      {
+        href: "/faults/response",
+        title: "Fault response",
+      },
+      {
+        href: "/faults/eot-requests",
+        title: "Fault EOT request (TO)",
+      },
+      {
+        href: "/faults/eot-approval",
+        title: "Fault EOT approval (NEA)",
+      },
+      {
+        href: "/faults/verification-to",
+        title: "Fault verification (TO)",
+      },
+      {
+        href: "/faults/verification-nea",
+        title: "Fault verification (NEA)",
+      },
+      {
+        href: "/faults/rectified",
+        title: "Fault rectified",
       },
     ],
   },
