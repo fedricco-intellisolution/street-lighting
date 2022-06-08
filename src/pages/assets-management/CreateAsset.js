@@ -193,8 +193,8 @@ const CreateAsset = () => {
                           "react-select-container" + errors.sector &&
                           "is-invalid"
                         }
-                        onChange={onChange}
-                        value={value}
+                        onChange={(val) => onChange(val.value)}
+                        value={sectors.filter((c) => value.includes(c.value))}
                       />
                     )}
                   />
