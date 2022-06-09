@@ -120,104 +120,95 @@ export const ChecklistTypeAddEdit = () => {
                 </Row>
                 <Card>
                     <Card.Body>
-                        <Form>
-                            <Row>
-                                <Col md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Name</Form.Label>
-                                        <Controller
-                                            control={control}
-                                            name="name"
-                                            defaultValue=""
-                                            render={({
-                                                field: {
-                                                    value,
-                                                    onChange,
-                                                    onBlur,
-                                                },
-                                            }) => (
-                                                <Form.Control
-                                                    type="text"
-                                                    value={value}
-                                                    onChange={onChange}
-                                                    onBlur={onBlur}
-                                                    className={errors.name}
-                                                />
-                                            )}
-                                        />
-                                        <ErrorMessage
-                                            errors={errors}
-                                            name="name"
-                                            render={({ message }) => (
-                                                <small className="text-danger">
-                                                    {message}
-                                                </small>
-                                            )}
-                                        />
-                                    </Form.Group>
-                                </Col>
-                                <Col md={6}>
-                                    {" "}
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Sequence number</Form.Label>
-                                        <Controller
-                                            control={control}
-                                            name="sequence_no"
-                                            defaultValue=""
-                                            render={({
-                                                field: {
-                                                    value,
-                                                    onChange,
-                                                    onBlur,
-                                                },
-                                            }) => (
-                                                <Form.Control
-                                                    type="number"
-                                                    value={value}
-                                                    onChange={onChange}
-                                                    onBlur={onBlur}
-                                                    className={errors.name}
-                                                />
-                                            )}
-                                        />
-                                        <ErrorMessage
-                                            errors={errors}
-                                            name="sequence_no"
-                                            render={({ message }) => (
-                                                <small className="text-danger">
-                                                    {message}
-                                                </small>
-                                            )}
-                                        />
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                            <Row className="pt-4">
-                                <Col className="text-end">
-                                    <Button
-                                        variant="secondary"
-                                        className="me-2"
-                                        onClick={() =>
-                                            navigate(
-                                                "/preventive-maintenance/checklist-type"
-                                            )
-                                        }
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        variant="primary"
-                                        onClick={handleSubmit(
-                                            action === "add"
-                                                ? addChecklistType
-                                                : updateChecklistType
+                        <h6 className="py-2">Checklist type details</h6>
+                        <Row>
+                            <Col md={6}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Name</Form.Label>
+                                    <Controller
+                                        control={control}
+                                        name="name"
+                                        defaultValue=""
+                                        render={({
+                                            field: { value, onChange, onBlur },
+                                        }) => (
+                                            <Form.Control
+                                                type="text"
+                                                value={value}
+                                                onChange={onChange}
+                                                onBlur={onBlur}
+                                                className={errors.name}
+                                            />
                                         )}
-                                    >
-                                        Submit
-                                    </Button>
-                                </Col>
-                            </Row>
-                        </Form>
+                                    />
+                                    <ErrorMessage
+                                        errors={errors}
+                                        name="name"
+                                        render={({ message }) => (
+                                            <small className="text-danger">
+                                                {message}
+                                            </small>
+                                        )}
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col md={6}>
+                                {" "}
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Sequence number</Form.Label>
+                                    <Controller
+                                        control={control}
+                                        name="sequence_no"
+                                        defaultValue=""
+                                        render={({
+                                            field: { value, onChange, onBlur },
+                                        }) => (
+                                            <Form.Control
+                                                type="number"
+                                                value={value}
+                                                onChange={onChange}
+                                                onBlur={onBlur}
+                                                className={errors.name}
+                                            />
+                                        )}
+                                    />
+                                    <ErrorMessage
+                                        errors={errors}
+                                        name="sequence_no"
+                                        render={({ message }) => (
+                                            <small className="text-danger">
+                                                {message}
+                                            </small>
+                                        )}
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Row className="pt-4">
+                            <Col className="text-end">
+                                <Button
+                                    variant="secondary"
+                                    className="me-2"
+                                    onClick={() =>
+                                        navigate(
+                                            "/preventive-maintenance/checklist-type"
+                                        )
+                                    }
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    variant="primary"
+                                    onClick={handleSubmit(
+                                        action === "add"
+                                            ? addChecklistType
+                                            : updateChecklistType
+                                    )}
+                                >
+                                    Submit
+                                </Button>
+                            </Col>
+                        </Row>
                     </Card.Body>
                 </Card>
             </Container>

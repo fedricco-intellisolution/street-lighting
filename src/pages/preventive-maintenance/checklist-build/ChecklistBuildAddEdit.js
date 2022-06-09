@@ -18,11 +18,11 @@ import {
 import { FREQUENCY } from "../config/options";
 
 const schema = yup.object().shape({
-    checklistItem    : yup.string().required("This field is required"),
-    checklistName    : yup.string().required("This field is required"),
-    checklistSubItem : yup.string().required("This field is required"),
-    checklistType    : yup.string().required("This field is required"),
-    frequency        : yup.string().required("This field is required"),
+    checklistItem: yup.string().required("This field is required"),
+    checklistName: yup.string().required("This field is required"),
+    checklistSubItem: yup.string().required("This field is required"),
+    checklistType: yup.string().required("This field is required"),
+    frequency: yup.string().required("This field is required"),
 });
 
 export const ChecklistBuildAddEdit = () => {
@@ -71,7 +71,7 @@ export const ChecklistBuildAddEdit = () => {
                     <Card.Body>
                         <Form>
                             <Row>
-                                <h6 className="py-2">Checklist information</h6>
+                                <h6 className="py-2">Checklist details</h6>
                                 <Col md={4}>
                                     <Form.Group className="mb-3">
                                         <Form.Label>Checklist name</Form.Label>
@@ -87,7 +87,7 @@ export const ChecklistBuildAddEdit = () => {
                                                 },
                                             }) => (
                                                 <Form.Control
-													className={errors.name}
+                                                    className={errors.name}
                                                     onBlur={onBlur}
                                                     onChange={onChange}
                                                     type="text"
@@ -117,13 +117,13 @@ export const ChecklistBuildAddEdit = () => {
                                             render={({
                                                 field: {
                                                     onBlur,
-													onChange,
+                                                    onChange,
                                                     value,
                                                 },
                                             }) => (
                                                 <Form.Select
-													id="frequency"
-													name="frequency"
+                                                    id="frequency"
+                                                    name="frequency"
                                                     onChange={onChange}
                                                     onBlur={onBlur}
                                                     value={value}
@@ -166,7 +166,7 @@ export const ChecklistBuildAddEdit = () => {
                                             inline
                                             label="Yes"
                                             name="is_recurring"
-											onChange={() => {}}
+                                            onChange={() => {}}
                                             type="radio"
                                             value="Yes"
                                         />
@@ -200,8 +200,8 @@ export const ChecklistBuildAddEdit = () => {
                                                 },
                                             }) => (
                                                 <Form.Select
-													id="checklistType"
-													name="checklistType"
+                                                    id="checklistType"
+                                                    name="checklistType"
                                                     onBlur={onBlur}
                                                     onChange={onChange}
                                                     value={value}
@@ -249,7 +249,7 @@ export const ChecklistBuildAddEdit = () => {
                                                 },
                                             }) => (
                                                 <Form.Select
-													id="checklistItem"
+                                                    id="checklistItem"
                                                     name="checklistItem"
                                                     onChange={onChange}
                                                     onBlur={onBlur}
@@ -300,7 +300,7 @@ export const ChecklistBuildAddEdit = () => {
                                                 },
                                             }) => (
                                                 <Form.Select
-													id="checklistSubItem"
+                                                    id="checklistSubItem"
                                                     name="checklistSubItem"
                                                     onBlur={onBlur}
                                                     onChange={onChange}

@@ -179,19 +179,17 @@ export const ChecklistSubItemsAddEdit = () => {
                 </Row>
                 <Card>
                     <Card.Body>
+                        <h6 className="py-2">Checklist sub item details</h6>
                         <ChecklistSubItemsAddMain
                             control={control}
                             errors={errors}
                             checklistTypes={checklistTypes}
                             checklistItems={checklistItems}
                         />
-                    </Card.Body>
-                </Card>
-                <Card>
-                    <Card.Body>
+                        <h6 className="py-2">Checklist sub item name</h6>
                         <Row>
                             <Form.Group className="mb-3">
-                                <Form.Label>Custom field</Form.Label>
+                                <Form.Label>Is custom field?</Form.Label>
                                 <br />
                                 <Form.Check
                                     {...register("is_custom_field")}
@@ -223,7 +221,7 @@ export const ChecklistSubItemsAddEdit = () => {
                                 <Col md={4}>
                                     <Form.Group className="mb-3">
                                         <Form.Label>
-                                            Checklist sub item
+                                            Checklist sub item name
                                         </Form.Label>
                                         <Controller
                                             control={control}
@@ -263,10 +261,11 @@ export const ChecklistSubItemsAddEdit = () => {
                                 errors={errors}
                             />
                         )}
-                    </Card.Body>
-                </Card>
-                <Card>
-                    <Card.Body>
+                        <Row className="mt-2">
+                            <Col md={12}>
+                                <small>* optional fields</small>
+                            </Col>
+                        </Row>
                         <Row>
                             <Col className="text-end">
                                 <Button

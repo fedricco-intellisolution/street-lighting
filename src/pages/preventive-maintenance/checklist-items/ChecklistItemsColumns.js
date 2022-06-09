@@ -14,7 +14,7 @@ export const ChecklistItemsColumns = ({ control, errors }) => {
     return (
         <>
             <Col md={12}>
-                <h6 className="pt-2">Checklist columns</h6>
+                <h6 className="pt-2">Checklist item columns</h6>
                 <small>
                     <i>Default columns - check, clean</i>
                 </small>
@@ -115,7 +115,7 @@ export const ChecklistItemsColumns = ({ control, errors }) => {
                         <>
                             <Row key="#">
                                 <Col md={12} className="text-center">
-                                    Add a column
+                                    Add a new column
                                 </Col>
                             </Row>
                         </>

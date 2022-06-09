@@ -16,16 +16,10 @@ export const ChecklistSubItemsAddCustomFields = ({ control, errors }) => {
     return (
         <>
             <Row className="mb-2">
-                <Col className="font-weight-bold" md={3}>
-                    Checklist sub item
-                </Col>
-                <Col className="font-weight-bold" md={4}>
-                    Type
-                </Col>
-                <Col className="font-weight-bold" md={4}>
-                    Position
-                </Col>
-                <Col className="font-weight-bold" md={1}></Col>
+                <Col md={3}>Checklist sub item name</Col>
+                <Col md={4}>Type</Col>
+                <Col md={4}>Position</Col>
+                <Col md={1}></Col>
             </Row>
             <hr />
 
