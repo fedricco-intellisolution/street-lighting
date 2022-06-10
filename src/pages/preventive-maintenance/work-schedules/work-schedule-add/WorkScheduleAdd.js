@@ -6,10 +6,11 @@ import { useNavigate } from "react-router-dom";
 
 import { tableColumns, tableData } from "./WorkScheduleTable";
 import DynamicTable from "@components/ui/DynamicTable";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { WorkScheduleAddCustomFields } from "./WorkScheduleAddCustomFields";
+
 import * as yup from "yup";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const schema = yup.object().shape({
@@ -24,7 +25,7 @@ export const WorkScheduleAdd = () => {
     //
 
     // const [tableData, setTableData] = useState([]);
-    const { control } = useForm({
+    const { control, errors } = useForm({
         mode: "onTouched",
         resolver: yupResolver(schema),
     });
@@ -61,7 +62,11 @@ export const WorkScheduleAdd = () => {
                             </Col>
                         </Row>
                         <h6 className="py-2">Frequency start dates</h6>
-                        <Row className="mb-2">
+                        <WorkScheduleAddCustomFields
+                            control={control}
+                            error={errors}
+                        />
+                        {/* <Row className="mb-2">
                             <Col md={6}>
                                 <Form.Label>Weekly</Form.Label>
                                 <Controller
@@ -139,7 +144,7 @@ export const WorkScheduleAdd = () => {
                                     )}
                                 />
                             </Col>
-                        </Row>
+                        </Row> */}
                         <Row className="pt-4">
                             <Col className="text-end">
                                 <Button

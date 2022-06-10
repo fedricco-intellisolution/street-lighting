@@ -27,10 +27,10 @@ export const ChecklistType = () => {
         setTableData(response.data.data);
     }, []);
 
-	//
-	// UseEffects
-	//
-	
+    //
+    // UseEffects
+    //
+
     useEffect(() => {
         getChecklistTypes();
     }, [getChecklistTypes]);
@@ -38,7 +38,7 @@ export const ChecklistType = () => {
     return (
         <>
             <React.Fragment>
-                <Helmet title="Settings" />
+                <Helmet title="Checklist type" />
                 <h1 className="h3 mb-3">Checklist type</h1>
                 <Card className="p-0">
                     <Card.Header className="pb-0">

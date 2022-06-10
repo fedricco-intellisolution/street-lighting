@@ -40,7 +40,7 @@ export const JointInspection = () => {
     return (
         <>
             <React.Fragment>
-                <Helmet title="Settings" />
+                <Helmet title="Joint inspection" />
                 <h1 className="h3 mb-3">Joint inspection</h1>
                 <Card className="p-0">
                     <Card.Header className="pb-0">

@@ -5,10 +5,11 @@ import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 import { tableColumns, tableData } from "./checklistPendingTable";
-import DynamicTable from "@components/ui/DynamicTable";
+import { Controller, useForm } from "react-hook-form";
+import DynamicTableNoPagination from "components/ui/DynamicTableNoPagination";
+
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Controller, useForm } from "react-hook-form";
 
 export const ChecklistPendingAdd = () => {
     const navigate = useNavigate();
@@ -73,7 +74,7 @@ export const ChecklistPendingAdd = () => {
                     </Card.Header>
                     <Card.Body>
                         {tableData && (
-                            <DynamicTable
+                            <DynamicTableNoPagination
                                 columns={tableColumns}
                                 data={tableData}
                             />

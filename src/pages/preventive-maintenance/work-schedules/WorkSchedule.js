@@ -37,7 +37,7 @@ export const WorkSchedule = () => {
     return (
         <>
             <React.Fragment>
-                <Helmet title="Settings" />
+                <Helmet title="Work schedule" />
                 <h1 className="h3 mb-3">Work schedule</h1>
                 <Card className="p-0">
                     <Card.Header className="pb-0">

@@ -3,12 +3,13 @@ import React, { useCallback, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { Controller, useForm } from "react-hook-form";
 
 import { tableColumns, tableData } from "./JointInspectionTable";
-import DynamicTable from "@components/ui/DynamicTable";
+import DynamicTableNoPagination from "components/ui/DynamicTableNoPagination";
+
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Controller, useForm } from "react-hook-form";
 
 export const JointInspectionAdd = () => {
     const navigate = useNavigate();
@@ -91,7 +92,7 @@ export const JointInspectionAdd = () => {
                     </Card.Header>
                     <Card.Body>
                         {tableData && (
-                            <DynamicTable
+                            <DynamicTableNoPagination
                                 columns={tableColumns}
                                 data={tableData}
                             />
