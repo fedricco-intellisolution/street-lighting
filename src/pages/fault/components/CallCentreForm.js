@@ -131,7 +131,8 @@ const CallCentreForm = (props) => {
     
     useEffect(() => {   
         reset(props.fault)
-    }, [reset, props.fault])
+        setValue('site_id', props.fault?.site?.id)
+    }, [reset, props.fault, setValue])
     
     return (
         <Form>
@@ -207,7 +208,7 @@ const CallCentreForm = (props) => {
                         />
                         <ErrorMessage
                             errors={errors}
-                            name="complainant?.name"
+                            name="complainant.name"
                             render={({ message }) => <small className="text-danger">{message}</small>}
                         />
                     </Form.Group>
@@ -233,7 +234,7 @@ const CallCentreForm = (props) => {
                         />
                         <ErrorMessage
                             errors={errors}
-                            name="complainant?.contact_no"
+                            name="complainant.contact_no"
                             render={({ message }) => <small className="text-danger">{message}</small>}
                         />
                     </Form.Group>

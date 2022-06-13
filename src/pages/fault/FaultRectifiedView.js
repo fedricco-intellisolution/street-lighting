@@ -6,16 +6,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import CallCentreForm from "./components/CallCentreForm";
 import TechnicianForm from "./components/TechnicianForm";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import * as faultApi from "@api/faultApi";
+import SignatoriesForm from "./components/SignatoriesForm";
+import TechnicalOfficerForm from "./components/TechnicalOfficerForm";
 
-const schema = yup.object().shape({
-    action_taken: yup
-        .string()
-        .required('This field is required')
-    
-});
 const FaultRectifiedView = () => {
     const navigate = useNavigate();
     const { id } = useParams();
@@ -28,7 +22,6 @@ const FaultRectifiedView = () => {
         formState: { errors },
     } = useForm({
         mode: "onTouched",
-        resolver: yupResolver(schema),
     });
     
     const getFault = useCallback(async () => {
@@ -74,6 +67,17 @@ const FaultRectifiedView = () => {
                         reset={reset}
                         fault={fault}
                         setValue={setValue}
+                    />
+                    <TechnicalOfficerForm
+                        editable={false}
+                        control={control}
+                        errors={errors}
+                        reset={reset}
+                        fault={fault}
+                        setValue={setValue}
+                    />
+                    <SignatoriesForm
+                        control={control}
                     />
                 </Form>
             </Container>

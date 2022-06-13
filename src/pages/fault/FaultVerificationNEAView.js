@@ -10,6 +10,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import * as faultApi from "@api/faultApi";
 import NotyfContext from "@contexts/NotyfContext";
+import TechnicalOfficerForm from "./components/TechnicalOfficerForm";
+import SignatoriesForm from "./components/SignatoriesForm";
 
 const schema = yup.object().shape({
 
@@ -24,6 +26,7 @@ const FaultVerificationNEAView = () => {
     const {
         control,
         reset,
+        setValue,
         formState: { errors },
     } = useForm({
         mode: "onTouched",
@@ -46,7 +49,8 @@ const FaultVerificationNEAView = () => {
                  notyf.open({
                     type: 'success',
                     message: response.data.message
-                })
+                 })
+                navigate('/faults/verification-nea')
             }
         } catch (error) {
             
@@ -80,12 +84,24 @@ const FaultVerificationNEAView = () => {
                     </Card.Body>
                 </Card>
                 <Form>
-                    <TechnicianForm
-                        editable={true}
+                     <TechnicianForm
+                        editable={false}
                         control={control}
                         errors={errors}
                         reset={reset}
                         fault={fault}
+                        setValue={setValue}
+                    />
+                    <TechnicalOfficerForm
+                        editable={false}
+                        control={control}
+                        errors={errors}
+                        reset={reset}
+                        fault={fault}
+                        setValue={setValue}
+                    />
+                    <SignatoriesForm
+                        control={control}
                     />
                      <Row>
                         <Col md={12} className="text-end">

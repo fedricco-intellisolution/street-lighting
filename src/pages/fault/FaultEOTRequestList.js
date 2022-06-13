@@ -25,7 +25,7 @@ const FaultEOTRequestList = () => {
         },
         {
             Header: "Site",
-            accessor: "site",
+            accessor: "site.name",
         },
         {
             Header: "Complainant",

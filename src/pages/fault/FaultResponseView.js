@@ -10,6 +10,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import * as faultApi from "@api/faultApi";
 import NotyfContext from "@contexts/NotyfContext";
+import SignatoriesForm from "./components/SignatoriesForm";
 
 const schema = yup.object().shape({
     action_taken: yup
@@ -81,6 +82,7 @@ const FaultResponseView = () => {
                     type : 'success',
                     message: response.data.message,
                 })
+                navigate('/faults/response')
             }
         } catch (error) {
             console.log(error)            
@@ -136,6 +138,9 @@ const FaultResponseView = () => {
                         reset={reset}
                         fault={fault}
                         setValue={setValue}
+                    />
+                    <SignatoriesForm
+                        control={control}
                     />
                     <Row>
                         <Col md={12} className="text-end">

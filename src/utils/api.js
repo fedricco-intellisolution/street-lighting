@@ -26,7 +26,7 @@ const api = () => {
     } else {
         _baseURL = process.env.REACT_APP_PROD_API
     }
-
+    console.log(_baseURL)
     const instance = axios.create({
         baseURL: _baseURL,
     });

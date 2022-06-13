@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Card, Col, Container, Form, Row } from "react-bootstrap";
-import { Edit2 } from "react-feather";
+import { Eye } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
 import DynamicTable from "@components/ui/DynamicTable";
 import * as faultApi from "@api/faultApi";
@@ -25,7 +25,7 @@ const FaultVerificationNEAList = () => {
         },
         {
             Header: "Site",
-            accessor: "site",
+            accessor: "site.name",
         },
         {
             Header: "Complainant",
@@ -54,7 +54,7 @@ const FaultVerificationNEAList = () => {
             data.push({
                 actions: (
                     <>
-                       <Edit2
+                       <Eye
                             className="align-middle me-2"
                             size={16}
                             onClick={() => navigate(location.pathname+'/'+fault.id)}

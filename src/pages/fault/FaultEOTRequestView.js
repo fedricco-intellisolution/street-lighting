@@ -10,6 +10,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import * as faultApi from "@api/faultApi";
 import NotyfContext from "@contexts/NotyfContext";
+import TechnicalOfficerForm from "./components/TechnicalOfficerForm";
+import SignatoriesForm from "./components/SignatoriesForm";
 
 const schema = yup.object().shape({
     action_taken: yup
@@ -24,7 +26,6 @@ const FaultEOTRequestView = () => {
     const [fault, setFault] = useState({});
 
     const {
-        handleSubmit,
         control,
         reset,
         setValue,
@@ -43,29 +44,16 @@ const FaultEOTRequestView = () => {
         getFault()
     }, [getFault])
 
-    const applyEOTHandler = async (data) => {
-
-        let before_photos = data.before_photos ? data.before_photos : []
-        let after_photos = data.after_photos ?  data.after_photos : []
-        
-        const formData = new FormData()
-        formData.append("action_taken", data.action_taken)
-        
-        before_photos.forEach(file => {
-            formData.append("before_photos[]", file);
-        })
-       
-        after_photos.forEach(file => {
-            formData.append("after_photos[]", file);
-        })
+    const applyEOTHandler = async () => {
 
         try {
-            const response = await faultApi.updateFaultTO(id, formData)
+            const response = await faultApi.applyEOT(id)
             if (response.data.status === 'SUCCESS') {
                 notyf.open({
                     type : 'success',
                     message: response.data.message,
                 })
+                navigate('/faults/eot-requests')
             }
         } catch (error) {
             console.log(error)            
@@ -99,20 +87,31 @@ const FaultEOTRequestView = () => {
                     </Card.Body>
                 </Card>
                 <Form>
-                    <TechnicianForm
-                        editable={true}
+                     <TechnicianForm
+                        editable={false}
                         control={control}
                         errors={errors}
                         reset={reset}
                         fault={fault}
                         setValue={setValue}
                     />
+                    <TechnicalOfficerForm
+                        editable={false}
+                        control={control}
+                        errors={errors}
+                        reset={reset}
+                        fault={fault}
+                        setValue={setValue}
+                    />
+                    <SignatoriesForm
+                        control={control}
+                    />
                      <Row>
                         <Col md={12} className="text-end">
                             <Button
                                 variant="primary"
                                 className="me-2"
-                                onClick={handleSubmit(applyEOTHandler)}
+                                onClick={() => applyEOTHandler()}
                             >
                                 Apply EOT
                             </Button>

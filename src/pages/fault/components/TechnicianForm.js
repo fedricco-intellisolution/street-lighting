@@ -1,9 +1,8 @@
-import { Button, Card, Col, Form, Image, Row } from "react-bootstrap";
+import { Card, Col, Form, Image, Row } from "react-bootstrap";
 import { Controller } from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
-import { Paperclip, Trash2, ZoomIn } from "react-feather";
+import { Trash2, ZoomIn } from "react-feather";
 import { useEffect, useState } from "react";
-
 
 const TechnicianForm = (props) => {
     const {
@@ -19,7 +18,6 @@ const TechnicianForm = (props) => {
     const [afterPhotos, setAfterPhotos] = useState([]);
     const [beforePhotosURLs, setBeforePhotosURLs] = useState([]);
     const [afterPhotosURLs, setAfterPhotosURLs] = useState([]);
-    
     useEffect(() => {
         reset(fault)
         setBeforePhotosURLs(fault.before_photos)
@@ -213,144 +211,6 @@ const TechnicianForm = (props) => {
                     </Row>
                 </Card.Body>
             </Card>
-            <Card>
-                <Card.Header className="pb-0">
-                    <Row>
-                        <Col  md={6} >
-                            <Card.Title className="mb-0">Technical Officer</Card.Title>
-                        </Col>
-                        <Col md={6} className="text-end">
-                            <Button variant="warning">
-                                <Paperclip size={16} className="me-1"/>
-                                Attach incident report
-                            </Button>
-                        </Col>
-                    </Row>
-                   
-                </Card.Header>
-                <Card.Body>
-                    <Row>
-                        <Col md={6}>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Fault case category</Form.Label>
-                                <Controller
-                                    control={control}
-                                    name="case_category"
-                                    defaultValue=""
-                                    render={({ field: { value, onChange, onBlur } }) => (
-                                        <Form.Select
-                                            type="text"
-                                            disabled={!editable}
-                                            className={(errors.case_category && 'is-invalid')}
-                                        >
-                                            <option value="">Choose an option</option>
-                                        </Form.Select>
-                                    )}
-                                />
-                                <ErrorMessage
-                                    errors={errors}
-                                    name="case_category"
-                                    render={({ message }) => <small className="text-danger">{message}</small>}
-                                />
-                            </Form.Group>
-                        </Col>
-                      
-                    </Row>
-                </Card.Body>
-            </Card>    
-            <Card>
-                <Card.Header>
-                    <Card.Title className="mb-0">Signatories</Card.Title>
-                </Card.Header>
-                <Card.Body>
-                    <Row>
-                        <Col md={6}>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Supervisor</Form.Label>
-                                <Controller
-                                    control={control}
-                                    name="supervisor"
-                                    defaultValue=""
-                                    render={({ field: { value, onChange, onBlur } }) => (
-                                        <Form.Control
-                                            type="text"
-                                            value={value}
-                                            onChange={onChange}
-                                            onBlur={onBlur}
-                                            disabled
-                                        />
-                                    )}
-                                />
-                            </Form.Group>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Comments</Form.Label>
-                                <Controller
-                                    control={control}
-                                    name="supervisor_comment"
-                                    defaultValue=""
-                                    render={({ field: { value, onChange, onBlur } }) => (
-                                        <Form.Control
-                                            type="text"
-                                            value={value}
-                                            as="textarea"
-                                            rows={5}
-                                            onChange={onChange}
-                                            onBlur={onBlur}
-                                            disabled
-                                        />
-                                    )}
-                                />
-                            </Form.Group>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Signature</Form.Label>
-                            </Form.Group>
-                        </Col>
-                        <Col md={6}>
-                            <Form.Group className="mb-3">
-                                <Form.Label>NEA's Authorised</Form.Label>
-                                <Controller
-                                    control={control}
-                                    name="nea_authorised"
-                                    defaultValue=""
-                                    render={({ field: { value, onChange, onBlur } }) => (
-                                        <Form.Control
-                                            type="text"
-                                            value={value}
-                                            onChange={onChange}
-                                            onBlur={onBlur}
-                                            disabled
-                                        />
-                                    )}
-                                />
-                            </Form.Group>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Comments</Form.Label>
-                                <Controller
-                                    control={control}
-                                    name="nea_authorised_comment"
-                                    defaultValue=""
-                                    render={({ field: { value, onChange, onBlur } }) => (
-                                        <Form.Control
-                                            type="text"
-                                            value={value}
-                                            as="textarea"
-                                            rows={5}
-                                            onChange={onChange}
-                                            onBlur={onBlur}
-                                            disabled
-                                        />
-                                    )}
-                                />
-                              
-                            </Form.Group>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Signature</Form.Label>
-                            </Form.Group>
-                        </Col>
-                    </Row>
-                </Card.Body>
-            </Card> 
-
              {props.children}
        </>                                 
     )

@@ -96,6 +96,10 @@ const pagesSection = [
         href: "/faults/rectified",
         title: "Fault rectified",
       },
+       {
+        href: "/faults/incident-reports",
+        title: "Fault incident report",
+      },
     ],
   },
   {

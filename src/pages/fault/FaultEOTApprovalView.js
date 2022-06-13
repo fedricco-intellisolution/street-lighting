@@ -10,6 +10,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import * as faultApi from "@api/faultApi";
 import NotyfContext from "@contexts/NotyfContext";
+import SignatoriesForm from "./components/SignatoriesForm";
+import TechnicalOfficerForm from "./components/TechnicalOfficerForm";
 
 const schema = yup.object().shape({
     
@@ -86,12 +88,23 @@ const FaultEOTApprovalView = () => {
                 </Card>
                 <Form>
                     <TechnicianForm
-                        editable={true}
+                        editable={false}
                         control={control}
                         errors={errors}
                         reset={reset}
                         fault={fault}
                         setValue={setValue}
+                    />
+                    <TechnicalOfficerForm
+                        editable={false}
+                        control={control}
+                        errors={errors}
+                        reset={reset}
+                        fault={fault}
+                        setValue={setValue}
+                    />
+                    <SignatoriesForm 
+                        control={control}
                     />
                      <Row>
                         <Col md={12} className="text-end">

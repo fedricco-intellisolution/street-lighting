@@ -32,6 +32,10 @@ export const requestEOT = (id) => {
     return api.post('/fault/technician/request_eot/'+ id)
 }
 
+export const applyEOT = (id) => {
+    return api.post('/fault/to/apply_eot/'+ id)
+}
+
 export const updateFaultTO = (id, data) => {
     return api.post('/fault/to/'+id, data)
 }
@@ -42,6 +46,22 @@ export const forVerificationNEA = (id, data) => {
 
 export const verifyFault = (id) => {
     return api.post('/fault/nea/verify/'+id)
+}
+
+export const saveIncidentReport = (data) => {
+    return api.post('/fault_incident_report', data)
+}
+
+export const updateIncidentReport = (id, data) => {
+    return api.post('/fault_incident_report/'+id, data)
+}
+
+export const getIncidentReport = (id) => {
+    return api.get('/fault_incident_report/'+id)
+}
+
+export const getIncidentReports = () => {
+    return api.get('/fault_incident_report')
 }
 
 

@@ -10,9 +10,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import * as faultApi from "@api/faultApi";
 import NotyfContext from "@contexts/NotyfContext";
+import TechnicalOfficerForm from "./components/TechnicalOfficerForm";
+import SignatoriesForm from "./components/SignatoriesForm";
 
 const schema = yup.object().shape({
     action_taken: yup
+        .string()
+        .required('This field is required'),
+    case_category: yup
         .string()
         .required('This field is required')
     
@@ -50,6 +55,7 @@ const FaultVerificationTOView = () => {
         
         const formData = new FormData()
         formData.append("action_taken", data.action_taken)
+        formData.append("case_category", data.case_category)
         
         before_photos.forEach(file => {
             formData.append("before_photos[]", file);
@@ -128,6 +134,17 @@ const FaultVerificationTOView = () => {
                         reset={reset}
                         fault={fault}
                         setValue={setValue}
+                    />
+                    <TechnicalOfficerForm
+                        editable={true}
+                        control={control}
+                        errors={errors}
+                        reset={reset}
+                        fault={fault}
+                        setValue={setValue}
+                    />
+                    <SignatoriesForm 
+                        control={control}
                     />
                      <Row>
                         <Col md={12} className="text-end">

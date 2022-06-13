@@ -56,6 +56,8 @@ import FaultEOTRequestView from "@fault/FaultEOTRequestView";
 import FaultEOTApprovalList from "@fault/FaultEOTApprovalList";
 import FaultEOTApprovalView from "@fault/FaultEOTApprovalView";
 import FaultRectifiedView from "@fault/FaultRectifiedView";
+import FaultIncidentReportList from "@fault/FaultIncidentReportList";
+import FaultIncidentReportView from "@fault/FaultIncidentReportView";
 
 // Preventive maintenance
 import { ChecklistBuild } from "@preventive/checklist-build/ChecklistBuild";
@@ -281,6 +283,19 @@ const routes = [
         path: "eot-approval/:id",
         element: <FaultEOTApprovalView />
       },
+      {
+        path: "incident-reports",
+        element: <FaultIncidentReportList />,
+      },
+      {
+        path: "incident-reports/:id",
+        element: <FaultIncidentReportView />
+      },
+      {
+        path: "incident-reports/:id/:fault_id",
+        element: <FaultIncidentReportView />
+      },
+      
     ],
   },
   {
