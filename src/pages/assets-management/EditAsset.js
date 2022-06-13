@@ -153,17 +153,6 @@ const EditAsset = () => {
     }
   }, [rawLevels, watch("site")]);
 
-  useEffect(() => {
-    const subscription = watch((value, { name, type }) => {
-      if (type === "change" && name === "sector") {
-        setValue("site", "");
-        setValue("level", "");
-        setValue("area", "");
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [watch]);
-
   //use effect
   useEffect(() => {
     if (rawAreas) {
@@ -178,6 +167,18 @@ const EditAsset = () => {
       setAreas(finalAreas);
     }
   }, [rawAreas, watch("level")]);
+
+  //reset dropdown
+  useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      if (type === "change" && name === "sector") {
+        setValue("site", "");
+        setValue("level", "");
+        setValue("area", "");
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
 
   //get types
   const getTypes = useCallback(async () => {
@@ -302,7 +303,11 @@ const EditAsset = () => {
                         "react-select-container" + errors.level && "is-invalid"
                       }
                       onChange={(val) => onChange(val.value)}
-                      value={levels.filter((c) => value.includes(c.value))}
+                      value={
+                        value
+                          ? levels.filter((c) => value.includes(c.value))
+                          : null
+                      }
                     />
                   )}
                 />
@@ -329,7 +334,11 @@ const EditAsset = () => {
                         "react-select-container" + errors.area && "is-invalid"
                       }
                       onChange={(val) => onChange(val.value)}
-                      value={areas.filter((c) => value.includes(c.value))}
+                      value={
+                        value
+                          ? areas.filter((c) => value.includes(c.value))
+                          : null
+                      }
                     />
                   )}
                 />

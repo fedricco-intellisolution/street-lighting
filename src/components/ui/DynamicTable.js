@@ -28,7 +28,7 @@ const DynamicTable = (props) => {
 
   return (
     <>
-      <Table striped bordered {...getTableProps()}>
+      <Table striped bordered responsive {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
