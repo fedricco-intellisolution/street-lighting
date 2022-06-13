@@ -1,30 +1,29 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { PlusCircle } from "react-feather";
 
-import { tableColumns } from "./tableColumns";
+import { tableColumns, tableData } from "./tableColumns";
 import DynamicTable from "@components/ui/DynamicTable";
-import * as preventiveMaintenanceApi from "@api/preventiveMaintenanceApi";
 
-export const ChecklistType = () => {
+export const WorkSchedule = () => {
     const navigate = useNavigate();
 
     //
     // States
     //
 
-    const [tableData, setTableData] = useState([]);
+    // const [tableData, setTableData] = useState([]);
 
     //
     // Functions
     //
 
-    const getChecklistTypes = useCallback(async () => {
-        const response = await preventiveMaintenanceApi.getChecklistTypes();
-        setTableData(response.data.data);
+    const getWorkSchedule = useCallback(async () => {
+        // const response = await preventiveMaintenanceApi.getChecklistTypes();
+        // setTableData(response.data.data);
     }, []);
 
     //
@@ -32,14 +31,14 @@ export const ChecklistType = () => {
     //
 
     useEffect(() => {
-        getChecklistTypes();
-    }, [getChecklistTypes]);
+        getWorkSchedule();
+    }, [getWorkSchedule]);
 
     return (
         <>
             <React.Fragment>
-                <Helmet title="Checklist type" />
-                <h1 className="h3 mb-3">Checklist type</h1>
+                <Helmet title="Work schedule" />
+                <h1 className="h3 mb-3">Work schedule</h1>
                 <Card className="p-0">
                     <Card.Header className="pb-0">
                         <Row>
@@ -58,7 +57,7 @@ export const ChecklistType = () => {
                                     variant="primary"
                                     onClick={() =>
                                         navigate(
-                                            "/preventive-maintenance/checklist-type/add"
+                                            "/preventive-maintenance/work-schedule/add"
                                         )
                                     }
                                 >
@@ -66,7 +65,7 @@ export const ChecklistType = () => {
                                         className="align-middle me-1"
                                         size={16}
                                     />
-                                    Add checklist type
+                                    Add work schedule
                                 </Button>
                             </Col>
                         </Row>

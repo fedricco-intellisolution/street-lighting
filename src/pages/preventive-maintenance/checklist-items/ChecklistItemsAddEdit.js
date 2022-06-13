@@ -150,6 +150,7 @@ export const ChecklistItemsAddEdit = () => {
                 </Row>
                 <Card>
                     <Card.Body>
+                        <h6 className="py-2">Checklist item details</h6>
                         <Row>
                             <Col md={4}>
                                 <Form.Group className="mb-3">
@@ -258,18 +259,10 @@ export const ChecklistItemsAddEdit = () => {
                                 </Form.Group>
                             </Col>
                         </Row>
-                    </Card.Body>
-                </Card>
-                <Card>
-                    <Card.Body>
                         <ChecklistItemsColumns
                             control={control}
                             errors={errors}
                         />
-                    </Card.Body>
-                </Card>
-                <Card>
-                    <Card.Body>
                         <Row className="pt-4">
                             <Col className="text-end">
                                 <Button

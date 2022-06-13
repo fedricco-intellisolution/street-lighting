@@ -67,7 +67,13 @@ import { ChecklistSubItems } from "@preventive/checklist-sub-items/ChecklistSubI
 import { ChecklistTypeAddEdit } from "@preventive/checklist-type/ChecklistTypeAddEdit";
 import { ChecklistItemsAddEdit } from "@preventive/checklist-items/ChecklistItemsAddEdit";
 import { ChecklistSubItemsAddEdit } from "@preventive/checklist-sub-items/ChecklistSubItemsAddEdit";
-import { ChecklistBuildAddEdit } from "pages/preventive-maintenance/checklist-build/ChecklistBuildAddEdit";
+import { ChecklistBuildAddEdit } from "@preventive/checklist-build/ChecklistBuildAddEdit";
+import { WorkSchedule } from "@preventive/work-schedules/WorkSchedule";
+import { WorkScheduleAdd } from "@preventive/work-schedules/work-schedule-add/WorkScheduleAdd";
+import { ChecklistPending } from "@preventive/checklist-pending/ChecklistPending";
+import { ChecklistPendingAdd } from "@preventive/checklist-pending/checklist-pending-add/ChecklistPendingAdd";
+import { JointInspection } from "@preventive/joint-inspection/JointInpsection";
+import { JointInspectionAdd } from "@preventive/joint-inspection/joint-inspection-add/JointInspectionAdd";
 
 
 const routes = [
@@ -333,6 +339,30 @@ const routes = [
       {
         path: "checklist-build/:action",
         element: <ChecklistBuildAddEdit />,
+      },
+	  {
+        path: "work-schedule",
+        element: <WorkSchedule />,
+      },
+      {
+        path: "work-schedule/:action",
+        element: <WorkScheduleAdd />,
+      },
+	  {
+        path: "checklist-pending",
+        element: <ChecklistPending />,
+      },
+      {
+        path: "checklist-pending/:action",
+        element: <ChecklistPendingAdd />,
+      },	  
+	  {
+        path: "joint-inspection",
+        element: <JointInspection />,
+      },
+      {
+        path: "joint-inspection/:action",
+        element: <JointInspectionAdd />,
       },
     ],
   },

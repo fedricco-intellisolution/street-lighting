@@ -96,7 +96,6 @@ export const ChecklistSubItemsAddMain = ({
             </Row>
             <Row>
                 <Col md={6}>
-                    {" "}
                     <Form.Group className="mb-3">
                         <Form.Label>Sub item header *</Form.Label>
                         <Controller
@@ -144,11 +143,6 @@ export const ChecklistSubItemsAddMain = ({
                             )}
                         />
                     </Form.Group>
-                </Col>
-            </Row>
-            <Row>
-                <Col md={12}>
-                    <small>* optional fields</small>
                 </Col>
             </Row>
         </>

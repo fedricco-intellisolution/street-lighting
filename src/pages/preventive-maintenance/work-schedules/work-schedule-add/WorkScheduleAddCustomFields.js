@@ -5,9 +5,12 @@ import { Controller, useFieldArray } from "react-hook-form";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare, faWindowClose } from "@fortawesome/free-solid-svg-icons";
-import { COLUMN_TYPE, POSITION } from "../config/options";
+import { FREQUENCY } from "../../config/options";
 
-export const ChecklistSubItemsAddCustomFields = ({ control, errors }) => {
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+export const WorkScheduleAddCustomFields = ({ control }) => {
     const { fields, append, remove } = useFieldArray({
         control,
         name: "custom_field",
@@ -16,17 +19,16 @@ export const ChecklistSubItemsAddCustomFields = ({ control, errors }) => {
     return (
         <>
             <Row className="mb-2">
-                <Col md={3}>Checklist sub item name</Col>
-                <Col md={4}>Type</Col>
-                <Col md={4}>Position</Col>
-                <Col md={1}></Col>
+                <Col md={5}>Frequency</Col>
+                <Col md={5}>Start date</Col>
+                <Col md={2}></Col>
             </Row>
             <hr />
 
             {fields.length ? (
                 fields.map((field, index) => (
                     <Row className="mb-2" key={field.id}>
-                        <Col md={3}>
+                        <Col md={5}>
                             <Form.Group className="mb-3">
                                 <Controller
                                     defaultValue=""
@@ -35,18 +37,28 @@ export const ChecklistSubItemsAddCustomFields = ({ control, errors }) => {
                                     render={({
                                         field: { value, onChange, onBlur },
                                     }) => (
-                                        <Form.Control
-                                            className={errors.name}
-                                            onBlur={onBlur}
+                                        <Form.Select
                                             onChange={onChange}
-                                            type="text"
+                                            onBlur={onBlur}
                                             value={value}
-                                        />
+                                        >
+                                            <option></option>
+                                            {FREQUENCY.map((data, index) => {
+                                                return (
+                                                    <option
+                                                        key={index}
+                                                        value={data}
+                                                    >
+                                                        {data}
+                                                    </option>
+                                                );
+                                            })}
+                                        </Form.Select>
                                     )}
                                 />
                             </Form.Group>
                         </Col>
-                        <Col md={4}>
+                        <Col md={5}>
                             <Form.Group className="mb-3">
                                 <Controller
                                     defaultValue=""
@@ -55,58 +67,18 @@ export const ChecklistSubItemsAddCustomFields = ({ control, errors }) => {
                                     render={({
                                         field: { value, onChange, onBlur },
                                     }) => (
-                                        <Form.Select
-                                            onChange={onChange}
-                                            onBlur={onBlur}
-                                            value={value}
-                                        >
-                                            <option></option>
-                                            {COLUMN_TYPE.map((data, index) => {
-                                                return (
-                                                    <option
-                                                        key={index}
-                                                        value={data}
-                                                    >
-                                                        {data}
-                                                    </option>
-                                                );
-                                            })}
-                                        </Form.Select>
+                                        <DatePicker
+                                            // selected={value}
+                                            // onChange={onChange}
+                                            showMonthYearPicker
+                                            dateFormat="MM/yyyy"
+                                            className="form-control"
+                                        />
                                     )}
                                 />
                             </Form.Group>
                         </Col>
-                        <Col md={4}>
-                            <Form.Group className="mb-3">
-                                <Controller
-                                    defaultValue=""
-                                    control={control}
-                                    name={`custom_field[${index}].position`}
-                                    render={({
-                                        field: { value, onChange, onBlur },
-                                    }) => (
-                                        <Form.Select
-                                            onChange={onChange}
-                                            onBlur={onBlur}
-                                            value={value}
-                                        >
-                                            <option></option>
-                                            {POSITION.map((data, index) => {
-                                                return (
-                                                    <option
-                                                        key={index}
-                                                        value={data}
-                                                    >
-                                                        {data}
-                                                    </option>
-                                                );
-                                            })}
-                                        </Form.Select>
-                                    )}
-                                />
-                            </Form.Group>
-                        </Col>
-                        <Col md={1}>
+                        <Col md={2}>
                             <Button
                                 variant="primary"
                                 onClick={() => remove(index)}
@@ -119,11 +91,10 @@ export const ChecklistSubItemsAddCustomFields = ({ control, errors }) => {
             ) : (
                 <Row key="#">
                     <Col md={12} className="text-center">
-                        Add a new sub item
+                        Add a frequency start date
                     </Col>
                 </Row>
             )}
-
             <Row>
                 <Col>
                     <>
@@ -134,7 +105,8 @@ export const ChecklistSubItemsAddCustomFields = ({ control, errors }) => {
                                 append({ subItem: "", type: "", position: "" });
                             }}
                         >
-                            <FontAwesomeIcon icon={faPlusSquare} /> Add sub item
+                            <FontAwesomeIcon icon={faPlusSquare} /> Add
+                            frequency start date
                         </Button>
                     </>
                 </Col>

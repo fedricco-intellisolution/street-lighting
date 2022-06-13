@@ -1,9 +1,10 @@
 const FREQUENCY = [
-    "DAILY INSPECTION",
-    "WEEKLY INSPECTION",
-    "MONTHLY INSPECTION",
-    "BI-MONTHLY INSPECTION",
-    "QUARTERLY SERVICING",
+    "DAILY",
+    "WEEKLY",
+    "MONTHLY",
+    "BI-MONTHLY",
+    "QUARTERLY",
+    "YEARLY",
 ];
 
 const COLUMN_TYPE = ["Text", "Number", "Checkbox"];
