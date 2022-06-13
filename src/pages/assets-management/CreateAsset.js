@@ -1,89 +1,99 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { Helmet } from "react-helmet-async";
-import { Edit2 } from "react-feather";
-import { Container, Row, Button, Col } from "react-bootstrap";
-import { Card, Form } from "react-bootstrap";
+import { Trash, Plus } from "react-feather";
+import { Container, Row, Button, Col, Card, Form } from "react-bootstrap";
 import Select from "react-select";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ErrorMessage } from "@hookform/error-message";
 import * as propertyManagementApi from "@api/propertyManagementApi";
+import * as assetManagementApi from "@api/assetManagementApi";
 import NotyfContext from "@contexts/NotyfContext";
 import DynamicTable from "@components/ui/DynamicTable";
-import { useLocation } from "react-router-dom";
+import * as lookUpApi from "@api/lookUpApi";
 
 const CreateAsset = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { id } = useParams();
-  const add = id === "add" ? true : false;
   const [sectors, setSectors] = useState([]);
-  const [generateQRCode, setGenerateQRCode] = useState();
+  const [sites, setSites] = useState([]);
+  const [levels, setLevels] = useState([]);
+  const [areas, setAreas] = useState([]);
+  const [types, setTypes] = useState([]);
+  const [conditions, setConditions] = useState([]);
+  const [assets, setAssets] = useState([]);
+  const [assetDetails, setAssetDetails] = useState({
+    sector_name: "",
+    site_name: "",
+    type_name: "",
+    condition_name: "",
+  });
   const tableColumns = [
     {
       Header: "Actions",
       accessor: "actions",
       Cell: (cell) => (
-        <Edit2
+        <Trash
           className="align-middle me-1"
           size={18}
-          onClick={() =>
-            navigate(location.pathname + "/" + cell.row.original.id)
-          }
+          onClick={() => {
+            const new_sites = [...assets];
+            new_sites.splice(cell.row.id, 1);
+            setAssets(new_sites);
+          }}
         />
       ),
     },
     {
       Header: "Sector",
-      accessor: "",
+      accessor: "sector_name",
     },
     {
       Header: "Site",
-      accessor: "",
+      accessor: "site_name",
     },
     {
       Header: "Level",
-      accessor: "",
+      accessor: "level_name",
     },
     {
       Header: "Name",
-      accessor: "",
+      accessor: "name",
     },
     {
       Header: "Asset code",
-      accessor: "",
+      accessor: "asset_code",
     },
     {
       Header: "Asset type",
-      accessor: "",
+      accessor: "type_name",
     },
     {
       Header: "Serial no",
-      accessor: "",
+      accessor: "serial_no",
     },
     {
       Header: "Brand",
-      accessor: "",
+      accessor: "brand",
     },
     {
       Header: "Model",
-      accessor: "",
+      accessor: "model",
     },
     {
       Header: "Description",
-      accessor: "",
+      accessor: "description",
     },
     {
       Header: "Condition",
-      accessor: "",
+      accessor: "condition_name",
     },
   ];
   const schema = yup.object().shape({
     sector: yup.string().required("This field is required"),
     site: yup.string().required("This field is required"),
-    asset_name: yup.string().required("This field is required"),
+    name: yup.string().required("This field is required"),
     asset_code: yup.string().required("This field is required"),
     asset_type: yup.string().required("This field is required"),
     condition: yup.string().required("This field is required"),
@@ -92,46 +102,46 @@ const CreateAsset = () => {
   const {
     handleSubmit,
     control,
-    reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm({
     mode: "onTouched",
     resolver: yupResolver(schema),
   });
 
+  //watch specified inputs
+  watch(["sector", "site", "level"]);
+
   //create asset
-  const createAsset = async (data) => {
-    data.generate_qr_code = generateQRCode;
-
+  const createAsset = useCallback(async () => {
     try {
-      const response = await propertyManagementApi.createSite(data);
+      const response = await assetManagementApi.createAsset(assets);
       if (response.status === 200) {
         notyf.open({
           type: "success",
           message: response.data.message,
         });
-        navigate("/property-management/sites");
+        navigate("/assets-management/assets");
       }
     } catch (error) {
       throw new Error();
     }
-  };
+  }, [assets]);
 
-  //update site
-  const updateSite = async (data) => {
-    try {
-      const response = await propertyManagementApi.updateSite(id, data);
-      if (response.status === 200) {
-        notyf.open({
-          type: "success",
-          message: response.data.message,
-        });
-        navigate("/property-management/sites");
-      }
-    } catch (error) {
-      throw new Error();
-    }
-  };
+  //add to list
+  const addToList = useCallback(
+    async (data) => {
+      data.sector_name = assetDetails.sector_name;
+      data.site_name = assetDetails.site_name;
+      data.level_name = assetDetails.level_name;
+      data.type_name = assetDetails.type_name;
+      data.condition_name = assetDetails.condition_name;
+
+      setAssets((prevState) => [...prevState, data]);
+    },
+    [assetDetails]
+  );
 
   //get sectors
   const getSectors = useCallback(async () => {
@@ -149,25 +159,117 @@ const CreateAsset = () => {
     setSectors(temp);
   }, []);
 
-  //get site
-  const getSite = useCallback(async () => {
-    const response = await propertyManagementApi.getSite(id);
-    reset({
-      name: response.data.data.name,
-      address: response.data.data.address,
-      sector_id: response.data.data.sector.id,
+  //get sites
+  const getSites = useCallback(async (e) => {
+    const response = await propertyManagementApi.getSites();
+    let finalSites = [];
+
+    response.data.data
+      .filter((site) => site.sector_id === e)
+      .forEach((site) => {
+        finalSites.push({
+          label: site.name,
+          value: site.id,
+        });
+      });
+
+    setSites(finalSites);
+  }, []);
+
+  //get levels
+  const getLevels = useCallback(async (e) => {
+    const response = await propertyManagementApi.getLevels();
+    let finalLevels = [];
+
+    response.data.data
+      .filter((level) => level.site_id === e)
+      .forEach((level) => {
+        finalLevels.push({
+          label: level.name,
+          value: level.id,
+        });
+      });
+
+    setLevels(finalLevels);
+  }, []);
+
+  //get areas
+  const getAreas = useCallback(async (e) => {
+    const response = await propertyManagementApi.getAreas();
+    let finalAreas = [];
+
+    response.data.data
+      .filter((area) => area.level_id === e)
+      .forEach((area) => {
+        finalAreas.push({
+          label: area.name,
+          value: area.id,
+        });
+      });
+
+    setAreas(finalAreas);
+  }, []);
+
+  //get types
+  const getTypes = useCallback(async () => {
+    const response = await lookUpApi.getLookUp({
+      search: { category: "ASSET_TYPE" },
     });
-    setGenerateQRCode(response.data.data.qr_code_path);
-  }, [id, reset]);
+    const data = response.data.data;
+    const options = [];
+    data.forEach((item) => {
+      options.push({
+        label: item.name,
+        value: item.code,
+      });
+    });
+    setTypes(options);
+  }, []);
+
+  const getConditions = useCallback(async () => {
+    const response = await lookUpApi.getLookUp({
+      search: { category: "ASSET_CONDITION" },
+    });
+    const data = response.data.data;
+    const options = [];
+    data.forEach((item) => {
+      options.push({
+        label: item.name,
+        value: item.code,
+      });
+    });
+    setConditions(options);
+  }, []);
+
+  //use effect
+  useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      switch (name) {
+        case "sector":
+          setValue("site", "");
+          setValue("level", "");
+          setValue("area", "");
+          getSites(value.sector);
+          break;
+        case "site":
+          getLevels(value.site);
+          break;
+        case "level":
+          getAreas(value.level);
+          break;
+        default:
+          break;
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   //use effect
   useEffect(() => {
     getSectors();
-
-    if (!add) {
-      getSite();
-    }
-  }, [getSectors, getSite, add]);
+    getTypes();
+    getConditions();
+  }, []);
 
   return (
     <React.Fragment>
@@ -193,7 +295,13 @@ const CreateAsset = () => {
                           "react-select-container" + errors.sector &&
                           "is-invalid"
                         }
-                        onChange={(val) => onChange(val.value)}
+                        onChange={(val) => {
+                          onChange(val.value);
+                          setAssetDetails((prevState) => ({
+                            ...prevState,
+                            sector_name: val.label,
+                          }));
+                        }}
                         value={sectors.filter((c) => value.includes(c.value))}
                       />
                     )}
@@ -215,13 +323,19 @@ const CreateAsset = () => {
                     render={({ field: { value, onChange, onBlur, ref } }) => (
                       <Select
                         classNamePrefix="react-select"
-                        options={[]}
+                        options={sites}
                         onBlur={onBlur}
                         className={
                           "react-select-container" + errors.site && "is-invalid"
                         }
-                        onChange={onChange}
-                        value={value}
+                        onChange={(e) => {
+                          onChange(e.value);
+                          setAssetDetails((prevState) => ({
+                            ...prevState,
+                            site_name: e.label,
+                          }));
+                        }}
+                        value={sites.filter((c) => value.includes(c.value))}
                       />
                     )}
                   />
@@ -242,14 +356,20 @@ const CreateAsset = () => {
                     render={({ field: { value, onChange, onBlur, ref } }) => (
                       <Select
                         classNamePrefix="react-select"
-                        options={[]}
+                        options={levels}
                         onBlur={onBlur}
                         className={
                           "react-select-container" + errors.level &&
                           "is-invalid"
                         }
-                        onChange={onChange}
-                        value={value}
+                        onChange={(e) => {
+                          onChange(e.value);
+                          setAssetDetails((prevState) => ({
+                            ...prevState,
+                            level_name: e.label,
+                          }));
+                        }}
+                        value={levels.filter((c) => value.includes(c.value))}
                       />
                     )}
                   />
@@ -270,13 +390,13 @@ const CreateAsset = () => {
                     render={({ field: { value, onChange, onBlur, ref } }) => (
                       <Select
                         classNamePrefix="react-select"
-                        options={[]}
+                        options={areas}
                         onBlur={onBlur}
                         className={
-                          "react-select-container" + errors.site && "is-invalid"
+                          "react-select-container" + errors.area && "is-invalid"
                         }
-                        onChange={onChange}
-                        value={value}
+                        onChange={(e) => onChange(e.value)}
+                        value={areas.filter((c) => value.includes(c.value))}
                       />
                     )}
                   />
@@ -292,7 +412,7 @@ const CreateAsset = () => {
                   <Form.Label>Asset name</Form.Label>
                   <Controller
                     control={control}
-                    name="asset_name"
+                    name="name"
                     defaultValue=""
                     render={({ field: { value, onChange, onBlur } }) => (
                       <Form.Control
@@ -300,13 +420,13 @@ const CreateAsset = () => {
                         value={value}
                         onChange={onChange}
                         onBlur={onBlur}
-                        className={errors.asset_name && "is-invalid"}
+                        className={errors.name && "is-invalid"}
                       />
                     )}
                   />
                   <ErrorMessage
                     errors={errors}
-                    name="asset_name"
+                    name="name"
                     render={({ message }) => (
                       <small className="text-danger">{message}</small>
                     )}
@@ -344,16 +464,21 @@ const CreateAsset = () => {
                     defaultValue=""
                     render={({ field: { value, onChange, onBlur, ref } }) => (
                       <Select
-                        inputRef={ref}
                         classNamePrefix="react-select"
-                        options={[]}
+                        options={types}
                         onBlur={onBlur}
                         className={
                           "react-select-container" + errors.asset_type &&
                           "is-invalid"
                         }
-                        onChange={onChange}
-                        value={value}
+                        onChange={(val) => {
+                          onChange(val.value);
+                          setAssetDetails((prevState) => ({
+                            ...prevState,
+                            type_name: val.label,
+                          }));
+                        }}
+                        value={types.filter((c) => value.includes(c.value))}
                       />
                     )}
                   />
@@ -446,14 +571,22 @@ const CreateAsset = () => {
                     render={({ field: { value, onChange, onBlur, ref } }) => (
                       <Select
                         classNamePrefix="react-select"
-                        options={[]}
+                        options={conditions}
                         onBlur={onBlur}
                         className={
                           "react-select-container" + errors.condition &&
                           "is-invalid"
                         }
-                        onChange={onChange}
-                        value={value}
+                        onChange={(val) => {
+                          onChange(val.value);
+                          setAssetDetails((prevState) => ({
+                            ...prevState,
+                            condition_name: val.label,
+                          }));
+                        }}
+                        value={conditions.filter((c) =>
+                          value.includes(c.value)
+                        )}
                       />
                     )}
                   />
@@ -492,20 +625,9 @@ const CreateAsset = () => {
               </Row>
               <Row className="pt-4">
                 <Col className="text-end">
-                  <Button
-                    variant="secondary"
-                    className="me-2"
-                    onClick={() => navigate("/assets-management/assets")}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="primary"
-                    onClick={
-                      add ? handleSubmit(createAsset) : handleSubmit(updateSite)
-                    }
-                  >
-                    Submit
+                  <Button variant="primary" onClick={handleSubmit(addToList)}>
+                    <Plus className="align-middle me-1" size={16} />
+                    Add to list
                   </Button>
                 </Col>
               </Row>
@@ -514,7 +636,21 @@ const CreateAsset = () => {
           <Card className="col-md-8 col-sm-12">
             <Card.Body>
               <Row>
-                <DynamicTable data={[]} columns={tableColumns} />
+                <DynamicTable data={assets} columns={tableColumns} />
+              </Row>
+              <Row>
+                <Col className="text-end">
+                  <Button
+                    variant="secondary"
+                    className="me-2"
+                    onClick={() => navigate("/assets-management/assets")}
+                  >
+                    Cancel
+                  </Button>
+                  <Button variant="primary" onClick={handleSubmit(createAsset)}>
+                    Submit
+                  </Button>
+                </Col>
               </Row>
             </Card.Body>
           </Card>

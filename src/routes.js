@@ -40,6 +40,7 @@ import AddEditContract from "@contract/contract/AddEditContract";
 //asset management
 import Assets from "@asset/Assets";
 import CreateAsset from "@asset/CreateAsset";
+import EditAsset from "@asset/EditAsset";
 
 //Fault
 import CallCentreFaultList from "@fault/CallCentreFaultList";
@@ -66,7 +67,6 @@ import { ChecklistTypeAddEdit } from "@preventive/checklist-type/ChecklistTypeAd
 import { ChecklistItemsAddEdit } from "@preventive/checklist-items/ChecklistItemsAddEdit";
 import { ChecklistSubItemsAddEdit } from "@preventive/checklist-sub-items/ChecklistSubItemsAddEdit";
 import { ChecklistBuildAddEdit } from "pages/preventive-maintenance/checklist-build/ChecklistBuildAddEdit";
-
 
 const routes = [
   {
@@ -173,6 +173,10 @@ const routes = [
         path: "create-asset",
         element: <CreateAsset />,
       },
+      {
+        path: "assets/:id",
+        element: <EditAsset />,
+      },
     ],
   },
   {
@@ -235,51 +239,51 @@ const routes = [
       },
       {
         path: "rectified",
-        element: <FaultRectifiedList />
+        element: <FaultRectifiedList />,
       },
       {
         path: "rectified/:id",
-        element: <FaultRectifiedView />
+        element: <FaultRectifiedView />,
       },
       {
         path: "eot-requests",
-        element: <FaultEOTRequestList />
+        element: <FaultEOTRequestList />,
       },
       {
         path: "eot-requests/:id",
-        element: <FaultEOTRequestView />
+        element: <FaultEOTRequestView />,
       },
       {
         path: "eot-approval",
-        element: <FaultEOTApprovalList />
+        element: <FaultEOTApprovalList />,
       },
       {
         path: "eot-approval/:id",
-        element: <FaultEOTApprovalView />
+        element: <FaultEOTApprovalView />,
       },
       {
         path: "rectified",
-        element: <FaultRectifiedList />
+        element: <FaultRectifiedList />,
       },
       {
         path: "rectified/:id",
-        element: <FaultRectifiedView />
+        element: <FaultRectifiedView />,
       },
       {
         path: "eot-requests",
-        element: <FaultEOTRequestList />
+        element: <FaultEOTRequestList />,
       },
       {
         path: "eot-requests/:id",
-        element: <FaultEOTRequestView />
+        element: <FaultEOTRequestView />,
       },
       {
         path: "eot-approval",
-        element: <FaultEOTApprovalList />
+        element: <FaultEOTApprovalList />,
       },
       {
         path: "eot-approval/:id",
-        element: <FaultEOTApprovalView />
+        element: <FaultEOTApprovalView />,
       },
     ],
   },
