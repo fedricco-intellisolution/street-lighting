@@ -40,6 +40,7 @@ import AddEditContract from "@contract/contract/AddEditContract";
 //asset management
 import Assets from "@asset/Assets";
 import CreateAsset from "@asset/CreateAsset";
+import EditAsset from "@asset/EditAsset";
 
 //Fault
 import CallCentreFaultList from "@fault/CallCentreFaultList";
@@ -76,7 +77,6 @@ import { ChecklistPending } from "@preventive/checklist-pending/ChecklistPending
 import { ChecklistPendingAdd } from "@preventive/checklist-pending/checklist-pending-add/ChecklistPendingAdd";
 import { JointInspection } from "@preventive/joint-inspection/JointInpsection";
 import { JointInspectionAdd } from "@preventive/joint-inspection/joint-inspection-add/JointInspectionAdd";
-
 
 const routes = [
   {
@@ -183,6 +183,10 @@ const routes = [
         path: "create-asset",
         element: <CreateAsset />,
       },
+      {
+        path: "assets/:id",
+        element: <EditAsset />,
+      },
     ],
   },
   {
@@ -245,27 +249,27 @@ const routes = [
       },
       {
         path: "rectified",
-        element: <FaultRectifiedList />
+        element: <FaultRectifiedList />,
       },
       {
         path: "rectified/:id",
-        element: <FaultRectifiedView />
+        element: <FaultRectifiedView />,
       },
       {
         path: "eot-requests",
-        element: <FaultEOTRequestList />
+        element: <FaultEOTRequestList />,
       },
       {
         path: "eot-requests/:id",
-        element: <FaultEOTRequestView />
+        element: <FaultEOTRequestView />,
       },
       {
         path: "eot-approval",
-        element: <FaultEOTApprovalList />
+        element: <FaultEOTApprovalList />,
       },
       {
         path: "eot-approval/:id",
-        element: <FaultEOTApprovalView />
+        element: <FaultEOTApprovalView />,
       },
       {
         path: "eot/:id",
@@ -281,11 +285,11 @@ const routes = [
       },
       {
         path: "rectified",
-        element: <FaultRectifiedList />
+        element: <FaultRectifiedList />,
       },
       {
         path: "rectified/:id",
-        element: <FaultRectifiedView />
+        element: <FaultRectifiedView />,
       },
       {
         path: "incident-reports",

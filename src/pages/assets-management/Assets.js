@@ -4,8 +4,8 @@ import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Search, Edit2 } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
 import * as propertyManagementApi from "@api/propertyManagementApi";
+import * as assetManagementApi from "@api/assetManagementApi";
 import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import Select from "react-select";
 import { ErrorMessage } from "@hookform/error-message";
 import DynamicTable from "@components/ui/DynamicTable";
@@ -17,74 +17,99 @@ const Assets = () => {
   const [sites, setSites] = useState([]);
   const [levels, setLevels] = useState([]);
   const [areas, setAreas] = useState([]);
+  const [assets, setAssets] = useState([]);
+  const [filter, setFilter] = useState();
   const tableColumns = [
     {
       Header: "Actions",
       accessor: "actions",
       Cell: (cell) => (
-        <Edit2
-          className="align-middle me-1"
-          size={18}
-          onClick={() =>
-            navigate(location.pathname + "/" + cell.row.original.id)
-          }
-        />
+        <div>
+          <Edit2
+            className="align-middle me-1"
+            size={18}
+            onClick={() =>
+              navigate(location.pathname + "/" + cell.row.original.id)
+            }
+          />
+        </div>
       ),
     },
     {
       Header: "Sector",
-      accessor: "",
+      accessor: "sector.name",
     },
     {
       Header: "Site",
-      accessor: "",
+      accessor: "site.name",
     },
     {
       Header: "Level",
-      accessor: "",
+      accessor: "level.name",
+    },
+    {
+      Header: "Area",
+      accessor: "area.name",
     },
     {
       Header: "Name",
-      accessor: "",
+      accessor: "name",
     },
     {
       Header: "Asset code",
-      accessor: "",
+      accessor: "code",
     },
     {
       Header: "Asset type",
-      accessor: "",
+      accessor: "type.name",
     },
     {
       Header: "Serial no",
-      accessor: "",
+      accessor: "serial_no",
     },
     {
       Header: "Brand",
-      accessor: "",
+      accessor: "details.brand",
     },
     {
       Header: "Model",
-      accessor: "",
+      accessor: "details.model",
     },
     {
       Header: "Description",
-      accessor: "",
+      accessor: "details.description",
     },
     {
       Header: "Condition",
-      accessor: "",
+      accessor: "condition.name",
     },
   ];
   const {
     control,
-    reset,
     setValue,
     watch,
     formState: { errors },
   } = useForm({
     mode: "onTouched",
   });
+
+  //watch specified inputs
+  watch(["sector", "site", "level", "area"]);
+
+  //handle filter
+  const handleFilter = useCallback(async () => {
+    let sector = watch("sector", "value");
+    let site = watch("site", "value");
+    let level = watch("level", "value");
+    let area = watch("area", "value");
+
+    setFilter({
+      sector: sector.value,
+      site: site.value,
+      level: level.value,
+      area: area.value,
+    });
+  }, []);
 
   //call get area
   const getAreas = useCallback(async (e) => {
@@ -146,24 +171,39 @@ const Assets = () => {
     setSectors(finalSectors);
   }, []);
 
+  //call get assets
+  const getAssets = useCallback(async () => {
+    const response = await assetManagementApi.getAssets({ search: filter });
+    setAssets(response.data.data);
+  }, [filter]);
+
+  //use effect
   useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      switch (name) {
+        case "sector":
+          setValue("site", "");
+          setValue("level", "");
+          setValue("area", "");
+          getSites(value.sector);
+          break;
+        case "site":
+          getLevels(value.site);
+          break;
+        case "level":
+          getAreas(value.level);
+          break;
+        default:
+          break;
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    getAssets();
     getSectors();
-
-    setValue("site", "");
-    setValue("level", "");
-    getSites(watch("sector", "value"));
-  }, [getSectors, watch("sector")]);
-
-  useEffect(() => {
-    setValue("level", "");
-    setValue("area", "");
-    getLevels(watch("site", "value"));
-  }, [watch("site")]);
-
-  useEffect(() => {
-    setValue("area", "");
-    getAreas(watch("level", "value"));
-  }, [watch("level")]);
+  }, [getAssets, getSectors]);
 
   return (
     <React.Fragment>
@@ -286,7 +326,7 @@ const Assets = () => {
                   variant="primary"
                   className="me-1 mb-1"
                   style={{ marginTop: "30px", width: "100%" }}
-                  onClick={() => navigate(location.pathname + "/add")}
+                  onClick={handleFilter}
                 >
                   <Search className="align-middle me-1" size={16} />
                   Search
@@ -298,7 +338,7 @@ const Assets = () => {
         <Card>
           <Card.Body>
             <Row>
-              <DynamicTable data={[]} columns={tableColumns} />
+              <DynamicTable data={assets} columns={tableColumns} />
             </Row>
           </Card.Body>
         </Card>

@@ -20,6 +20,7 @@ const pagesSection = [
   {
     icon: FileText,
     title: "Contract management",
+    href: "/contract-management",
     children: [
       {
         href: "/contract-management/contracts",
@@ -30,6 +31,7 @@ const pagesSection = [
   {
     icon: Home,
     title: "Property management",
+    href: "/property-management",
     children: [
       {
         href: "/property-management/sectors",
@@ -52,6 +54,7 @@ const pagesSection = [
   {
     icon: Package,
     title: "Assets management",
+    href: "/assets-management",
     children: [
       {
         href: "/assets-management/assets",
@@ -109,6 +112,7 @@ const pagesSection = [
   {
     icon: Shield,
     title: "Preventive maintenance",
+    href: "/preventive-maintenance",
     children: [
 	  {
 		href: "/preventive-maintenance/checklist-pending",
