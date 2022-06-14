@@ -1,43 +1,158 @@
-import React from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import { Controller, useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import { Helmet } from "react-helmet-async";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import { MOCK_CHECKLIST_ITEMS, MOCK_CHECKLIST_TYPE } from "../config/mockData";
-import { FREQUENCY } from "../config/options";
+import * as preventiveMaintenanceApi from "@api/preventiveMaintenanceApi";
+import NotyfContext from "contexts/NotyfContext";
+import { ChecklistSubItemsAddCustomFields } from "./ChecklistSubItemsAddCustomFields";
+import { ChecklistSubItemsAddMain } from "./ChecklistSubItemsAddMain";
 
 const schema = yup.object().shape({
-    checklistType    : yup.string().required("This field is required"),
-    checklistItem    : yup.string().required("This field is required"),
-    checklistSubItem : yup.string().required("This field is required"),
-    sequenceNumber   : yup.string().required("This field is required"),
-    frequency        : yup.string().required("This field is required"),
+    checklist_id: yup.string().required("This field is required"),
+    checklist_item_id: yup.string().required("This field is required"),
+    is_custom_field: yup.string(),
+    name: yup.string().when("is_custom_field", {
+        is: "No",
+        then: yup.string().required("This field is required"),
+    }),
+    sequence_no: yup.string().required("This field is required"),
 });
 
 export const ChecklistSubItemsAddEdit = () => {
     const navigate = useNavigate();
+    const { action } = useParams();
     const {
         handleSubmit,
         control,
         formState: { errors },
+        reset,
+        register,
     } = useForm({
-        mode     : "onTouched",
-        resolver : yupResolver(schema),
+        mode: "onTouched",
+        resolver: yupResolver(schema),
     });
+
+    //
+    // States
+    //
+    const [checklistTypes, setChecklistTypes] = useState([]);
+    const [checklistItems, setChecklistItems] = useState([]);
+    const [isCustomField, setIsCustomField] = useState(false);
+    const notyf = useContext(NotyfContext);
 
     //
     // Functions
     //
 
-    const addChecklistSubItems = (data) => {
-        console.log(data);
+    const addChecklistSubItems = async (data) => {
+        try {
+            const response =
+                await preventiveMaintenanceApi.createChecklistSubItem(data);
+            if (response.data.status === "SUCCESS") {
+                notyf.open({
+                    type: "success",
+                    message: response.data.message,
+                });
+                navigate("/preventive-maintenance/checklist-sub-items");
+            }
+        } catch (error) {
+            notyf.open({
+                type: "danger",
+                message: "Something went wrong with the server",
+            });
+        }
     };
+
+    const updateChecklistSubItem = async (data) => {
+        try {
+            const response =
+                await preventiveMaintenanceApi.updateChecklistSubItem(
+                    action,
+                    data
+                );
+            if (response.data.status === "SUCCESS") {
+                notyf.open({
+                    type: "success",
+                    message: response.data.message,
+                });
+                navigate("/preventive-maintenance/checklist-sub-items");
+            }
+        } catch (error) {
+            notyf.open({
+                type: "danger",
+                message: "Something went wrong with the server",
+            });
+        }
+    };
+
+    const getChecklistTypes = useCallback(async () => {
+        const response = await preventiveMaintenanceApi.getChecklistTypes();
+        const checklistTypeData = response.data.data;
+        let checklitTypeOption = [];
+
+        checklistTypeData.map((data) => {
+            return (checklitTypeOption = [
+                ...checklitTypeOption,
+                {
+                    key: data.id,
+                    value: data.name,
+                },
+            ]);
+        });
+
+        setChecklistTypes(checklitTypeOption);
+    }, []);
+
+    const getChecklistItems = useCallback(async () => {
+        const response = await preventiveMaintenanceApi.getChecklistItems();
+        const checklistItemData = response.data.data;
+        let checklitItemOption = [];
+
+        checklistItemData.map((data) => {
+            return (checklitItemOption = [
+                ...checklitItemOption,
+                {
+                    key: data.id,
+                    value: data.name,
+                },
+            ]);
+        });
+
+        setChecklistItems(checklitItemOption);
+    }, []);
+
+    const getChecklistSubItem = useCallback(async () => {
+        const response = await preventiveMaintenanceApi.getChecklistSubItem(
+            action
+        );
+        reset({
+            checklist_id: "",
+            checklist_item_id: response.data.data.checklist_item_id,
+            header: response.data.data.header,
+            name: response.data.data.name,
+            sequence_no: response.data.data.sequence_no,
+        });
+    }, [action, reset]);
+
+    //
+    // UseEffect
+    //
+
+    useEffect(() => {
+        getChecklistTypes();
+        getChecklistItems();
+    }, [getChecklistTypes, getChecklistItems]);
+
+    useEffect(() => {
+        if (action !== "add") getChecklistSubItem();
+    }, [getChecklistSubItem, action]);
 
     return (
         <React.Fragment>
@@ -64,123 +179,63 @@ export const ChecklistSubItemsAddEdit = () => {
                 </Row>
                 <Card>
                     <Card.Body>
-                        <Form>
+                        <h6 className="py-2">Checklist sub item details</h6>
+                        <ChecklistSubItemsAddMain
+                            control={control}
+                            errors={errors}
+                            checklistTypes={checklistTypes}
+                            checklistItems={checklistItems}
+                        />
+                        <h6 className="py-2">Checklist sub item name</h6>
+                        <Row>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Is custom field?</Form.Label>
+                                <br />
+                                <Form.Check
+                                    {...register("is_custom_field")}
+                                    className="mb-2"
+                                    id="is_custom_field"
+                                    inline
+                                    label="Yes"
+                                    name="is_custom_field"
+                                    onChange={() => setIsCustomField(true)}
+                                    type="radio"
+                                    value="Yes"
+                                />
+                                <Form.Check
+                                    {...register("is_custom_field")}
+                                    checked={!isCustomField}
+                                    className="mb-2"
+                                    id="is_custom_field"
+                                    inline
+                                    label="No"
+                                    name="is_custom_field"
+                                    type="radio"
+                                    value="No"
+                                    onChange={() => setIsCustomField(false)}
+                                />
+                            </Form.Group>
+                        </Row>
+                        {!isCustomField ? (
                             <Row>
                                 <Col md={4}>
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Checklist type</Form.Label>
-                                        <Controller
-                                            defaultValue=""
-                                            control={control}
-                                            name="checklistType"
-                                            render={({
-                                                field: {
-                                                    value,
-                                                    onChange,
-                                                    onBlur,
-                                                },
-                                            }) => (
-                                                <Form.Select
-													id="checklistType"
-                                                    name="checklistType"
-                                                    onBlur={onBlur}
-                                                    onChange={onChange}
-                                                    value={value}
-                                                >
-                                                    <option></option>
-                                                    {MOCK_CHECKLIST_TYPE.map(
-                                                        (data, index) => {
-                                                            return (
-                                                                <option
-                                                                    key={index}
-                                                                    value={data}
-                                                                >
-                                                                    {data}
-                                                                </option>
-                                                            );
-                                                        }
-                                                    )}
-                                                </Form.Select>
-                                            )}
-                                        />
-                                        <ErrorMessage
-                                            errors={errors}
-                                            name="checklistType"
-                                            render={({ message }) => (
-                                                <small className="text-danger">
-                                                    {message}
-                                                </small>
-                                            )}
-                                        />
-                                    </Form.Group>
-                                </Col>
-                                <Col md={4}>
-                                    {" "}
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Checklist item</Form.Label>
-                                        <Controller
-                                            control={control}
-                                            defaultValue=""
-                                            name="checklistItem"
-                                            render={({
-                                                field: {
-                                                    value,
-                                                    onChange,
-                                                    onBlur,
-                                                },
-                                            }) => (
-                                                <Form.Select
-													id="checklistItem"
-                                                    name="checklistItem"
-                                                    onBlur={onBlur}
-                                                    onChange={onChange}
-                                                    value={value}
-                                                >
-                                                    <option></option>
-                                                    {MOCK_CHECKLIST_ITEMS.map(
-                                                        (data, index) => {
-                                                            return (
-                                                                <option
-                                                                    key={index}
-                                                                    value={data}
-                                                                >
-                                                                    {data}
-                                                                </option>
-                                                            );
-                                                        }
-                                                    )}
-                                                </Form.Select>
-                                            )}
-                                        />
-                                        <ErrorMessage
-                                            errors={errors}
-                                            name="checklistItem"
-                                            render={({ message }) => (
-                                                <small className="text-danger">
-                                                    {message}
-                                                </small>
-                                            )}
-                                        />
-                                    </Form.Group>
-                                </Col>
-                                <Col md={4}>
-                                    <Form.Group className="mb-3">
                                         <Form.Label>
-                                            Checklist sub item
+                                            Checklist sub item name
                                         </Form.Label>
                                         <Controller
                                             control={control}
                                             defaultValue=""
-                                            name="checklistSubItem"
+                                            name="name"
                                             render={({
                                                 field: {
                                                     onBlur,
-													onChange,
+                                                    onChange,
                                                     value,
                                                 },
                                             }) => (
                                                 <Form.Control
-													className={errors.name}
+                                                    className={errors.name}
                                                     onBlur={onBlur}
                                                     onChange={onChange}
                                                     type="text"
@@ -190,7 +245,7 @@ export const ChecklistSubItemsAddEdit = () => {
                                         />
                                         <ErrorMessage
                                             errors={errors}
-                                            name="checklistSubItem"
+                                            name="name"
                                             render={({ message }) => (
                                                 <small className="text-danger">
                                                     {message}
@@ -200,158 +255,42 @@ export const ChecklistSubItemsAddEdit = () => {
                                     </Form.Group>
                                 </Col>
                             </Row>
-                            <Row>
-                                <Col md={4}>
-                                    {" "}
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>
-                                            Sub item header *
-                                        </Form.Label>
-                                        <Controller
-                                            defaultValue=""
-                                            control={control}
-                                            name="subItemHeader"
-                                            render={({
-                                                field: {
-                                                    value,
-                                                    onChange,
-                                                    onBlur,
-                                                },
-                                            }) => (
-                                                <Form.Control
-													className={errors.name}
-													onBlur={onBlur}
-													onChange={onChange}
-													type="text"
-													value={value}
-                                                />
-                                            )}
-                                        />
-                                        <ErrorMessage
-                                            errors={errors}
-                                            name="subItemHeader"
-                                            render={({ message }) => (
-                                                <small className="text-danger">
-                                                    {message}
-                                                </small>
-                                            )}
-                                        />
-                                    </Form.Group>
-                                </Col>
-                                <Col md={4}>
-                                    {" "}
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Sequence number</Form.Label>
-                                        <Controller
-                                            control={control}
-                                            defaultValue=""
-                                            name="sequenceNumber"
-                                            render={({
-                                                field: {
-                                                    value,
-                                                    onChange,
-                                                    onBlur,
-                                                },
-                                            }) => (
-                                                <Form.Control
-													className={errors.name}
-                                                    onChange={onChange}
-                                                    onBlur={onBlur}
-                                                    type="text"
-                                                    value={value}
-                                                />
-                                            )}
-                                        />
-                                        <ErrorMessage
-                                            errors={errors}
-                                            name="sequenceNumber"
-                                            render={({ message }) => (
-                                                <small className="text-danger">
-                                                    {message}
-                                                </small>
-                                            )}
-                                        />
-                                    </Form.Group>
-                                </Col>
-                                <Col md={4}>
-                                    {" "}
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Frequency</Form.Label>
-                                        <Controller
-                                            control={control}
-                                            defaultValue=""
-                                            name="frequency"
-                                            render={({
-                                                field: {
-													onBlur,
-                                                    onChange,
-                                                    value,
-                                                },
-                                            }) => (
-                                                <Form.Select
-													id="frequency"
-                                                    name="frequency"
-                                                    onBlur={onBlur}
-                                                    onChange={onChange}
-                                                    value={value}
-                                                >
-                                                    <option></option>
-                                                    {FREQUENCY.map(
-                                                        (data, index) => {
-                                                            return (
-                                                                <option
-                                                                    key={index}
-                                                                    value={data}
-                                                                >
-                                                                    {data}
-                                                                </option>
-                                                            );
-                                                        }
-                                                    )}
-                                                </Form.Select>
-                                            )}
-                                        />
-                                        <ErrorMessage
-                                            errors={errors}
-                                            name="frequency"
-                                            render={({ message }) => (
-                                                <small className="text-danger">
-                                                    {message}
-                                                </small>
-                                            )}
-                                        />
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col md={12}>
-                                    <small>* optional fields</small>
-                                </Col>
-                            </Row>
-                            <Row className="pt-4">
-                                <Col className="text-end">
-                                    <Button
-                                        className="me-2"
-                                        variant="secondary"
-                                        onClick={() =>
-                                            navigate(
-                                                "/preventive-maintenance/checklist-sub-items"
-                                            )
-                                        }
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        variant="primary"
-                                        onClick={handleSubmit(
-                                            addChecklistSubItems
-                                        )}
-                                    >
-                                        Submit
-                                    </Button>
-                                </Col>
-                            </Row>
-                        </Form>
+                        ) : (
+                            <ChecklistSubItemsAddCustomFields
+                                control={control}
+                                errors={errors}
+                            />
+                        )}
+                        <Row className="mt-2">
+                            <Col md={12}>
+                                <small>* optional fields</small>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col className="text-end">
+                                <Button
+                                    className="me-2"
+                                    variant="secondary"
+                                    onClick={() =>
+                                        navigate(
+                                            "/preventive-maintenance/checklist-sub-items"
+                                        )
+                                    }
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    variant="primary"
+                                    onClick={handleSubmit(
+                                        action === "add"
+                                            ? addChecklistSubItems
+                                            : updateChecklistSubItem
+                                    )}
+                                >
+                                    Submit
+                                </Button>
+                            </Col>
+                        </Row>
                     </Card.Body>
                 </Card>
             </Container>

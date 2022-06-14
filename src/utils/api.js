@@ -1,37 +1,47 @@
-import axios from "axios";
+import axios from 'axios';
 
-const requestHandler = (request) => {
-  const accessToken = window.localStorage.getItem("accessToken");
-  if (accessToken != null) {
-    request.headers.Authorization = "Bearer " + accessToken;
-  }
-  return request;
+const requestHandler = request => {
+    const accessToken = window.localStorage.getItem("accessToken");
+    if (accessToken != null) {
+        request.headers.Authorization = 'Bearer ' + accessToken;
+    }
+    return request;
 };
 
 const responseHandler = (response) => {
-  return response;
+    return response;
 };
 
 const errorHandler = (error) => {
-  return Promise.reject(error);
+    return Promise.reject(error);
 };
 
 const api = () => {
-  const instance = axios.create({
-    baseURL: process.env.REACT_APP_DEV_API,
-  });
+    let _baseURL = '';
 
-  instance.interceptors.request.use(
-    (request) => requestHandler(request),
-    (error) => errorHandler(error)
-  );
+    var base_url = window.location.origin;
 
-  instance.interceptors.response.use(
-    (response) => responseHandler(response),
-    (error) => errorHandler(error)
-  );
+    if (base_url.includes("localhost")) {
+        _baseURL = process.env.REACT_APP_DEV_API
+    } else {
+        _baseURL = process.env.REACT_APP_PROD_API
+    }
 
-  return instance;
+    const instance = axios.create({
+        baseURL: _baseURL,
+    });
+
+    instance.interceptors.request.use(
+        (request) => requestHandler(request),
+        (error) => errorHandler(error)
+    );
+
+    instance.interceptors.response.use(
+        (response) => responseHandler(response),
+        (error) => errorHandler(error)
+    );
+
+    return instance;
 };
 
 export default api();

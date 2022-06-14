@@ -106,6 +106,14 @@ const pagesSection = [
     title: "Preventive maintenance",
     href: "/preventive-maintenance",
     children: [
+	  {
+		href: "/preventive-maintenance/checklist-pending",
+		title: "Pending checklist",
+	  },
+	  {
+		href: "/preventive-maintenance/joint-inspection",
+		title: "Joint inspection",
+	  },
       {
         href: "/preventive-maintenance/checklist-type",
         title: "Checklist type",
@@ -121,6 +129,10 @@ const pagesSection = [
       {
         href: "/preventive-maintenance/checklist-build",
         title: "Build checklist",
+      },
+	  {
+        href: "/preventive-maintenance/work-schedule",
+        title: "Work schedule",
       },
     ],
   },

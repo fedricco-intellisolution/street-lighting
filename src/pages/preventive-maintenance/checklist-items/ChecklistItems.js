@@ -1,20 +1,39 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { PlusCircle } from "react-feather";
 
-import { TablePagination } from "components/TablePagination";
-import { tableColumns, tableData } from "./tableColumns";
+import { tableColumns } from "./tableColumns";
+import * as preventiveMaintenanceApi from "@api/preventiveMaintenanceApi";
+import DynamicTable from "components/ui/DynamicTable";
 
 export const ChecklistItems = () => {
     const navigate = useNavigate();
+    const [tableData, setTableData] = useState([]);
+
+    //
+    // Functions
+    //
+
+    const getChecklistItems = useCallback(async () => {
+        const response = await preventiveMaintenanceApi.getChecklistItems();
+        setTableData(response.data.data);
+    }, []);
+
+    //
+    // UseEffects
+    //
+
+    useEffect(() => {
+        getChecklistItems();
+    }, [getChecklistItems]);
 
     return (
         <>
             <React.Fragment>
-                <Helmet title="Settings" />
+                <Helmet title="Checklist items" />
                 <h1 className="h3 mb-3">Checklist items</h1>
                 <Card className="p-0">
                     <Card.Header className="pb-0">
@@ -48,11 +67,12 @@ export const ChecklistItems = () => {
                         </Row>
                     </Card.Header>
                     <Card.Body>
-                        <TablePagination
-                            columns={tableColumns}
-                            module="Checklist type"
-                            rawData={tableData}
-                        />
+                        {tableData && (
+                            <DynamicTable
+                                columns={tableColumns}
+                                data={tableData}
+                            />
+                        )}
                     </Card.Body>
                 </Card>
             </React.Fragment>

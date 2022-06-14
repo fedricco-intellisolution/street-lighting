@@ -14,7 +14,7 @@ export const ChecklistBuild = () => {
     return (
         <>
             <React.Fragment>
-                <Helmet title="Settings" />
+                <Helmet title="Build checklist" />
                 <h1 className="h3 mb-3">Build checklist</h1>
                 <Card className="p-0">
                     <Card.Header className="pb-0">
