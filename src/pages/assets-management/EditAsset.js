@@ -47,23 +47,20 @@ const EditAsset = () => {
   const notyf = useContext(NotyfContext);
 
   //update asset
-  const updateAsset = useCallback(
-    async (data) => {
-      try {
-        const response = await assetManagementApi.updateAsset(id, data);
-        if (response.status === 200) {
-          notyf.open({
-            type: "success",
-            message: response.data.message,
-          });
-          navigate("/assets-management/assets");
-        }
-      } catch (error) {
-        throw new Error();
+  const updateAsset = useCallback(async (data) => {
+    try {
+      const response = await assetManagementApi.updateAsset(id, data);
+      if (response.status === 200) {
+        notyf.open({
+          type: "success",
+          message: response.data.message,
+        });
+        navigate("/assets-management/assets");
       }
-    },
-    [id]
-  );
+    } catch (error) {
+      throw new Error();
+    }
+  }, []);
 
   //get asset
   const getAsset = useCallback(async () => {
@@ -77,9 +74,12 @@ const EditAsset = () => {
       area: asset.area_id,
       name: asset.name,
       asset_code: asset.code,
-      asset_type: asset.type.id,
+      asset_type: asset.type?.code,
       serial_no: asset.serial_no,
-      condition: asset.condition.id,
+      condition: asset.condition?.code,
+      brand: asset.details?.brand,
+      model: asset.details?.model,
+      description: asset.details?.description,
     });
   }, [id, reset]);
 
@@ -189,7 +189,7 @@ const EditAsset = () => {
 
     response.data.data.forEach((type) => {
       finalTypes.push({
-        value: type.id,
+        value: type.code,
         label: type.name,
       });
     });
@@ -206,7 +206,7 @@ const EditAsset = () => {
 
     response.data.data.forEach((condition) => {
       conditions.push({
-        value: condition.id,
+        value: condition.code,
         label: condition.name,
       });
     });
