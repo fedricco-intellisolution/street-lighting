@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
@@ -9,7 +9,6 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import * as faultApi from "@api/faultApi";
-import NotyfContext from "@contexts/NotyfContext";
 import SignatoriesForm from "./components/SignatoriesForm";
 import TechnicalOfficerForm from "./components/TechnicalOfficerForm";
 
@@ -19,11 +18,9 @@ const schema = yup.object().shape({
 const FaultEOTApprovalView = () => {
     const navigate = useNavigate();
     const { id } = useParams();
-    const notyf = useContext(NotyfContext);
     const [fault, setFault] = useState({});
 
     const {
-        handleSubmit,
         control,
         reset,
         setValue,
@@ -41,24 +38,6 @@ const FaultEOTApprovalView = () => {
     useEffect(() => {
         getFault()
     }, [getFault])
-
-    const approveHandler = async (data) => {
-
-        notyf.open({
-            type : 'success',
-            message: 'Approve handler called',
-        })
-  
-    }
-
-    const rejectHandler = async (data) => {
-
-        notyf.open({
-            type : 'success',
-            message: 'Reject handler called',
-        })
-  
-    }
 
     return (
         <React.Fragment>
@@ -108,19 +87,13 @@ const FaultEOTApprovalView = () => {
                     />
                      <Row>
                         <Col md={12} className="text-end">
-                            <Button
-                                variant="danger"
-                                className="me-2"
-                                onClick={handleSubmit(rejectHandler)}
-                            >
-                                Reject
-                            </Button>
+                           
                             <Button
                                 variant="primary"
                                 className="me-2"
-                                onClick={handleSubmit(approveHandler)}
+                                onClick={ () => navigate('/faults/eot/'+id+'/approval')}
                             >
-                                Approve
+                                View EOT
                             </Button>
                             
                         </Col>

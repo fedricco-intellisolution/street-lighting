@@ -78,11 +78,19 @@ const FaultVerificationTOView = () => {
         }
     }
 
-    const forwardToTechnicianHandler = () => {
-        notyf.open({
-            type: 'success',
-            message: 'Forward to technician called'
-        })
+    const forwardToTechnicianHandler = async() => {
+         try {
+            const response = await faultApi.forwardToTechnician(id)
+            if (response.data.status === 'SUCCESS') {
+                notyf.open({
+                    type : 'success',
+                    message: response.data.message,
+                })
+                navigate('/faults/verification-to')
+            }
+        } catch (error) {
+            console.log(error)            
+        }
     }
 
     const faultVerificationHandler = async(data) => {

@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import CallCentreForm from "./components/CallCentreForm";
 import TechnicianForm from "./components/TechnicianForm";
 import { useForm } from "react-hook-form";
@@ -21,6 +21,8 @@ const schema = yup.object().shape({
 });
 const FaultResponseView = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const response_page = location.pathname.indexOf('response') > -1 ? true : false
     const { id } = useParams();
     const notyf = useContext(NotyfContext)
     const [fault, setFault] = useState({});
@@ -113,8 +115,13 @@ const FaultResponseView = () => {
                         <h1 className="h3 mb-3">View fault</h1>
                     </Col>
                     <Col md={6}>
-                         <Breadcrumb>
-                            <Breadcrumb.Item onClick={() => navigate('/faults/response')}>Fault Response</Breadcrumb.Item>
+                        <Breadcrumb>
+                            {
+                                response_page 
+                                    ? <Breadcrumb.Item onClick={() => navigate('/faults/response')}>Fault Response</Breadcrumb.Item>
+                                    : <Breadcrumb.Item onClick={() => navigate('/faults/followup')}>Fault follow up</Breadcrumb.Item>
+                            }
+                            
                             <Breadcrumb.Item active>View</Breadcrumb.Item>
                         </Breadcrumb>
                     </Col>

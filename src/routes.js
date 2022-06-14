@@ -58,6 +58,8 @@ import FaultEOTApprovalView from "@fault/FaultEOTApprovalView";
 import FaultRectifiedView from "@fault/FaultRectifiedView";
 import FaultIncidentReportList from "@fault/FaultIncidentReportList";
 import FaultIncidentReportView from "@fault/FaultIncidentReportView";
+import FaultFollowUpList from "@fault/FaultFollowUpList";
+import FaultEOTView from "@fault/FaultEOTView";
 
 // Preventive maintenance
 import { ChecklistBuild } from "@preventive/checklist-build/ChecklistBuild";
@@ -266,28 +268,24 @@ const routes = [
         element: <FaultEOTApprovalView />
       },
       {
+        path: "eot/:id",
+        element: <FaultEOTView />
+      },
+      {
+        path: "eot/:id/apply",
+        element: <FaultEOTView />
+      },
+       {
+        path: "eot/:id/approval",
+        element: <FaultEOTView />
+      },
+      {
         path: "rectified",
         element: <FaultRectifiedList />
       },
       {
         path: "rectified/:id",
         element: <FaultRectifiedView />
-      },
-      {
-        path: "eot-requests",
-        element: <FaultEOTRequestList />
-      },
-      {
-        path: "eot-requests/:id",
-        element: <FaultEOTRequestView />
-      },
-      {
-        path: "eot-approval",
-        element: <FaultEOTApprovalList />
-      },
-      {
-        path: "eot-approval/:id",
-        element: <FaultEOTApprovalView />
       },
       {
         path: "incident-reports",
@@ -300,6 +298,14 @@ const routes = [
       {
         path: "incident-reports/:id/:fault_id",
         element: <FaultIncidentReportView />
+      },
+      {
+        path: "followup",
+        element: <FaultFollowUpList />
+      },
+       {
+        path: "followup/:id",
+        element: <FaultResponseView />
       },
       
     ],

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
@@ -9,7 +9,6 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import * as faultApi from "@api/faultApi";
-import NotyfContext from "@contexts/NotyfContext";
 import TechnicalOfficerForm from "./components/TechnicalOfficerForm";
 import SignatoriesForm from "./components/SignatoriesForm";
 
@@ -22,7 +21,6 @@ const schema = yup.object().shape({
 const FaultEOTRequestView = () => {
     const navigate = useNavigate();
     const { id } = useParams();
-    const notyf = useContext(NotyfContext);
     const [fault, setFault] = useState({});
 
     const {
@@ -43,22 +41,6 @@ const FaultEOTRequestView = () => {
     useEffect(() => {
         getFault()
     }, [getFault])
-
-    const applyEOTHandler = async () => {
-
-        try {
-            const response = await faultApi.applyEOT(id)
-            if (response.data.status === 'SUCCESS') {
-                notyf.open({
-                    type : 'success',
-                    message: response.data.message,
-                })
-                navigate('/faults/eot-requests')
-            }
-        } catch (error) {
-            console.log(error)            
-        }
-    }
 
     return (
         <React.Fragment>
@@ -111,7 +93,7 @@ const FaultEOTRequestView = () => {
                             <Button
                                 variant="primary"
                                 className="me-2"
-                                onClick={() => applyEOTHandler()}
+                                onClick={() => navigate(`/faults/eot/${id}/apply`)}
                             >
                                 Apply EOT
                             </Button>

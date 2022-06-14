@@ -32,16 +32,16 @@ export const requestEOT = (id) => {
     return api.post('/fault/technician/request_eot/'+ id)
 }
 
-export const applyEOT = (id) => {
-    return api.post('/fault/to/apply_eot/'+ id)
-}
-
 export const updateFaultTO = (id, data) => {
     return api.post('/fault/to/'+id, data)
 }
 
 export const forVerificationNEA = (id, data) => {
     return api.post('/fault/to/for_verification_nea/'+id, data)
+}
+
+export const forwardToTechnician = (id) => {
+    return api.post('/fault/to/forward_to_technician/'+id)
 }
 
 export const verifyFault = (id) => {
@@ -64,5 +64,12 @@ export const getIncidentReports = () => {
     return api.get('/fault_incident_report')
 }
 
+export const applyEOT = (data) => {
+    return api.post('/fault_eot', data)
+}
+
+export const approveEOT = (id) => {
+    return api.post('/fault_eot/approve/'+ id)
+}
 
 

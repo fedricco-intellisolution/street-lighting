@@ -1,7 +1,7 @@
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { Controller } from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
-import { Paperclip } from "react-feather";
+import { Clock, Paperclip } from "react-feather";
 import { useCallback, useEffect, useState } from "react";
 import * as lookUpApi from "@api/lookUpApi";
 import ReactSelect from "react-select";
@@ -56,6 +56,16 @@ const TechnicalOfficerForm = (props) => {
                                         View incident report
                                     </Button>
                             }
+
+                            { fault?.eot && fault?.eot?.status === 'APPROVED' &&
+                                <Button
+                                    variant="primary"
+                                    className="ms-2"
+                                    onClick={() =>window.open(`/faults/eot/${fault.id}`)}>
+                                        <Clock size={16} className="me-1"/>
+                                        View EOT
+                              </Button>
+                            }
                         </Col>
                     </Row>
                    
@@ -91,7 +101,6 @@ const TechnicalOfficerForm = (props) => {
                                 />
                             </Form.Group>
                         </Col>
-                      
                     </Row>
                 </Card.Body>
             </Card>    

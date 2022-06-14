@@ -77,6 +77,10 @@ const pagesSection = [
         title: "Fault response",
       },
       {
+        href: "/faults/followup",
+        title: "Fault follow up",
+      },
+      {
         href: "/faults/eot-requests",
         title: "Fault EOT request (TO)",
       },

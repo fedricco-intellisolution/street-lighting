@@ -1,18 +1,18 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Card, Col, Container, Form, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
+import { Card, Col, Container, Form, Row, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Eye } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
 import DynamicTable from "@components/ui/DynamicTable";
 import * as faultApi from "@api/faultApi";
 import debounce from 'debounce';
 
-const FaultEOTApprovalList = () => {
+const FaultFollowUpList = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [filter, setFilter] = useState({
         search: {
-            status: 'FOR_EOT_APPROVAL'
+            status: 'FOLLOW_UP_TECHNICIAN'
         }
     });
     const [tableData, setTableData] = useState([])
@@ -62,7 +62,7 @@ const FaultEOTApprovalList = () => {
                                 className="align-middle me-2"
                                 size={16}
                                 onClick={() => navigate(location.pathname+'/'+fault.id)}
-                                />
+                            />
                         </OverlayTrigger>
                     </>
                 ),
@@ -84,9 +84,9 @@ const FaultEOTApprovalList = () => {
 
     return (
         <React.Fragment>
-            <Helmet title="Fault EOT Approval" />
+            <Helmet title="Fault Follow up" />
             <Container fluid className="p-0">
-                <h1 className="h3 mb-3">Fault EOT approval (NEA)</h1>
+                <h1 className="h3 mb-3">Fault follow up</h1>
                 <Card>
                     <Card.Header className="pb-0">
                         <Row>
@@ -111,8 +111,9 @@ const FaultEOTApprovalList = () => {
                     </Card.Body>
                 </Card>
             </Container>
+          
         </React.Fragment>    
     )
 }
 
-export default FaultEOTApprovalList;
+export default FaultFollowUpList;
