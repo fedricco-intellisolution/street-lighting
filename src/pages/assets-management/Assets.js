@@ -18,6 +18,7 @@ const Assets = () => {
   const [levels, setLevels] = useState([]);
   const [areas, setAreas] = useState([]);
   const [assets, setAssets] = useState([]);
+  const [filter, setFilter] = useState();
   const tableColumns = [
     {
       Header: "Actions",
@@ -93,7 +94,22 @@ const Assets = () => {
   });
 
   //watch specified inputs
-  watch(["sector", "site", "level"]);
+  watch(["sector", "site", "level", "area"]);
+
+  //handle filter
+  const handleFilter = useCallback(async () => {
+    let sector = watch("sector", "value");
+    let site = watch("site", "value");
+    let level = watch("level", "value");
+    let area = watch("area", "value");
+
+    setFilter({
+      sector: sector.value,
+      site: site.value,
+      level: level.value,
+      area: area.value,
+    });
+  }, []);
 
   //call get area
   const getAreas = useCallback(async (e) => {
@@ -157,9 +173,9 @@ const Assets = () => {
 
   //call get assets
   const getAssets = useCallback(async () => {
-    const response = await assetManagementApi.getAssets();
+    const response = await assetManagementApi.getAssets({ search: filter });
     setAssets(response.data.data);
-  }, []);
+  }, [filter]);
 
   //use effect
   useEffect(() => {
@@ -310,7 +326,7 @@ const Assets = () => {
                   variant="primary"
                   className="me-1 mb-1"
                   style={{ marginTop: "30px", width: "100%" }}
-                  onClick={() => navigate(location.pathname + "/add")}
+                  onClick={handleFilter}
                 >
                   <Search className="align-middle me-1" size={16} />
                   Search

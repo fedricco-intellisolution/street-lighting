@@ -3,7 +3,9 @@ import api from "../utils/api";
 /**
  * @returns assets
  */
-export const getAssets = () => api.get("/asset");
+export const getAssets = (filter) => {
+  return api.get("/asset", { params: filter ?? "" });
+};
 
 export const createAsset = (data) => {
   return api.post("/asset", data);
