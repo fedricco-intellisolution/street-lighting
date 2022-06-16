@@ -9,6 +9,7 @@ import {
   Shield,
   FileText,
   Package,
+  Mail,
 } from "react-feather";
 
 const pagesSection = [
@@ -103,7 +104,7 @@ const pagesSection = [
         href: "/faults/rectified",
         title: "Fault rectified",
       },
-       {
+      {
         href: "/faults/incident-reports",
         title: "Fault incident report",
       },
@@ -114,14 +115,14 @@ const pagesSection = [
     title: "Preventive maintenance",
     href: "/preventive-maintenance",
     children: [
-	  {
-		href: "/preventive-maintenance/checklist-pending",
-		title: "Pending checklist",
-	  },
-	  {
-		href: "/preventive-maintenance/joint-inspection",
-		title: "Joint inspection",
-	  },
+      {
+        href: "/preventive-maintenance/checklist-pending",
+        title: "Pending checklist",
+      },
+      {
+        href: "/preventive-maintenance/joint-inspection",
+        title: "Joint inspection",
+      },
       {
         href: "/preventive-maintenance/checklist-type",
         title: "Checklist type",
@@ -138,11 +139,16 @@ const pagesSection = [
         href: "/preventive-maintenance/checklist-build",
         title: "Build checklist",
       },
-	  {
+      {
         href: "/preventive-maintenance/work-schedule",
         title: "Work schedule",
       },
     ],
+  },
+  {
+    href: "/email-notification",
+    icon: Mail,
+    title: "Email notification",
   },
   {
     href: "/settings",
