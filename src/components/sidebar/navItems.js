@@ -67,7 +67,7 @@ const pagesSection = [
     ],
   },
   {
-    href: "/fault",
+    href: "/faults",
     icon: Zap,
     title: "Fault Management",
     children: [
@@ -103,9 +103,13 @@ const pagesSection = [
         href: "/faults/rectified",
         title: "Fault rectified",
       },
-       {
+      {
         href: "/faults/incident-reports",
         title: "Fault incident report",
+      },
+      {
+        href: "/faults/summary",
+        title: "Fault summary",
       },
     ],
   },
