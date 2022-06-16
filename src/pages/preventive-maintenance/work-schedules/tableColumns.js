@@ -15,10 +15,6 @@ const tableColumns = [
         accessor: "hawker_center",
     },
     {
-        Header: "Year",
-        accessor: "year",
-    },
-    {
         Header: "Generated checklist",
         accessor: "generated_checklist",
     },
@@ -27,17 +23,14 @@ const tableColumns = [
 const tableData = [
     {
         hawker_center: "Adam",
-        year: "2022",
         generated_checklist: "Yes",
     },
     {
         hawker_center: "Amoy",
-        year: "2022",
         generated_checklist: "Yes",
     },
     {
         hawker_center: "Marsiling",
-        year: "2022",
         generated_checklist: "Yes",
     },
 ];

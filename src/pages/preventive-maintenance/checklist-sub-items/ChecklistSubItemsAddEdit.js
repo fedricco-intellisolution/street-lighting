@@ -133,12 +133,16 @@ export const ChecklistSubItemsAddEdit = () => {
             action
         );
         reset({
-            checklist_id: "",
-            checklist_item_id: response.data.data.checklist_item_id,
-            header: response.data.data.header,
-            name: response.data.data.name,
-            sequence_no: response.data.data.sequence_no,
+            checklist_id: response.data.data.checklist_item.checklist.id,
+            checklist_item_id: response.data.data.checklist_item_id || "",
+            header: response.data.data.header || "",
+            name: response.data.data.name || "",
+            sequence_no: response.data.data.sequence_no || "",
+			frequency: response.data.data.frequency || "",
+			is_custom_field: response.data.data.is_custom_field ? "Yes" : "No",
+			custom_field: JSON.parse(response.data.data.custom_field)
         });
+		setIsCustomField(response.data.data.is_custom_field);
     }, [action, reset]);
 
     //
@@ -210,9 +214,9 @@ export const ChecklistSubItemsAddEdit = () => {
                                     inline
                                     label="No"
                                     name="is_custom_field"
+                                    onChange={() => setIsCustomField(false)}
                                     type="radio"
                                     value="No"
-                                    onChange={() => setIsCustomField(false)}
                                 />
                             </Form.Group>
                         </Row>
