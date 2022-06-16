@@ -132,6 +132,9 @@ const CallCentreForm = (props) => {
     useEffect(() => {   
         reset(props.fault)
         setValue('site_id', props.fault?.site?.id)
+        setValue('job_type', props.fault?.job_type?.code)
+        setValue('call_type', props.fault?.call_type?.code)
+        setValue('technician_id', props.fault?.technician?.id)
     }, [reset, props.fault, setValue])
     
     return (
