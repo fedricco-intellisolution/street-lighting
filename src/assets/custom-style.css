@@ -65,3 +65,7 @@ img {
     right: 10px;
     font-weight: 900;
 }
+
+.table-layout-fixed {
+    table-layout: fixed;
+}

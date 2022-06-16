@@ -61,6 +61,7 @@ import FaultIncidentReportList from "@fault/FaultIncidentReportList";
 import FaultIncidentReportView from "@fault/FaultIncidentReportView";
 import FaultFollowUpList from "@fault/FaultFollowUpList";
 import FaultEOTView from "@fault/FaultEOTView";
+import FaultSummaryList from "@fault/FaultSummaryList";
 
 // Preventive maintenance
 import { ChecklistBuild } from "@preventive/checklist-build/ChecklistBuild";
@@ -321,6 +322,10 @@ const routes = [
       {
         path: "followup/:id",
         element: <FaultResponseView />,
+      },
+      {
+        path: "summary",
+        element: <FaultSummaryList />,
       },
     ],
   },

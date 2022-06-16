@@ -20,6 +20,7 @@ const CallCentreFaultList = () => {
         {
             Header: "Actions",
             accessor: "actions",
+            width: 80,
             
         },
         {
@@ -40,7 +41,7 @@ const CallCentreFaultList = () => {
         },
         {
             Header: "Job type",
-            accessor: "job_type",
+            accessor: "job_type.name",
         },
         
     ]

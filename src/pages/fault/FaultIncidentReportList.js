@@ -14,7 +14,7 @@ const FaultIncidentReportList = () => {
         {
             Header: "Actions",
             accessor: "actions",
-            
+            width: 80,
         },
         {
             Header: "Status",

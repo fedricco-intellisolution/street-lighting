@@ -21,7 +21,7 @@ const FaultEOTApprovalList = () => {
         {
             Header: "Actions",
             accessor: "actions",
-            
+            width: 80,
         },
         {
             Header: "Site",
@@ -41,7 +41,7 @@ const FaultEOTApprovalList = () => {
         },
         {
             Header: "Job type",
-            accessor: "job_type",
+            accessor: "job_type.name",
         },
         
     ]
