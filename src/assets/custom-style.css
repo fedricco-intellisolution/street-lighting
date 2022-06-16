@@ -65,6 +65,10 @@ img {
     right: 10px;
     font-weight: 900;
 }
+.file-uploader-modal img {
+    max-width: none;
+    width: 100%;
+}
 
 .table-layout-fixed {
     table-layout: fixed;
