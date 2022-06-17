@@ -26,7 +26,6 @@ const FaultResponseView = () => {
     const { id } = useParams();
     const notyf = useContext(NotyfContext)
     const [fault, setFault] = useState({});
-
     const {
         handleSubmit,
         control,
@@ -48,6 +47,7 @@ const FaultResponseView = () => {
     }, [getFault])
 
     const saveHandler = async (data) => {
+
         let before_photos = data.before_photos ? data.before_photos : []
         let after_photos = data.after_photos ?  data.after_photos : []
         
@@ -61,7 +61,7 @@ const FaultResponseView = () => {
         after_photos.forEach(file => {
             formData.append("after_photos[]", file);
         })
-       
+     
         try {
             const response = await faultApi.updateFaultTechnician(id, formData)
             if (response.data.status === 'SUCCESS') {

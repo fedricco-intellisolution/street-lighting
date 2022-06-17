@@ -1,8 +1,8 @@
-import { Card, Col, Form, Image, Row } from "react-bootstrap";
+import { Card, Col, Form, Row } from "react-bootstrap";
 import { Controller } from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
-import { Trash2, ZoomIn } from "react-feather";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import FileUploader from "../../../components/ui/FileUploader";
 
 const TechnicianForm = (props) => {
     const {
@@ -14,58 +14,9 @@ const TechnicianForm = (props) => {
         setValue
     } = props
 
-    const [beforePhotos, setBeforePhotos] = useState([]);
-    const [afterPhotos, setAfterPhotos] = useState([]);
-    const [beforePhotosURLs, setBeforePhotosURLs] = useState([]);
-    const [afterPhotosURLs, setAfterPhotosURLs] = useState([]);
     useEffect(() => {
-        reset(fault)
-        setBeforePhotosURLs(fault.before_photos)
-        setAfterPhotosURLs(fault.after_photos)
-        
+        reset(fault) 
     }, [reset, fault])
-
-    const onChangeBeforePhotos = (e) => {
-        setBeforePhotos(prevState => [...prevState, ...e.target.files]);
-    }
-
-    useEffect(() => {
-        if (beforePhotos.length < 1) return;
-        beforePhotos.forEach(image => {
-            setBeforePhotosURLs(prevState => [...prevState, {
-                full_path: URL.createObjectURL(image),
-                file_name: image.name
-            }]);
-        })
-        setValue('before_photos', beforePhotos)
-    }, [beforePhotos, setValue])
-
-    const onChangeAfterPhotos = (e) => {
-        setAfterPhotos(prevState => [...prevState, ...e.target.files]);
-    }
-
-    useEffect(() => {
-        if (afterPhotos.length < 1) return;
-        afterPhotos.forEach(image => {
-            setAfterPhotosURLs(prevState => [...prevState, {
-                full_path: URL.createObjectURL(image),
-                file_name: image.name
-            }]);
-        })
-        setValue('after_photos', afterPhotos)
-    }, [afterPhotos, setValue])
-
-    const removeBeforePhoto = (index) => {
-        let temp = [...beforePhotosURLs]
-        temp.splice(index, 1)
-        setBeforePhotosURLs(temp)
-    }
-
-    const removeAfterPhoto = (index) => {
-        let temp = [...afterPhotosURLs]
-        temp.splice(index, 1)
-        setAfterPhotosURLs(temp)
-    }
 
     return (
         <>
@@ -145,68 +96,28 @@ const TechnicianForm = (props) => {
                     </Row>
                     <Row>
                         <Col md={12}>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Before photos </Form.Label>
-                                <Controller
-                                    control={control}
-                                    name="before_photos"
-                                    defaultValue=""
-                                    render={({ field: { value, onChange, onBlur } }) => (
-                                        <Form.Control
-                                           type="file"
-                                            multiple
-                                            accept="image/*"
-                                            name="before_photos"
-                                            disabled={!editable}
-                                            onChange={onChangeBeforePhotos}
-                                             className={(errors.before_photos && 'is-invalid')}
-                                        />
-                                    )}
-                                />
-                            </Form.Group>
-                            
-                            {beforePhotosURLs?.map((image, key) =>
-                                <div key={key} className="fault-image-holder mb-2">
-                                    <Image src={image.full_path} />
-                                    <small>{image.file_name}</small>
-                                    <div className="text-end mt-2">
-                                        <Trash2 size={16} className="cursor-pointer me-1" onClick={()=>removeBeforePhoto(key)}/>
-                                        <ZoomIn size={16} className="cursor-pointer" />
-                                    </div>
-                                </div>
-                            )}
-
+                            <FileUploader
+                                defaultValue=""
+                                label="Before photos"
+                                control={control}
+                                name="before_photos"
+                                disabled={false}
+                                errors={errors}
+                                setValue={setValue}
+                                data={fault.before_photos}
+                            />
                         </Col>
                         <Col md={12}>
-                            <Form.Group className="mb-3 mt-4">
-                                <Form.Label>After photos </Form.Label>
-                                <Controller
-                                    control={control}
-                                    name="after_photos"
-                                    defaultValue=""
-                                    render={({ field: { value, onChange, onBlur } }) => (
-                                        <Form.Control
-                                            type="file"
-                                            multiple
-                                            accept="image/*"
-                                            name="after_photos"
-                                            disabled={!editable}
-                                            onChange={onChangeAfterPhotos}
-                                            className={(errors.after_photos && 'is-invalid')}
-                                        />
-                                    )}
-                                />
-                            </Form.Group>
-                            {afterPhotosURLs?.map((image, key) =>
-                                <div key={key} className="fault-image-holder mb-2">
-                                    <Image src={image.full_path} />
-                                    <small>{image.file_name}</small>
-                                    <div className="text-end mt-2">
-                                        <Trash2 size={16} className="cursor-pointer me-1" onClick={()=>removeAfterPhoto(key)}/>
-                                        <ZoomIn size={16} className="cursor-pointer" />
-                                    </div>
-                                </div>
-                            )}
+                           <FileUploader
+                                defaultValue=""
+                                label="After photos"
+                                control={control}
+                                name="after_photos"
+                                disabled={false}
+                                errors={errors}
+                                setValue={setValue}
+                                data={fault?.after_photos}
+                            />
                         </Col>
                     </Row>
                 </Card.Body>

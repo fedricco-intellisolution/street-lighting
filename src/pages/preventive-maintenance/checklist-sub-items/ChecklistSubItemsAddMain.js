@@ -3,6 +3,7 @@ import React from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import { Controller } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
+import { FREQUENCY } from "../config/options";
 
 export const ChecklistSubItemsAddMain = ({
     control,
@@ -95,7 +96,7 @@ export const ChecklistSubItemsAddMain = ({
                 </Col>
             </Row>
             <Row>
-                <Col md={6}>
+                <Col md={4}>
                     <Form.Group className="mb-3">
                         <Form.Label>Sub item header *</Form.Label>
                         <Controller
@@ -116,7 +117,7 @@ export const ChecklistSubItemsAddMain = ({
                         />
                     </Form.Group>
                 </Col>
-                <Col md={6}>
+                <Col md={4}>
                     <Form.Group className="mb-3">
                         <Form.Label>Sequence number</Form.Label>
                         <Controller
@@ -133,6 +134,43 @@ export const ChecklistSubItemsAddMain = ({
                                     type="number"
                                     value={value}
                                 />
+                            )}
+                        />
+                        <ErrorMessage
+                            errors={errors}
+                            name="sequence_no"
+                            render={({ message }) => (
+                                <small className="text-danger">{message}</small>
+                            )}
+                        />
+                    </Form.Group>
+                </Col>
+                <Col md={4}>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Frequency</Form.Label>
+                        <Controller
+                            control={control}
+                            defaultValue=""
+                            name="frequency"
+                            render={({
+                                field: { value, onChange, onBlur },
+                            }) => (
+                                <Form.Select
+                                    id="frequency"
+                                    name="frequency"
+                                    onBlur={onBlur}
+                                    onChange={onChange}
+                                    value={value}
+                                >
+                                    <option></option>
+                                    {FREQUENCY.map((data, index) => {
+                                        return (
+                                            <option key={index} value={data}>
+                                                {data}
+                                            </option>
+                                        );
+                                    })}
+                                </Form.Select>
                             )}
                         />
                         <ErrorMessage
