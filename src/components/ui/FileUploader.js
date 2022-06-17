@@ -4,7 +4,6 @@ import { Download, Trash2, ZoomIn } from "react-feather";
 import { Controller } from "react-hook-form";
 import * as attachmentApi from "../../api/attachmentApi";
 import NotyfContext from "@contexts/NotyfContext";
-import { useNavigate, useLocation } from "react-router-dom";
 import { saveAs } from "file-saver";
 
 const FileUploader = (props) => {
@@ -24,8 +23,6 @@ const FileUploader = (props) => {
     const [thumbnail, setThumbnail] = useState({})
     const imageExtension = ['jpeg', 'jpg', 'JPG', 'PNG', 'png']
     const notyf = useContext(NotyfContext)
-    const navigate = useNavigate()
-    const location = useLocation()
     const onChangePhotos = (e) => {
         setPhotos(prevState => [...prevState, ...e.target.files])
     }
@@ -47,7 +44,7 @@ const FileUploader = (props) => {
                 }]);
             }
         })
-    }, [photos])
+    }, [photos, setValue, photoURLs, name])
     
     const removePhoto = (index) => {
         let new_photoURLs = [...photoURLs]

@@ -1,4 +1,4 @@
-import { Card, Col, Form, Image, Row } from "react-bootstrap";
+import { Card, Col, Form, Row } from "react-bootstrap";
 import { Controller } from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import { useEffect } from "react";
