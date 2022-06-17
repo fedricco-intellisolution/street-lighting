@@ -1,6 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  Row,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
 import { Search, Edit2 } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
 import * as propertyManagementApi from "@api/propertyManagementApi";
@@ -25,13 +34,18 @@ const Assets = () => {
       accessor: "actions",
       Cell: (cell) => (
         <div>
-          <Edit2
-            className="align-middle me-1"
-            size={18}
-            onClick={() =>
-              navigate(location.pathname + "/" + cell.row.original.id)
-            }
-          />
+          <OverlayTrigger
+            placement="bottom"
+            overlay={<Tooltip>Edit asset</Tooltip>}
+          >
+            <Edit2
+              className="align-middle me-1"
+              size={18}
+              onClick={() =>
+                navigate(location.pathname + "/" + cell.row.original.id)
+              }
+            />
+          </OverlayTrigger>
         </div>
       ),
     },

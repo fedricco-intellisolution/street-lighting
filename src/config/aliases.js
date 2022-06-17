@@ -18,6 +18,7 @@ const aliases = (prefix = `src`) => ({
   "@api": `${prefix}/api`,
   "@contexts": `${prefix}/contexts`,
   "@emailnotification": `${prefix}/pages/email-notification`,
+  "@emailtemplates": `${prefix}/pages/settings/email-templates`,
 });
 
 module.exports = aliases;

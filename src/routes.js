@@ -22,6 +22,8 @@ import Users from "@users/Users";
 import AddEditUser from "@users/AddEditUser";
 import Groups from "@groups/Groups";
 import Permissions from "@permissions/Permissions";
+import EmailTemplates from "@emailtemplates/EmailTemplates";
+import AddEditEmailTemplate from "@emailtemplates/AddEditEmailTemplate";
 
 //property management
 import Sectors from "@sector/Sectors";
@@ -220,6 +222,14 @@ const routes = [
       {
         path: "permissions",
         element: <Permissions />,
+      },
+      {
+        path: "email-templates",
+        element: <EmailTemplates />,
+      },
+      {
+        path: "email-templates/:id",
+        element: <AddEditEmailTemplate />,
       },
     ],
   },

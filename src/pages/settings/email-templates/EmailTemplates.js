@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import {
-  Button,
   Card,
   Col,
   Container,
@@ -9,18 +8,18 @@ import {
   Row,
   OverlayTrigger,
   Tooltip,
+  Button,
 } from "react-bootstrap";
-import { Map, Edit2 } from "react-feather";
-import { useLocation, useNavigate } from "react-router-dom";
-import * as propertyManagementApi from "@api/propertyManagementApi";
+import { Edit2, Mail, Users } from "react-feather";
+import { useNavigate, useLocation } from "react-router-dom";
+import * as emailApi from "@api/emailApi";
 import DynamicTable from "../../../components/ui/DynamicTable";
-import debounce from "debounce";
 
-const Levels = () => {
-  const [filter, setFilter] = useState();
+const EmailTemplates = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [levels, setLevels] = useState([]);
+  const [filter, setFilter] = useState();
+  const [emailTemplates, setEmailTemplates] = useState([]);
   const tableColumns = [
     {
       Header: "Actions",
@@ -29,9 +28,21 @@ const Levels = () => {
         <div>
           <OverlayTrigger
             placement="bottom"
-            overlay={<Tooltip>Edit level</Tooltip>}
+            overlay={<Tooltip>Edit template</Tooltip>}
           >
             <Edit2
+              className="align-middle me-1"
+              size={18}
+              onClick={() =>
+                navigate(location.pathname + "/" + cell.row.original.id)
+              }
+            />
+          </OverlayTrigger>
+          <OverlayTrigger
+            placement="bottom"
+            overlay={<Tooltip>Assign user</Tooltip>}
+          >
+            <Users
               className="align-middle me-1"
               size={18}
               onClick={() =>
@@ -43,47 +54,43 @@ const Levels = () => {
       ),
     },
     {
-      Header: "Site",
-      accessor: "site.name",
+      Header: "Code",
+      accessor: "code",
+    },
+    {
+      Header: "Title",
+      accessor: "title",
     },
     {
       Header: "Name",
       accessor: "name",
     },
-    {
-      Header: "Description",
-      accessor: "description",
-    },
   ];
 
-  //get levels
-  const getLevels = useCallback(async () => {
-    const response = await propertyManagementApi.getLevels(filter);
-    setLevels(response.data.data);
+  //call get email templates
+  const getEmailTemplates = useCallback(async () => {
+    const response = await emailApi.getEmailTemplates(filter);
+    setEmailTemplates(response.data.data);
   }, [filter]);
 
   useEffect(() => {
-    getLevels();
-  }, [getLevels]);
+    getEmailTemplates();
+  }, [getEmailTemplates]);
 
   return (
     <React.Fragment>
-      <Helmet title="Levels" />
+      <Helmet title="Email templates" />
       <Container fluid className="p-0">
-        <h1 className="h3 mb-3">Levels</h1>
+        <h1 className="h3 mb-3">Email templates</h1>
         <Card>
           <Card.Header className="pb-0">
             <Row>
               <Col md={3}>
                 <Form.Control
-                  onChange={debounce((e) => {
-                    const searchValue = {
-                      search: {
-                        keyword: e.target.value || undefined,
-                      },
-                    };
-                    setFilter(searchValue);
-                  }, 1000)}
+                  value={filter || ""}
+                  onChange={(e) => {
+                    setFilter(e.target.value || undefined);
+                  }}
                   placeholder="Search keyword"
                   className="d-inline-block"
                 />
@@ -94,14 +101,14 @@ const Levels = () => {
                   className="me-1 mb-1"
                   onClick={() => navigate(location.pathname + "/add")}
                 >
-                  <Map className="align-middle me-1" size={16} />
-                  Create new level
+                  <Mail className="align-middle me-1" size={16} />
+                  Create new email template
                 </Button>
               </Col>
             </Row>
           </Card.Header>
           <Card.Body>
-            <DynamicTable data={levels} columns={tableColumns} />
+            <DynamicTable data={emailTemplates} columns={tableColumns} />
           </Card.Body>
         </Card>
       </Container>
@@ -109,4 +116,4 @@ const Levels = () => {
   );
 };
 
-export default Levels;
+export default EmailTemplates;
