@@ -1,10 +1,20 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  Row,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
 import { Map, Edit2 } from "react-feather";
 import { useLocation, useNavigate } from "react-router-dom";
 import DynamicTable from "../../../components/ui/DynamicTable";
 import * as propertyManagementApi from "@api/propertyManagementApi";
+import debounce from "debounce";
 
 const Sites = () => {
   const [filter, setFilter] = useState();
@@ -16,13 +26,20 @@ const Sites = () => {
       Header: "Actions",
       accessor: "actions",
       Cell: (cell) => (
-        <Edit2
-          className="align-middle me-1"
-          size={18}
-          onClick={() =>
-            navigate(location.pathname + "/" + cell.row.original.id)
-          }
-        />
+        <div>
+          <OverlayTrigger
+            placement="bottom"
+            overlay={<Tooltip>Edit site</Tooltip>}
+          >
+            <Edit2
+              className="align-middle me-1"
+              size={18}
+              onClick={() =>
+                navigate(location.pathname + "/" + cell.row.original.id)
+              }
+            />
+          </OverlayTrigger>
+        </div>
       ),
     },
     {
@@ -45,9 +62,9 @@ const Sites = () => {
 
   //get sites
   const getSites = useCallback(async () => {
-    const response = await propertyManagementApi.getSites();
+    const response = await propertyManagementApi.getSites(filter);
     setSites(response.data.data);
-  }, []);
+  }, [filter]);
 
   useEffect(() => {
     getSites();
@@ -63,10 +80,14 @@ const Sites = () => {
             <Row>
               <Col md={3}>
                 <Form.Control
-                  value={filter || ""}
-                  onChange={(e) => {
-                    setFilter(e.target.value || undefined);
-                  }}
+                  onChange={debounce((e) => {
+                    const searchValue = {
+                      search: {
+                        keyword: e.target.value || undefined,
+                      },
+                    };
+                    setFilter(searchValue);
+                  }, 1000)}
                   placeholder="Search keyword"
                   className="d-inline-block"
                 />

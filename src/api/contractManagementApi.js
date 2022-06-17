@@ -4,7 +4,9 @@ import api from "../utils/api";
  * @return contract
  */
 
-export const getContracts = () => api.get("/contract");
+export const getContracts = (filter) => {
+  return api.get("/contract", { params: filter ?? "" });
+};
 
 export const getContract = (id) => {
   return api.get("/contract/" + id);

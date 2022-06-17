@@ -1,6 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  Row,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
 import { Map, Edit2 } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
 import * as propertyManagementApi from "@api/propertyManagementApi";
@@ -17,13 +26,20 @@ const Sectors = () => {
       Header: "Actions",
       accessor: "actions",
       Cell: (cell) => (
-        <Edit2
-          className="align-middle me-1"
-          size={18}
-          onClick={() =>
-            navigate(location.pathname + "/" + cell.row.original.id)
-          }
-        />
+        <div>
+          <OverlayTrigger
+            placement="bottom"
+            overlay={<Tooltip>Edit sector</Tooltip>}
+          >
+            <Edit2
+              className="align-middle me-1"
+              size={18}
+              onClick={() =>
+                navigate(location.pathname + "/" + cell.row.original.id)
+              }
+            />
+          </OverlayTrigger>
+        </div>
       ),
     },
     {

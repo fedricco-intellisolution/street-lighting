@@ -174,6 +174,11 @@ const pagesSection = [
         title: "Permissions",
         icon: Key,
       },
+      {
+        href: "/settings/email-templates",
+        title: "Email templates",
+        icon: Mail,
+      },
     ],
   },
 ];

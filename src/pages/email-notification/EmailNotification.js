@@ -7,7 +7,7 @@ import DynamicTable from "../../components/ui/DynamicTable";
 
 const EmailNotification = () => {
   const [filter, setFilter] = useState();
-  const [sectors, setSectors] = useState([]);
+  const [emailNotifications, setEmailNotifications] = useState([]);
   const tableColumns = [
     {
       Header: "Subject",
@@ -57,7 +57,7 @@ const EmailNotification = () => {
   //call get emails
   const getEmails = useCallback(async () => {
     const response = await emailNotificationApi.getEmails(filter);
-    setSectors(response.data.data);
+    setEmailNotifications(response.data.data);
   }, [filter]);
 
   useEffect(() => {
@@ -66,9 +66,9 @@ const EmailNotification = () => {
 
   return (
     <React.Fragment>
-      <Helmet title="Email notification" />
+      <Helmet title="Email notifications" />
       <Container fluid className="p-0">
-        <h1 className="h3 mb-3">Email notification</h1>
+        <h1 className="h3 mb-3">Email notifications</h1>
         <Card>
           <Card.Header className="pb-0">
             <Row>
@@ -89,7 +89,7 @@ const EmailNotification = () => {
             </Row>
           </Card.Header>
           <Card.Body>
-            <DynamicTable data={sectors} columns={tableColumns} />
+            <DynamicTable data={emailNotifications} columns={tableColumns} />
           </Card.Body>
         </Card>
       </Container>

@@ -22,7 +22,9 @@ export const updateSector = (id, data) => {
 /**
  * @return sites
  */
-export const getSites = () => api.get("/site");
+export const getSites = (filter) => {
+  return api.get("/site", { params: filter ?? "" });
+};
 
 export const createSite = (data) => {
   return api.post("/site", data);
@@ -39,7 +41,9 @@ export const updateSite = (id, data) => {
 /**
  * @return levels
  */
-export const getLevels = () => api.get("/level");
+export const getLevels = (filter) => {
+  return api.get("/level", { params: filter ?? "" });
+};
 
 export const getLevel = (id) => {
   return api.get("/level/" + id);
@@ -56,7 +60,9 @@ export const updateLevel = (id, data) => {
 /**
  * @return areas
  */
-export const getAreas = () => api.get("/area");
+export const getAreas = (filter) => {
+  return api.get("/area", { params: filter ?? "" });
+};
 
 export const createArea = (data) => {
   return api.post("/area", data);
