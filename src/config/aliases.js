@@ -17,6 +17,7 @@ const aliases = (prefix = `src`) => ({
   "@fault": `${prefix}/pages/fault`,
   "@api": `${prefix}/api`,
   "@contexts": `${prefix}/contexts`,
+  "@emailnotification": `${prefix}/pages/email-notification`,
 });
 
 module.exports = aliases;

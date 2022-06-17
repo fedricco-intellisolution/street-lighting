@@ -79,6 +79,8 @@ import { ChecklistPendingAdd } from "@preventive/checklist-pending/checklist-pen
 import { JointInspection } from "@preventive/joint-inspection/JointInpsection";
 import { JointInspectionAdd } from "@preventive/joint-inspection/joint-inspection-add/JointInspectionAdd";
 
+//email notification
+import EmailNotification from "@emailnotification/EmailNotification";
 
 const routes = [
   {
@@ -192,6 +194,14 @@ const routes = [
     ],
   },
   {
+    path: "email-notification",
+    element: (
+      <PrivateLayout>
+        <EmailNotification />
+      </PrivateLayout>
+    ),
+  },
+  {
     path: "settings",
     element: <PrivateLayout />,
     children: [
@@ -275,15 +285,15 @@ const routes = [
       },
       {
         path: "eot/:id",
-        element: <FaultEOTView />
+        element: <FaultEOTView />,
       },
       {
         path: "eot/:id/apply",
-        element: <FaultEOTView />
+        element: <FaultEOTView />,
       },
-       {
+      {
         path: "eot/:id/approval",
-        element: <FaultEOTView />
+        element: <FaultEOTView />,
       },
       {
         path: "rectified",
@@ -299,25 +309,24 @@ const routes = [
       },
       {
         path: "incident-reports/:id",
-        element: <FaultIncidentReportView />
+        element: <FaultIncidentReportView />,
       },
       {
         path: "incident-reports/:id/:fault_id",
-        element: <FaultIncidentReportView />
+        element: <FaultIncidentReportView />,
       },
       {
         path: "followup",
-        element: <FaultFollowUpList />
+        element: <FaultFollowUpList />,
       },
-       {
+      {
         path: "followup/:id",
-        element: <FaultResponseView />
+        element: <FaultResponseView />,
       },
-       {
+      {
         path: "summary",
-        element: <FaultSummaryList />
+        element: <FaultSummaryList />,
       },
-      
     ],
   },
   {
@@ -356,7 +365,7 @@ const routes = [
         path: "checklist-build/:action",
         element: <ChecklistBuildAddEdit />,
       },
-	  {
+      {
         path: "work-schedule",
         element: <WorkSchedule />,
       },
@@ -364,15 +373,15 @@ const routes = [
         path: "work-schedule/:action",
         element: <WorkScheduleAdd />,
       },
-	  {
+      {
         path: "checklist-pending",
         element: <ChecklistPending />,
       },
       {
         path: "checklist-pending/:action",
         element: <ChecklistPendingAdd />,
-      },	  
-	  {
+      },
+      {
         path: "joint-inspection",
         element: <JointInspection />,
       },
