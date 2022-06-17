@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { Button, Form, Image, Modal } from "react-bootstrap";
-import { Trash2, ZoomIn } from "react-feather";
+import { Download, Trash2, ZoomIn } from "react-feather";
 import { Controller } from "react-hook-form";
 import * as attachmentApi from "../../api/attachmentApi";
 import NotyfContext from "@contexts/NotyfContext";
 import { useNavigate, useLocation } from "react-router-dom";
+import { saveAs } from "file-saver";
 
 const FileUploader = (props) => {
     const {
@@ -14,8 +15,7 @@ const FileUploader = (props) => {
         label,
         errors,
         setValue,
-        data,
-        callback
+        data
     } = props
     const [photos, setPhotos] = useState([])
     const [photoURLs, setPhotoURLs] = useState([])
@@ -76,6 +76,10 @@ const FileUploader = (props) => {
         }
     }
 
+    const download = (item) => {
+        saveAs(item.full_path, item.file_name);
+    }
+
     return (
         <>
             <Form.Group className="mb-3">
@@ -119,12 +123,18 @@ const FileUploader = (props) => {
                                         />
                                     <ZoomIn
                                         size={18}
-                                        className="cursor-pointer"
+                                        className="cursor-pointer me-1"
                                         onClick={() => {
                                             setShowPreview(true)
                                             setThumbnail(photoURLs[key])
                                         }}
-                                    />
+                                     />
+                          
+                                <Download
+                                    size={18}
+                                    className="cursor-pointer"
+                                    onClick={() => download(image)}
+                                />
                                 </div>
                             </div>
                 })
