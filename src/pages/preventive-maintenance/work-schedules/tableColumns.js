@@ -11,12 +11,8 @@ const tableColumns = [
         },
     },
     {
-        Header: "Hawker center",
-        accessor: "hawker_center",
-    },
-    {
-        Header: "Year",
-        accessor: "year",
+        Header: "Site",
+        accessor: "site",
     },
     {
         Header: "Generated checklist",
@@ -26,18 +22,15 @@ const tableColumns = [
 
 const tableData = [
     {
-        hawker_center: "Adam",
-        year: "2022",
+        site: "Kranji",
         generated_checklist: "Yes",
     },
     {
-        hawker_center: "Amoy",
-        year: "2022",
+        site: "Pasir Ris",
         generated_checklist: "Yes",
     },
     {
-        hawker_center: "Marsiling",
-        year: "2022",
+        site: "Tampines",
         generated_checklist: "Yes",
     },
 ];

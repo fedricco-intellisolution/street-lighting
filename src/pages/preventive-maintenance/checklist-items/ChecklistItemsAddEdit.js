@@ -110,6 +110,7 @@ export const ChecklistItemsAddEdit = () => {
             checklist_id: response.data.data.checklist_id,
             name: response.data.data.name,
             sequence_no: response.data.data.sequence_no,
+			columns: JSON.parse(response.data.data.columns)
         });
     }, [action, reset]);
 
