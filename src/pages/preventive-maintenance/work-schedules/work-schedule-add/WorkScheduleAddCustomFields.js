@@ -1,90 +1,124 @@
 import React from "react";
 
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Col, Form, Row } from "react-bootstrap";
 import { Controller, useFieldArray } from "react-hook-form";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusSquare, faWindowClose } from "@fortawesome/free-solid-svg-icons";
-import { FREQUENCY } from "../../config/options";
+import { DAYS_OF_THE_WEEK, MONTHS_OF_A_YEAR } from "../../config/options";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 export const WorkScheduleAddCustomFields = ({ control }) => {
-    const { fields, append, remove } = useFieldArray({
+    const { fields } = useFieldArray({
         control,
         name: "custom_field",
+        defaultValues: {
+            custom_field: [
+                { subItem: "foo1", starts_at: "bar1", ends_at: "test" },
+                { subItem: "foo1", starts_at: "bar1", ends_at: "test" },
+                { subItem: "foo1", starts_at: "bar1", ends_at: "test" },
+                { subItem: "foo1", starts_at: "bar1", ends_at: "test" },
+                { subItem: "foo1", starts_at: "bar1", ends_at: "test" },
+            ],
+        },
     });
 
     return (
         <>
             <Row className="mb-2">
-                <Col md={5}>Frequency</Col>
-                <Col md={5}>Start date</Col>
-                <Col md={2}></Col>
+                <Col md={4}>Frequency</Col>
+                <Col md={4}>Starts at</Col>
+                <Col md={4}>
+                    Ends at *
+                    <small>(No set date will continuosly run scheduling)</small>
+                </Col>
             </Row>
             <hr />
 
             {fields.length ? (
                 fields.map((field, index) => (
                     <Row className="mb-2" key={field.id}>
-                        <Col md={5}>
+                        <Col md={4}>
+                            <p>{field.subItem}</p>
+                        </Col>
+                        <Col md={4}>
                             <Form.Group className="mb-3">
                                 <Controller
                                     defaultValue=""
                                     control={control}
-                                    name={`custom_field[${index}].subItem`}
+                                    name={`custom_field[${index}].starts_at`}
                                     render={({
                                         field: { value, onChange, onBlur },
-                                    }) => (
-                                        <Form.Select
-                                            onChange={onChange}
-                                            onBlur={onBlur}
-                                            value={value}
-                                        >
-                                            <option></option>
-                                            {FREQUENCY.map((data, index) => {
-                                                return (
-                                                    <option
-                                                        key={index}
-                                                        value={data}
-                                                    >
-                                                        {data}
-                                                    </option>
-                                                );
-                                            })}
-                                        </Form.Select>
-                                    )}
+                                    }) =>
+                                        field.subItem === "WEEKLY" ? (
+                                            <Form.Select
+                                                onChange={onChange}
+                                                onBlur={onBlur}
+                                                value={value}
+                                            >
+                                                <option></option>
+                                                {DAYS_OF_THE_WEEK.map(
+                                                    (data, index) => {
+                                                        return (
+                                                            <option
+                                                                key={index}
+                                                                value={data}
+                                                            >
+                                                                {data}
+                                                            </option>
+                                                        );
+                                                    }
+                                                )}
+                                            </Form.Select>
+                                        ) : field.subItem === "DAILY" ? (
+                                            <DatePicker
+                                                selected={value}
+                                                onChange={onChange}
+                                                className="form-control"
+                                            />
+                                        ) : (
+                                            <Form.Select
+                                                onChange={onChange}
+                                                onBlur={onBlur}
+                                                value={value}
+                                            >
+                                                <option></option>
+                                                {MONTHS_OF_A_YEAR.map(
+                                                    (data, index) => {
+                                                        return (
+                                                            <option
+                                                                key={index}
+                                                                value={data}
+                                                            >
+                                                                {data}
+                                                            </option>
+                                                        );
+                                                    }
+                                                )}
+                                            </Form.Select>
+                                        )
+                                    }
                                 />
                             </Form.Group>
                         </Col>
-                        <Col md={5}>
+                        <Col md={4}>
                             <Form.Group className="mb-3">
                                 <Controller
                                     defaultValue=""
                                     control={control}
-                                    name={`custom_field[${index}].type`}
+                                    name={`custom_field[${index}].ends_at`}
                                     render={({
                                         field: { value, onChange, onBlur },
                                     }) => (
                                         <DatePicker
                                             // selected={value}
                                             // onChange={onChange}
-                                            showMonthYearPicker
                                             dateFormat="MM/yyyy"
                                             className="form-control"
                                         />
                                     )}
                                 />
                             </Form.Group>
-                        </Col>
-                        <Col md={2}>
-                            <Button
-                                variant="primary"
-                                onClick={() => remove(index)}
-                            >
-                                <FontAwesomeIcon icon={faWindowClose} />
-                            </Button>
                         </Col>
                     </Row>
                 ))
@@ -95,20 +129,9 @@ export const WorkScheduleAddCustomFields = ({ control }) => {
                     </Col>
                 </Row>
             )}
-            <Row>
-                <Col>
-                    <>
-                        <Button
-                            variant="primary"
-                            className="m-0"
-                            onClick={() => {
-                                append({ subItem: "", type: "", position: "" });
-                            }}
-                        >
-                            <FontAwesomeIcon icon={faPlusSquare} /> Add
-                            frequency start date
-                        </Button>
-                    </>
+            <Row className="mt-2">
+                <Col md={12}>
+                    <small>* optional fields</small>
                 </Col>
             </Row>
         </>

@@ -16,7 +16,7 @@ const tableColumns = [
     },
     {
         Header: "Checklist type",
-        accessor: "",
+        accessor: "checklist_item.checklist.name",
     },
     {
         Header: "Checklist item",

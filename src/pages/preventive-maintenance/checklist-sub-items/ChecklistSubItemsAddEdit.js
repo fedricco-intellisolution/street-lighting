@@ -23,6 +23,7 @@ const schema = yup.object().shape({
         then: yup.string().required("This field is required"),
     }),
     sequence_no: yup.string().required("This field is required"),
+    frequency: yup.string().required("This field is required"),
 });
 
 export const ChecklistSubItemsAddEdit = () => {
@@ -138,11 +139,11 @@ export const ChecklistSubItemsAddEdit = () => {
             header: response.data.data.header || "",
             name: response.data.data.name || "",
             sequence_no: response.data.data.sequence_no || "",
-			frequency: response.data.data.frequency || "",
-			is_custom_field: response.data.data.is_custom_field ? "Yes" : "No",
-			custom_field: JSON.parse(response.data.data.custom_field)
+            frequency: response.data.data.frequency || "",
+            is_custom_field: response.data.data.is_custom_field ? "Yes" : "No",
+            custom_field: JSON.parse(response.data.data.custom_field),
         });
-		setIsCustomField(response.data.data.is_custom_field);
+        setIsCustomField(response.data.data.is_custom_field);
     }, [action, reset]);
 
     //

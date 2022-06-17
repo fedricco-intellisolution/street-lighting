@@ -59,3 +59,28 @@ export const createChecklistSubItem = (data) => {
 export const updateChecklistSubItem = (id, data) => {
     return api.put(`/checklist_subitem/${id}`, data);
 };
+
+/**
+ * @returns Work schedule
+ */
+
+ export const getWorkSchedules = () => {
+    return api.get("/work_schedule");
+};
+
+export const getWorkScheduleSites = () => {
+    return api.get(`/work_schedule/sites`);
+};
+
+export const getWorkSchedule = (data) => {
+    return api.get(`/work_schedule/${data}`);
+};
+
+export const createWorkSchedule = (data) => {
+    return api.post("/work_schedule", data);
+};
+
+export const updateWorkSchedule = (id, data) => {
+    return api.put(`/work_schedule/${id}`, data);
+};
+

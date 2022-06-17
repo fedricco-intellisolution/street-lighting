@@ -11,8 +11,8 @@ const tableColumns = [
         },
     },
     {
-        Header: "Hawker center",
-        accessor: "hawker_center",
+        Header: "Site",
+        accessor: "site",
     },
     {
         Header: "Generated checklist",
@@ -22,15 +22,15 @@ const tableColumns = [
 
 const tableData = [
     {
-        hawker_center: "Adam",
+        site: "Kranji",
         generated_checklist: "Yes",
     },
     {
-        hawker_center: "Amoy",
+        site: "Pasir Ris",
         generated_checklist: "Yes",
     },
     {
-        hawker_center: "Marsiling",
+        site: "Tampines",
         generated_checklist: "Yes",
     },
 ];

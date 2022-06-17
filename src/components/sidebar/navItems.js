@@ -138,10 +138,10 @@ const pagesSection = [
         href: "/preventive-maintenance/checklist-sub-items",
         title: "Checklist sub items",
       },
-      {
-        href: "/preventive-maintenance/checklist-build",
-        title: "Build checklist",
-      },
+	//   {
+	//     href: "/preventive-maintenance/checklist-build",
+	//     title: "Build checklist",
+	//   },
 	  {
         href: "/preventive-maintenance/work-schedule",
         title: "Work schedule",
