@@ -16,9 +16,11 @@ import SignatoriesForm from "./components/SignatoriesForm";
 const schema = yup.object().shape({
     action_taken: yup
         .string()
+        .nullable()
         .required('This field is required'),
     case_category: yup
         .string()
+        .nullable()
         .required('This field is required')
     
 });
@@ -73,12 +75,14 @@ const FaultVerificationTOView = () => {
                     message: response.data.message,
                 })
             }
+            navigate('/faults/verification-to')
         } catch (error) {
             console.log(error)            
         }
     }
 
-    const forwardToTechnicianHandler = async() => {
+    const forwardToTechnicianHandler = async () => {
+        
          try {
             const response = await faultApi.forwardToTechnician(id)
             if (response.data.status === 'SUCCESS') {
@@ -93,9 +97,25 @@ const FaultVerificationTOView = () => {
         }
     }
 
-    const faultVerificationHandler = async(data) => {
+    const faultVerificationHandler = async (data) => {
+        
+        let before_photos = data.before_photos ? data.before_photos : []
+        let after_photos = data.after_photos ?  data.after_photos : []
+        
+        const formData = new FormData()
+        formData.append("action_taken", data.action_taken)
+        formData.append("case_category", data.case_category)
+        
+        before_photos.forEach(file => {
+            formData.append("before_photos[]", file);
+        })
+       
+        after_photos.forEach(file => {
+            formData.append("after_photos[]", file);
+        })
+
         try {
-            const response = await faultApi.forVerificationNEA(id, data)
+            const response = await faultApi.forVerificationNEA(id, formData)
             if (response.data.status === 'SUCCESS') {
                 notyf.open({
                     type : 'success',
@@ -172,7 +192,7 @@ const FaultVerificationTOView = () => {
                             </Button>
                             <Button
                                 variant="success"
-                                onClick={() => faultVerificationHandler()}
+                                onClick={handleSubmit(faultVerificationHandler)}
                             >
                                 Fault Verification
                             </Button>

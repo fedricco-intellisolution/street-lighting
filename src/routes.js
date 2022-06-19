@@ -306,14 +306,6 @@ const routes = [
         element: <FaultEOTView />,
       },
       {
-        path: "rectified",
-        element: <FaultRectifiedList />,
-      },
-      {
-        path: "rectified/:id",
-        element: <FaultRectifiedView />,
-      },
-      {
         path: "incident-reports",
         element: <FaultIncidentReportList />,
       },
@@ -322,7 +314,7 @@ const routes = [
         element: <FaultIncidentReportView />,
       },
       {
-        path: "incident-reports/:id/:fault_id",
+        path: "incident-reports/:id/add",
         element: <FaultIncidentReportView />,
       },
       {

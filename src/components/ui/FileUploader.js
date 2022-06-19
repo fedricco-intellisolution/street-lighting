@@ -4,7 +4,6 @@ import { Download, Trash2, ZoomIn } from "react-feather";
 import { Controller } from "react-hook-form";
 import * as attachmentApi from "../../api/attachmentApi";
 import NotyfContext from "@contexts/NotyfContext";
-import { saveAs } from "file-saver";
 
 const FileUploader = (props) => {
     const {
@@ -73,8 +72,9 @@ const FileUploader = (props) => {
         }
     }
 
-    const download = (item) => {
-        saveAs(item.full_path, item.file_name);
+    const download = async (id) => {
+        const response = await attachmentApi.download(id)
+        window.open(response.data)
     }
 
     return (
@@ -107,9 +107,9 @@ const FileUploader = (props) => {
                                 }
                                 <small>{image.file_name}</small>
                                 <div className="text-end mt-2">
-                                    <Trash2
-                                        size={18}
-                                        className="cursor-pointer me-1"
+                            <Trash2
+                                size={18}
+                                className={!disabled ? "cursor-pointer me-1" : "cursor-not-allowed me-1" }
                                         onClick={
                                             image.id
                                                 ? () => {
@@ -126,12 +126,15 @@ const FileUploader = (props) => {
                                             setThumbnail(photoURLs[key])
                                         }}
                                      />
-                          
-                                <Download
-                                    size={18}
-                                    className="cursor-pointer"
-                                    onClick={() => download(image)}
-                                />
+                                    {
+                                        image.id !== '' &&
+                                        <Download
+                                            size={18}
+                                            className="cursor-pointer"
+                                            onClick={() => download(image.id)}
+                                        />
+                                    }
+                               
                                 </div>
                             </div>
                 })
@@ -147,8 +150,7 @@ const FileUploader = (props) => {
             <Modal show={showDelete}  onHide={() => setShowDelete(false)} size="md" className="file-uploader-modal">
                 <Modal.Header closeButton>{thumbnail.file_name}</Modal.Header>
                 <Modal.Body className="text-center m-3">
-                    <h6>Are you sure you want to delete this photo?</h6>
-                     <Image src={thumbnail.full_path} />
+                    <h6>Are you sure you want to delete this file?</h6>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button

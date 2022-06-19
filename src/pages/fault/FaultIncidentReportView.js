@@ -1,18 +1,21 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Breadcrumb, Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Helmet } from "react-helmet-async";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ErrorMessage } from '@hookform/error-message';
 import * as yup from "yup";
-import Select from "react-select";
 import * as faultApi from "@api/faultApi";
 import useAuth from "../../hooks/useAuth";
 import * as lookUpApi from "@api/lookUpApi";
 import NotyfContext from "@contexts/NotyfContext";
+import FileUploader from "../../components/ui/FileUploader";
 
 const schema = yup.object().shape({
+    status: yup
+            .string()
+            .required('This field is required'),
     details: yup.object().shape({
         incident_background: yup
             .string()
@@ -32,12 +35,12 @@ const schema = yup.object().shape({
 
 const FaultIncidentReportView = () => {
     const navigate = useNavigate();
-    const notyf = useContext(NotyfContext)
+    const location = useLocation();
+    const notyf = useContext(NotyfContext);
     const { user } = useAuth();
-    const { id, fault_id } = useParams();
-    const add_page = id === 'add' ? true : false;
+    const { id } = useParams();
+    const add_page = location.pathname.indexOf('add') > -1 ? true : false;
     const [fault, setFault] = useState();
-    const [incident_report, setIncidentReport] = useState();
     const [status, setStatus] = useState([]);
     
     const {
@@ -52,61 +55,45 @@ const FaultIncidentReportView = () => {
     });
 
     const getFault = useCallback(async () => {
-        const response = await faultApi.getFault(fault_id);
+        const response = await faultApi.getFault(id);
         setFault(response.data.data)
-    }, [fault_id])
-
-    const getIncidentReport = useCallback(async () => {
-        const response = await faultApi.getIncidentReport(id);
-        setIncidentReport(response.data.data)
     }, [id])
 
-    useEffect(() => {
-          if(add_page) getFault()
-    }, [getFault, add_page])
-
-    useEffect(() => {
-        if (fault) {
-            setValue('fault.id', fault.id)
-            setValue('fault.complaint_at', fault.complaint_at)
-            setValue('reported_by.full_name', user?.full_name)
-            setValue('fault.site.name', fault.site.name)
-        }
-    }, [fault, reset, user, setValue])
-
-    useEffect(() => {
-        if(!add_page) getIncidentReport()
-    }, [id, getIncidentReport, add_page])
-
-    useEffect(() => {
-        if (incident_report) {
-            reset(incident_report)
-        }
-    }, [incident_report, reset])
-    
-    const getStatus = async () => {
+    const getStatus = useCallback(async () => {
         const response = await lookUpApi.getLookUp({search: { category: 'FAULT_INCIDENT_REPORT_STATUS' }})
-        const data = response.data.data
-        const options = []
-        data.forEach(item => {
-            options.push({
-                label: item.name,
-                value: item.code
-            })
-        })
-        setStatus(options)
-    }
-
-    useEffect(() => {
-        getStatus()
+        setStatus(response.data.data)
     },[])
     
-    const printReportHandler = () => [
+    useEffect(() => {
+        getFault()
+        getStatus()
+    }, [getFault, getStatus])
 
-    ]
+    useEffect(() => {   
+        setValue('fault', fault)
+        setValue('details', fault?.incident_report?.details)
+        setValue('reported_at', fault?.incident_report?.reported_at)
+        setValue('reported_by', fault?.incident_report?.reported_by.full_name)
+        setValue('status', fault?.incident_report?.status)
+
+        if (add_page) {
+            setValue('reported_by', user.full_name)
+            setInterval(() => {
+                setValue('reported_at', new Date().toLocaleString())
+            }, 1000)
+        }
+       
+        
+    }, [reset, fault, setValue, user, add_page])
+
+  
+
+    const printReportHandler = () => {
+        
+    }
 
     const saveReportHandler = async (data) => {
-        data.fault_id = data.fault.id
+        data.fault_id = id
         try {
             const response = await faultApi.saveIncidentReport(data)
             if (response.data.status === 'SUCCESS') {
@@ -114,7 +101,7 @@ const FaultIncidentReportView = () => {
                     type: 'success',
                     message: response.data.message,
                 })
-                navigate(`/faults/incident-reports/${response.data.data.id}`)
+                navigate(`/faults/incident-reports/${id}`)
             }
         } catch (error) {
         }
@@ -122,7 +109,7 @@ const FaultIncidentReportView = () => {
 
     const updateReportHandler = async (data) => {
         try {
-            const response = await faultApi.updateIncidentReport(id, data)
+            const response = await faultApi.updateIncidentReport(fault.incident_report.id, data)
             if (response.data.status === 'SUCCESS') {
                 notyf.open({
                     type: 'success',
@@ -132,7 +119,7 @@ const FaultIncidentReportView = () => {
         } catch (error) {
         }
     }
-    
+
     return (
         <React.Fragment>
             <Helmet title="Fault Incident Report"/>
@@ -142,23 +129,12 @@ const FaultIncidentReportView = () => {
                         <h1 className="h3 mb-3">
                             { add_page
                                 ? 'Add incident report'
-                                : 'Edit incident report'
+                                : 'View incident report'
                             }</h1>
                     </Col>
                     <Col md={6}>
                         <Breadcrumb>
-                            {
-                                add_page 
-                                    ?  <Breadcrumb.Item onClick={() => navigate('/faults/'+fault_id)}>Fault</Breadcrumb.Item>
-                                    :  <Breadcrumb.Item onClick={() => navigate('/faults/incident-reports')}>Fault incident reports</Breadcrumb.Item>
-                            }
-                           
-                            <Breadcrumb.Item active>
-                                { add_page
-                                    ? 'Add'
-                                    : 'Edit'
-                                }
-                            </Breadcrumb.Item>
+                            
                         </Breadcrumb>
                     </Col>
                 </Row>
@@ -174,18 +150,26 @@ const FaultIncidentReportView = () => {
                                                 name="status"
                                                 defaultValue=""
                                                 render={({ field: { value, onChange, onBlur } }) => (
-                                                    <Select
-                                                        placeholder="Choose an option"
-                                                        classNamePrefix="react-select"
-                                                        options={status}
+                                                    <Form.Select
+                                                        name="status"
+                                                        onChange={onChange}
                                                         onBlur={onBlur}
-                                                        className={
-                                                            "react-select-container" + errors.site_id && "is-invalid"
-                                                        }
-                                                        onChange={(val) => onChange(val.value)}
-                                                        value={status.filter((c) => value.includes(c.value))}
-                                                    
-                                                    />
+                                                        value={value}
+                                                        className={(errors.status && 'is-invalid')}
+                                                    >
+                                                        <option value="">Choose an option</option>
+                                                        {status.map((item, index) => {
+                                                                return (
+                                                                    <option
+                                                                        key={index}
+                                                                        value={item.code}
+                                                                    >
+                                                                        {item.name}
+                                                                    </option>
+                                                                );
+                                                            }
+                                                        )}
+                                                    </Form.Select>
                                                 )}
                                         />
                                         <ErrorMessage
@@ -267,7 +251,7 @@ const FaultIncidentReportView = () => {
                                             <Form.Label>Reported by</Form.Label>
                                             <Controller
                                                 control={control}
-                                                name="reported_by.full_name"
+                                                name="reported_by"
                                                 defaultValue=""
                                                 render={({ field: { value, onChange, onBlur } }) => (
                                                     <Form.Control
@@ -397,19 +381,19 @@ const FaultIncidentReportView = () => {
                                             />
                                         </Form.Group>
                                         <Form.Group className="mb-3">
-                                            <Form.Label>Attachments</Form.Label>
                                             <Controller
                                                 control={control}
                                                 name="attachments"
                                                 defaultValue=""
                                                 render={({ field: { value, onChange, onBlur } }) => (
-                                                    <Form.Control
-                                                        type="file"
-                                                        multiple
-                                                        accept="*"
-                                                        value={value}
-                                                        onChange={onChange}
-                                                        onBlur={onBlur}
+                                                     <FileUploader
+                                                        defaultValue=""
+                                                        label="Attachment"
+                                                        control={control}
+                                                        name="attachment"
+                                                        errors={errors}
+                                                        setValue={setValue}
+                                                        data={[]}
                                                     />
                                                 )}
                                             />

@@ -68,8 +68,8 @@ export const applyEOT = (data) => {
     return api.post('/fault_eot', data)
 }
 
-export const approveEOT = (id) => {
-    return api.post('/fault_eot/approve/'+ id)
+export const approveEOT = (id, data) => {
+    return api.post('/fault_eot/approve/'+ id, data)
 }
 
 

@@ -15,8 +15,23 @@ const TechnicianForm = (props) => {
     } = props
 
     useEffect(() => {
-        reset(fault) 
-    }, [reset, fault])
+        reset(fault)
+
+        if (fault.attended_at === null) {
+            setValue('attended_at', new Date().toLocaleString())
+        }
+        
+        if (fault.action_taken === null) {
+            setValue('action_taken', '')
+        }
+
+        if (fault.case_category === null) {
+            setValue('case_category', '')
+        } else {
+            setValue('case_category', fault?.case_category?.code)
+        }
+
+    }, [reset, fault, setValue])
 
     return (
         <>
@@ -101,7 +116,7 @@ const TechnicianForm = (props) => {
                                 label="Before photos"
                                 control={control}
                                 name="before_photos"
-                                disabled={false}
+                                disabled={!editable}
                                 errors={errors}
                                 setValue={setValue}
                                 data={fault.before_photos}
@@ -113,7 +128,7 @@ const TechnicianForm = (props) => {
                                 label="After photos"
                                 control={control}
                                 name="after_photos"
-                                disabled={false}
+                                disabled={!editable}
                                 errors={errors}
                                 setValue={setValue}
                                 data={fault?.after_photos}

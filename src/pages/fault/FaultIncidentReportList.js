@@ -55,12 +55,12 @@ const FaultIncidentReportList = () => {
                 actions: (
                     <OverlayTrigger
                         placement="bottom"
-                        overlay={<Tooltip> View </Tooltip>}
+                        overlay={<Tooltip> View fault </Tooltip>}
                     >
                         <Eye
                             className="align-middle me-2"
                             size={16}
-                            onClick={() => navigate(location.pathname+'/'+report.id)}
+                            onClick={() => navigate(location.pathname+'/'+report.fault.id)}
                         />
                     </OverlayTrigger>
                 ),

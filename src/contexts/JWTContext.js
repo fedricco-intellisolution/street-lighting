@@ -83,7 +83,7 @@ function AuthProvider({ children }) {
               user: null,
             },
           });
-          navigate('/auth/sign-in')
+          //navigate('/auth/sign-in')
         }
       } catch (err) {
         dispatch({
@@ -95,9 +95,10 @@ function AuthProvider({ children }) {
         });
         
       }
-  }, [navigate]);
+  }, []);
   
   useEffect(() => {
+    console.log('JWT')
     initialize();
   }, [initialize]);
 
