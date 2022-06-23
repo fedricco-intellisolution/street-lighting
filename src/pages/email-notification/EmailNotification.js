@@ -15,7 +15,7 @@ const EmailNotification = () => {
     },
     {
       Header: "Sent to",
-      accessor: "sent_to_name",
+      accessor: "sent_to",
     },
     {
       Header: "Sent to email",
@@ -31,6 +31,52 @@ const EmailNotification = () => {
     {
       Header: "Body",
       accessor: "body",
+      Cell: ({ cell: { value } }) => {
+        // return React.createElement("div", {
+        //   dangerouslySetInnerHTML: { __html: value },
+        // });
+        const [height, setHeight] = useState("100px");
+        const [overflowY, setOverflowy] = useState("hidden");
+        const [readMore, setReadMore] = useState(0);
+
+        const loadMore = () => {
+          setHeight(null);
+          setOverflowy();
+          setReadMore(1);
+
+          return false;
+        };
+
+        const loadLess = () => {
+          setHeight("100px");
+          setOverflowy("hidden");
+          setReadMore(0);
+
+          return false;
+        };
+
+        const content = React.createElement("div", {
+          dangerouslySetInnerHTML: { __html: value },
+        });
+
+        return (
+          <div>
+            <div
+              style={{
+                height: height,
+                overflowY: overflowY,
+              }}
+            >
+              {content}
+            </div>
+            <div>
+              <a href="#" onClick={readMore ? loadLess : loadMore}>
+                {readMore ? "Read less" : "Read more"}
+              </a>
+            </div>
+          </div>
+        );
+      },
     },
     {
       Header: "Status",

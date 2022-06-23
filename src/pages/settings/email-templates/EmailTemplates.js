@@ -38,7 +38,7 @@ const EmailTemplates = () => {
               }
             />
           </OverlayTrigger>
-          <OverlayTrigger
+          {/* <OverlayTrigger
             placement="bottom"
             overlay={<Tooltip>Assign user</Tooltip>}
           >
@@ -49,7 +49,7 @@ const EmailTemplates = () => {
                 navigate(location.pathname + "/" + cell.row.original.id)
               }
             />
-          </OverlayTrigger>
+          </OverlayTrigger> */}
         </div>
       ),
     },
@@ -57,10 +57,10 @@ const EmailTemplates = () => {
       Header: "Code",
       accessor: "code",
     },
-    {
-      Header: "Title",
-      accessor: "title",
-    },
+    // {
+    //   Header: "Title",
+    //   accessor: "title",
+    // },
     {
       Header: "Name",
       accessor: "name",

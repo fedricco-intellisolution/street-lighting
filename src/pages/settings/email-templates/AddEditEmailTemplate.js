@@ -16,7 +16,7 @@ const AddEditEmailTemplate = () => {
   const add = id === "add" ? true : false;
   const schema = yup.object().shape({
     code: yup.string().required("This field is required"),
-    title: yup.string().required("This field is required"),
+    // title: yup.string().required("This field is required"),
     name: yup.string().required("This field is required"),
   });
   const notyf = useContext(NotyfContext);
@@ -94,7 +94,7 @@ const AddEditEmailTemplate = () => {
         <Card>
           <Card.Body>
             <Row>
-              <Form className="col-md-4 col-sm-12 mb-2">
+              <Form className="col-md-6 col-sm-12 mb-2">
                 <Form.Label>Code</Form.Label>
                 <Controller
                   control={control}
@@ -118,7 +118,7 @@ const AddEditEmailTemplate = () => {
                   )}
                 />
               </Form>
-              <Form className="col-md-4 col-sm-12 mb-2">
+              {/* <Form className="col-md-4 col-sm-12 mb-2">
                 <Form.Label>Title</Form.Label>
                 <Controller
                   control={control}
@@ -141,8 +141,8 @@ const AddEditEmailTemplate = () => {
                     <small className="text-danger">{message}</small>
                   )}
                 />
-              </Form>
-              <Form className="col-md-4 col-sm-12 mb-2">
+              </Form> */}
+              <Form className="col-md-6 col-sm-12 mb-2">
                 <Form.Label>Name</Form.Label>
                 <Controller
                   control={control}
