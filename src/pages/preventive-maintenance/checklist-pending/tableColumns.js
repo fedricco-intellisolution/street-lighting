@@ -18,19 +18,19 @@ const tableColumns = [
     },
     {
         Header: "Checklist",
-        accessor: "checklist",
+        accessor: "checklist_item.checklist.name",
     },
     {
         Header: "Checklist item",
-        accessor: "checklist_item",
+        accessor: "checklist_item.name",
     },
     {
         Header: "Frequency",
         accessor: "frequency",
     },
     {
-        Header: "Hawker centre",
-        accessor: "hawker_centre",
+        Header: "Site",
+        accessor: "site.name",
     },
     {
         Header: "Technician",
@@ -38,31 +38,4 @@ const tableColumns = [
     },
 ];
 
-const tableData = [
-    {
-        id: "1",
-        checklist: "SECURITY SYSTEM",
-        checklist_item: "EXTERNAL CCTV",
-        frequency: "MONTHLY INSPECTION",
-        hawker_centre: "Marsiling Mall Hawker Centre",
-        technician: "",
-    },
-    {
-        id: "2",
-        checklist: "LUMBING AND SANITARY",
-        checklist_item: "WATER DISPENSER",
-        frequency: "WEEKLY INSPECTION 1",
-        hawker_centre: "Zion Riverside",
-        technician: "",
-    },
-    {
-        id: "3",
-        checklist: "BUILDING & CIVIL",
-        checklist_item: "ROOFING",
-        frequency: "QUARTERLY SERVICING",
-        hawker_centre: "Berseh",
-        technician: "",
-    },
-];
-
-export { tableColumns, tableData };
+export { tableColumns };

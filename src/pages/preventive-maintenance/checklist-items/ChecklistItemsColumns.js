@@ -4,6 +4,7 @@ import { Button, Col, Form, Row } from "react-bootstrap";
 import { Controller, useFieldArray } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare, faWindowClose } from "@fortawesome/free-solid-svg-icons";
+
 import { COLUMN_TYPE } from "../config/options";
 
 export const ChecklistItemsColumns = ({ control, errors }) => {
@@ -16,7 +17,7 @@ export const ChecklistItemsColumns = ({ control, errors }) => {
             <Col md={12}>
                 <h6 className="pt-2">Checklist item columns</h6>
                 <small>
-                    <i>Default columns - check, clean</i>
+                    <i>Default column - check</i>
                 </small>
                 <Row className="mt-2">
                     <Col className="font-weight-bold" md={5}>

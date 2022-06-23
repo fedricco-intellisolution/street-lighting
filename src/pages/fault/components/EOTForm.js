@@ -19,13 +19,17 @@ const EOTForm = (props) => {
         setValue('fault', fault)
         setValue('details', fault?.eot?.details)
         setValue('requested_by', fault?.eot?.requested_by?.full_name)
+        setValue('requestor_remarks', fault?.eot?.requestor_remarks)
+        setValue('approver_remarks', fault?.eot?.approver_remarks)
+        setValue('requested_extension_date', fault?.eot?.requested_extension_date)
         
         if (fault?.eot?.status === 'APPROVED') {
             setValue('approved_by', fault?.eot?.approved_by?.full_name)
         } else if (fault?.eot?.status === 'REJECTED') {
             setValue('approved_by', fault?.eot?.rejected_by?.full_name)
         } else {
-            setValue('approved_by', user?.full_name)
+            setValue('approved_by', fault?.eot?.approved_by ? fault?.eot?.approved_by.full_name : user?.full_name)
+            setValue('requested_by', fault?.eot?.requested_by ? fault?.eot?.requested_by.full_name : user?.full_name)
         }
         
     }, [reset, fault, user, setValue])
@@ -274,7 +278,6 @@ const EOTForm = (props) => {
                                             value={value}
                                             onChange={onChange}
                                             onBlur={onBlur}
-                                            className={(errors.details?.requestor_remarks && 'is-invalid')}
                                             disabled={fault?.eot?.requested_by ? true : false}
                                             
                                         />

@@ -69,6 +69,9 @@ const FaultResponseView = () => {
                     type : 'success',
                     message: response.data.message,
                 })
+                response_page
+                ? navigate('/faults/response')
+                : navigate('/faults/followup')
             }
         } catch (error) {
             console.log(error)            
@@ -84,7 +87,9 @@ const FaultResponseView = () => {
                     type : 'success',
                     message: response.data.message,
                 })
-                navigate('/faults/response')
+                response_page
+                ? navigate('/faults/response')
+                : navigate('/faults/followup')
             }
         } catch (error) {
             console.log(error)            
@@ -92,14 +97,31 @@ const FaultResponseView = () => {
     }
 
     const toVerifyHandler = async (data) => {
+       
+        let before_photos = data.before_photos ? data.before_photos : []
+        let after_photos = data.after_photos ?  data.after_photos : []
+        
+        const formData = new FormData()
+        formData.append("action_taken", data.action_taken)
+        
+        before_photos.forEach(file => {
+            formData.append("before_photos[]", file);
+        })
+       
+        after_photos.forEach(file => {
+            formData.append("after_photos[]", file);
+        })
+
         try {
-            const response = await faultApi.forVerificationTO(id, data)
+            const response = await faultApi.forVerificationTO(id, formData)
             if (response.data.status === 'SUCCESS') {
                 notyf.open({
                     type : 'success',
                     message: response.data.message,
                 })
-                navigate('/faults/response')
+                response_page
+                ? navigate('/faults/response')
+                : navigate('/faults/followup')
             }
         } catch (error) {
             console.log(error)            

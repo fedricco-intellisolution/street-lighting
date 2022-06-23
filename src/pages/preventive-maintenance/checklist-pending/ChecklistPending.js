@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { Helmet } from "react-helmet-async";
 import { Card, Col, Form, Row } from "react-bootstrap";
@@ -9,13 +9,13 @@ import DynamicTable from "@components/ui/DynamicTable";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import * as preventiveMaintenanceApi from "@api/preventiveMaintenanceApi";
 
 export const ChecklistPending = () => {
-    // const navigate = useNavigate();
-
     //
     // States
     //
+    const [tableData, setTableData] = useState([]);
 
     const { control } = useForm({
         mode: "onTouched",
@@ -26,8 +26,10 @@ export const ChecklistPending = () => {
     //
 
     const getWorkSchedule = useCallback(async () => {
-        // const response = await preventiveMaintenanceApi.getChecklistTypes();
-        // setTableData(response.data.data);
+        const response = await preventiveMaintenanceApi.getPendingChecklists({
+            status: "PENDING_TECHNICIAN_INSPECTION",
+        });
+        setTableData(response.data.data);
     }, []);
 
     //

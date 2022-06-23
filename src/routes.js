@@ -77,7 +77,7 @@ import { ChecklistBuildAddEdit } from "@preventive/checklist-build/ChecklistBuil
 import { WorkSchedule } from "@preventive/work-schedules/WorkSchedule";
 import { WorkScheduleAdd } from "@preventive/work-schedules/work-schedule-add/WorkScheduleAdd";
 import { ChecklistPending } from "@preventive/checklist-pending/ChecklistPending";
-import { ChecklistPendingAdd } from "@preventive/checklist-pending/checklist-pending-add/ChecklistPendingAdd";
+import { ChecklistPendingCheck } from "@preventive/checklist-pending/checklist-pending-check/ChecklistPendingCheck";
 import { JointInspection } from "@preventive/joint-inspection/JointInpsection";
 import { JointInspectionAdd } from "@preventive/joint-inspection/joint-inspection-add/JointInspectionAdd";
 
@@ -306,14 +306,6 @@ const routes = [
         element: <FaultEOTView />,
       },
       {
-        path: "rectified",
-        element: <FaultRectifiedList />,
-      },
-      {
-        path: "rectified/:id",
-        element: <FaultRectifiedView />,
-      },
-      {
         path: "incident-reports",
         element: <FaultIncidentReportList />,
       },
@@ -322,7 +314,7 @@ const routes = [
         element: <FaultIncidentReportView />,
       },
       {
-        path: "incident-reports/:id/:fault_id",
+        path: "incident-reports/:id/add",
         element: <FaultIncidentReportView />,
       },
       {
@@ -389,7 +381,7 @@ const routes = [
       },
       {
         path: "checklist-pending/:action",
-        element: <ChecklistPendingAdd />,
+        element: <ChecklistPendingCheck />,
       },
       {
         path: "joint-inspection",

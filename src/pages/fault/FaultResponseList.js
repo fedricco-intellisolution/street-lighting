@@ -59,16 +59,18 @@ const FaultResponseList = () => {
             data.push({
                 actions: (
                     <>
-                        <OverlayTrigger
-                            placement="bottom"
-                            overlay={<Tooltip>View fault</Tooltip>}
-                        >
-                            <Eye
-                                className="align-middle me-2"
-                                size={16}
-                                onClick={() => navigate(location.pathname+'/'+fault.id)}
-                            />
-                        </OverlayTrigger>
+                        {fault.attended_at &&
+                            <OverlayTrigger
+                                placement="bottom"
+                                overlay={<Tooltip>View fault</Tooltip>}
+                            >
+                                <Eye
+                                    className="align-middle me-2"
+                                    size={16}
+                                    onClick={() => navigate(location.pathname + '/' + fault.id)}
+                                />
+                            </OverlayTrigger>
+                        }
                        
                         {!fault.attended_at &&
                             <OverlayTrigger

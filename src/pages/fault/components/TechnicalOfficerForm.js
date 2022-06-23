@@ -2,7 +2,7 @@ import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { Controller } from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import { Clock, Paperclip } from "react-feather";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import * as lookUpApi from "@api/lookUpApi";
 import ReactSelect from "react-select";
 
@@ -13,15 +13,12 @@ const TechnicalOfficerForm = (props) => {
         errors,
         reset,
         fault,
+        setValue,
     } = props
 
     const [faultCaseCategory, setFaultCaseCategory] = useState([])
-    useEffect(() => {
-        reset(fault)
-    }, [reset, fault])
 
-
-    const getFaultCaseCategory = useCallback(async () => {
+    const getFaultCaseCategory = async () => {
         const response = await lookUpApi.getLookUp({search: { category: 'FAULT_CASE_CATEGORY' }})
         const data = response.data.data
         const options = []
@@ -32,11 +29,31 @@ const TechnicalOfficerForm = (props) => {
             })
         })
         setFaultCaseCategory(options)  
-    }, [])
+    }
     
     useEffect(() => {
         getFaultCaseCategory()
-    },[getFaultCaseCategory])
+    }, [])
+
+    useEffect(() => {
+        reset(fault)
+
+        if (fault.attended_at === null) {
+            setValue('attended_at', new Date().toLocaleString())
+        }
+        
+        if (fault.action_taken === null) {
+            setValue('action_taken', '')
+        }
+        
+        if (fault.case_category === null) {
+            setValue('case_category', '')
+        } else {
+            setValue('case_category', fault?.case_category?.code)
+        }
+        
+    }, [reset, fault, setValue])
+
     return (
         <>
             <Card>
@@ -46,12 +63,12 @@ const TechnicalOfficerForm = (props) => {
                             <Card.Title className="mb-0">Technical Officer</Card.Title>
                         </Col>
                         <Col md={6} className="text-end">
-                            { fault?.incident_report && fault?.incident_report.length < 1 
-                                ?   <Button variant="warning" onClick={() => window.open(`/faults/incident-reports/add/${fault.id}/`,'_blank')}>
+                            { fault?.incident_report === null
+                                ?   <Button variant="warning" onClick={() => window.open(`/faults/incident-reports/${fault.id}/add`,'_blank')}>
                                         <Paperclip size={16} className="me-1"/>
                                         Attach incident report
                                     </Button>
-                                :   <Button variant="warning" onClick={() => window.open(`/faults/incident-reports/${fault?.incident_report[0].id}/`,'_blank')}>
+                                :   <Button variant="warning" onClick={() => window.open(`/faults/incident-reports/${fault.id}`,'_blank')}>
                                         <Paperclip size={16} className="me-1"/>
                                         View incident report
                                     </Button>
@@ -89,7 +106,7 @@ const TechnicalOfficerForm = (props) => {
                                                 "react-select-container" + errors.case_category && "is-invalid"
                                             }
                                             onChange={(val) => onChange(val.value)}
-                                            value={faultCaseCategory.filter((c) => value?.includes(c.value))}
+                                            value={faultCaseCategory?.filter((c) => value?.includes(c.value))}
                                             isDisabled={!editable}
                                         />
                                     )}

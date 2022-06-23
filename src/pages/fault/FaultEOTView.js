@@ -54,6 +54,7 @@ const FaultEOTView = () => {
     }, [getFault])
 
     const submitHandler = async (data) => {
+        console.log(data)
         data.fault_id = data.fault.id
         try {
             const response = await faultApi.applyEOT(data)
@@ -68,9 +69,11 @@ const FaultEOTView = () => {
         }
     }
 
-    const approveHandler = async () => {
+    const approveHandler = async (data) => {
+        console.log(data)
+        
         try {
-            const response = await faultApi.approveEOT(fault.eot.id)
+            const response = await faultApi.approveEOT(fault.eot.id, data)
             if (response.data.status === 'SUCCESS') {
                 notyf.open({
                     type: 'success',
@@ -128,7 +131,7 @@ const FaultEOTView = () => {
                                         onClick={
                                             create
                                                 ? handleSubmit(submitHandler)
-                                                : () => approveHandler()
+                                                : handleSubmit(approveHandler)
                                             }
                                     >
                                         Approve

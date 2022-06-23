@@ -7,11 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { WorkScheduleAddCustomFields } from "./WorkScheduleAddCustomFields";
+import * as preventiveMaintenanceApi from "@api/preventiveMaintenanceApi";
+import DynamicTableNoPagination from "components/ui/DynamicTableNoPagination";
 
 import * as yup from "yup";
 import "react-datepicker/dist/react-datepicker.css";
-import DynamicTableNoPagination from "components/ui/DynamicTableNoPagination";
-import * as preventiveMaintenanceApi from "@api/preventiveMaintenanceApi";
 import NotyfContext from "contexts/NotyfContext";
 
 const schema = yup.object().shape({
@@ -21,14 +21,6 @@ const schema = yup.object().shape({
 export const WorkScheduleAdd = () => {
     const navigate = useNavigate();
     const notyf = useContext(NotyfContext);
-
-    //
-    // States
-    //
-
-    const [tableData, setTableData] = useState([]);
-    const [sites, setSites] = useState([]);
-    const [excludedChecklistItems, setExcludedChecklistItems] = useState([]);
     const {
         control,
         formState: { errors },
@@ -38,6 +30,14 @@ export const WorkScheduleAdd = () => {
         mode: "onTouched",
         resolver: yupResolver(schema),
     });
+
+    //
+    // States
+    //
+
+    const [tableData, setTableData] = useState([]);
+    const [sites, setSites] = useState([]);
+    const [excludedChecklistItems, setExcludedChecklistItems] = useState([]);
 
     const tableColumns = [
         {
@@ -96,13 +96,11 @@ export const WorkScheduleAdd = () => {
     }, []);
 
     const submitWorkSchedule = async (data) => {
-        const requestData = {
-            ...data,
-            excluded_checklists: excludedChecklistItems,
-        };
+		data.excluded_checklists = excludedChecklistItems;
+		
         try {
             const response = await preventiveMaintenanceApi.createWorkSchedule(
-                requestData
+                data
             );
             if (response.data.status === "SUCCESS") {
                 notyf.open({
@@ -131,12 +129,17 @@ export const WorkScheduleAdd = () => {
     useEffect(() => {
         reset({
             custom_field: [
-                { subItem: "DAILY", starts_at: new Date(), ends_at: "" },
-                { subItem: "WEEKLY", starts_at: "Monday", ends_at: "" },
-                { subItem: "MONTHLY", starts_at: "January", ends_at: "" },
-                { subItem: "BI-MONTHLY", starts_at: "January", ends_at: "" },
-                { subItem: "QUARTERLY", starts_at: "January", ends_at: "" },
-                { subItem: "YEARLY", starts_at: "January", ends_at: "" },
+                { subItem: "DAILY", starts_at: new Date(), ends_at: null },
+                { subItem: "WEEKLY", starts_at: new Date(), ends_at: null },
+                { subItem: "MONTHLY", starts_at: new Date(), ends_at: null },
+                { subItem: "BI-MONTHLY", starts_at: new Date(), ends_at: null },
+                { subItem: "QUARTERLY", starts_at: new Date(), ends_at: null },
+                {
+                    subItem: "HALF-YEARLY",
+                    starts_at: new Date(),
+                    ends_at: null,
+                },
+                { subItem: "YEARLY", starts_at: new Date(), ends_at: null },
             ],
         });
     }, [reset]);
