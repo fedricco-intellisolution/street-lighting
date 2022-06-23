@@ -80,9 +80,17 @@ import { ChecklistPending } from "@preventive/checklist-pending/ChecklistPending
 import { ChecklistPendingAdd } from "@preventive/checklist-pending/checklist-pending-add/ChecklistPendingAdd";
 import { JointInspection } from "@preventive/joint-inspection/JointInpsection";
 import { JointInspectionAdd } from "@preventive/joint-inspection/joint-inspection-add/JointInspectionAdd";
+import RegisterDefect from "@preventive/defects/RegisterDefect";
+import AssignToTechnician from "@preventive/defects/AssignToTechnician";
+import RectifyDefectList from "@preventive/defects/RectifyDefectList";
+import RectifyDefectView from "@preventive/defects/RectifyDefectView";
+import Defects from "@preventive/defects/Defects";
 
 //email notification
 import EmailNotification from "@emailnotification/EmailNotification";
+
+
+
 
 const routes = [
   {
@@ -390,6 +398,26 @@ const routes = [
       {
         path: "joint-inspection/:action",
         element: <JointInspectionAdd />,
+      },
+      {
+        path: "defects",
+        element: <Defects />,
+      },
+      {
+        path: "defects/register",
+        element: <RegisterDefect />,
+      },
+      {
+        path: "defects/assignment",
+        element: <AssignToTechnician />,
+      },
+      {
+        path: "defects/rectify",
+        element: <RectifyDefectList />,
+      },
+      {
+        path: "defects/rectify/:id",
+        element: <RectifyDefectView />,
       },
     ],
   },

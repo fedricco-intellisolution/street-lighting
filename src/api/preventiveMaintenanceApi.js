@@ -84,3 +84,26 @@ export const updateWorkSchedule = (id, data) => {
     return api.put(`/work_schedule/${id}`, data);
 };
 
+/**
+ * @returns Defects
+ */
+
+export const registerDefect = (data) => {
+    return api.post("/defects", data);
+}
+
+export const assignTechnician = (data) => {
+    return api.post("/defects/assign_to_technician", data);
+}
+
+export const getDefects = (filter) => {
+    return api.get('/defects', {params : filter});
+}
+
+export const getDefect = (id) => {
+    return api.get('/defects/'+id);
+}
+
+export const updateDefect = (id, data) => {
+    return api.post('/defects/update/'+id, data);
+}
