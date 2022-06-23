@@ -7,11 +7,12 @@ import { ErrorMessage } from "@hookform/error-message";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, useParams } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 
 import * as preventiveMaintenanceApi from "@api/preventiveMaintenanceApi";
-import NotyfContext from "contexts/NotyfContext";
 import { ChecklistItemsColumns } from "./ChecklistItemsColumns";
+
+import * as yup from "yup";
+import NotyfContext from "contexts/NotyfContext";
 
 const schema = yup.object().shape({
     checklist_id: yup.string().required("This field is required"),
@@ -35,6 +36,7 @@ export const ChecklistItemsAddEdit = () => {
     //
     // States
     //
+
     const [checklistTypes, setChecklistTypes] = useState([]);
     const notyf = useContext(NotyfContext);
 
@@ -110,7 +112,9 @@ export const ChecklistItemsAddEdit = () => {
             checklist_id: response.data.data.checklist_id,
             name: response.data.data.name,
             sequence_no: response.data.data.sequence_no,
-			columns: JSON.parse(response.data.data.columns)
+            columns: response.data.data.columns
+                ? JSON.parse(response.data.data.columns)
+                : [],
         });
     }, [action, reset]);
 
@@ -125,6 +129,12 @@ export const ChecklistItemsAddEdit = () => {
     useEffect(() => {
         if (action !== "add") getChecklistItem();
     }, [getChecklistItem, action]);
+
+    useEffect(() => {
+        reset({
+            columns: [{ column: "Check", type: "Checkbox" }],
+        });
+    }, [reset]);
 
     return (
         <React.Fragment>

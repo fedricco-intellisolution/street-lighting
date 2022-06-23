@@ -1,12 +1,14 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { PlusCircle } from "react-feather";
 
-import { tableColumns, tableData } from "./tableColumns";
+import { tableColumns } from "./tableColumns";
 import DynamicTable from "@components/ui/DynamicTable";
+
+import * as preventiveMaintenanceApi from "@api/preventiveMaintenanceApi";
 
 export const WorkSchedule = () => {
     const navigate = useNavigate();
@@ -15,15 +17,16 @@ export const WorkSchedule = () => {
     // States
     //
 
-    // const [tableData, setTableData] = useState([]);
+    const [tableData, setTableData] = useState([]);
 
     //
     // Functions
     //
 
     const getWorkSchedule = useCallback(async () => {
-        // const response = await preventiveMaintenanceApi.getChecklistTypes();
-        // setTableData(response.data.data);
+        const response = await preventiveMaintenanceApi.getWorkSchedules();
+
+        setTableData(response.data.data);
     }, []);
 
     //

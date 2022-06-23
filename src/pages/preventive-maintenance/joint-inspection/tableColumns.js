@@ -11,7 +11,7 @@ const tableColumns = [
                 <ChecklistButtons
                     row={row}
                     route="joint-inspection"
-                    module="pending checklist"
+                    module="joint inspection"
                 />
             );
         },
@@ -29,8 +29,8 @@ const tableColumns = [
         accessor: "frequency",
     },
     {
-        Header: "Hawker centre",
-        accessor: "hawker_centre",
+        Header: "Site",
+        accessor: "site",
     },
     {
         Header: "Technician",

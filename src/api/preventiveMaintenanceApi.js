@@ -84,3 +84,18 @@ export const updateWorkSchedule = (id, data) => {
     return api.put(`/work_schedule/${id}`, data);
 };
 
+/**
+ * @returns Pending checklist
+ */
+
+ export const getPendingChecklists = (data) => {
+    return api.post("/pending_checklist", data);
+};
+
+export const getPendingChecklist = (data) => {
+    return api.get(`/pending_checklist/${data}`);
+};
+
+export const updatePendingChecklist = (id, data) => {
+    return api.put(`/pending_checklist/${id}`, data);
+};
