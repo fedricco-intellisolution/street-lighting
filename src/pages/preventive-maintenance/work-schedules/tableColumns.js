@@ -1,22 +1,28 @@
 import React from "react";
-
-import { ChecklistButtons } from "../config/ChecklistButtons";
+import { Badge } from "react-bootstrap";
 
 const tableColumns = [
+	{
+		Header: "Site",
+		accessor: "site.name",
+	},
     {
-        Header: "Action",
-        accessor: "action",
+        Header: "Checklist item",
+        accessor: "checklist_item.name",
+    },
+	{
+        Header: "Frequency",
+        accessor: "frequency",
+    },
+    {
+        Header: "Status",
         Cell: ({ row }) => {
-            return <ChecklistButtons row={row} module="work schedule" />;
+            return (
+                <Badge pill bg="warning" text="dark">
+                    On-going
+                </Badge>
+            );
         },
-    },
-    {
-        Header: "Site",
-        accessor: "site",
-    },
-    {
-        Header: "Generated checklist",
-        accessor: "generated_checklist",
     },
 ];
 

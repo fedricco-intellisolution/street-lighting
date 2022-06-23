@@ -3,8 +3,6 @@ import React from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import { Controller, useFieldArray } from "react-hook-form";
 
-import { DAYS_OF_THE_WEEK, MONTHS_OF_A_YEAR } from "../../config/options";
-
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -12,15 +10,6 @@ export const WorkScheduleAddCustomFields = ({ control }) => {
     const { fields } = useFieldArray({
         control,
         name: "custom_field",
-        defaultValues: {
-            custom_field: [
-                { subItem: "foo1", starts_at: "bar1", ends_at: "test" },
-                { subItem: "foo1", starts_at: "bar1", ends_at: "test" },
-                { subItem: "foo1", starts_at: "bar1", ends_at: "test" },
-                { subItem: "foo1", starts_at: "bar1", ends_at: "test" },
-                { subItem: "foo1", starts_at: "bar1", ends_at: "test" },
-            ],
-        },
     });
 
     return (
@@ -30,7 +19,10 @@ export const WorkScheduleAddCustomFields = ({ control }) => {
                 <Col md={4}>Starts at</Col>
                 <Col md={4}>
                     Ends at *
-                    <small>(No set date will continuosly run scheduling)</small>
+                    <small>
+                        {" "}
+                        (No set date will continuosly run scheduling)
+                    </small>
                 </Col>
             </Row>
             <hr />
@@ -48,56 +40,14 @@ export const WorkScheduleAddCustomFields = ({ control }) => {
                                     control={control}
                                     name={`custom_field[${index}].starts_at`}
                                     render={({
-                                        field: { value, onChange, onBlur },
-                                    }) =>
-                                        field.subItem === "WEEKLY" ? (
-                                            <Form.Select
-                                                onChange={onChange}
-                                                onBlur={onBlur}
-                                                value={value}
-                                            >
-                                                <option></option>
-                                                {DAYS_OF_THE_WEEK.map(
-                                                    (data, index) => {
-                                                        return (
-                                                            <option
-                                                                key={index}
-                                                                value={data}
-                                                            >
-                                                                {data}
-                                                            </option>
-                                                        );
-                                                    }
-                                                )}
-                                            </Form.Select>
-                                        ) : field.subItem === "DAILY" ? (
-                                            <DatePicker
-                                                selected={value}
-                                                onChange={onChange}
-                                                className="form-control"
-                                            />
-                                        ) : (
-                                            <Form.Select
-                                                onChange={onChange}
-                                                onBlur={onBlur}
-                                                value={value}
-                                            >
-                                                <option></option>
-                                                {MONTHS_OF_A_YEAR.map(
-                                                    (data, index) => {
-                                                        return (
-                                                            <option
-                                                                key={index}
-                                                                value={data}
-                                                            >
-                                                                {data}
-                                                            </option>
-                                                        );
-                                                    }
-                                                )}
-                                            </Form.Select>
-                                        )
-                                    }
+                                        field: { value, onChange },
+                                    }) => (
+                                        <DatePicker
+                                            selected={value}
+                                            onChange={onChange}
+                                            className="form-control"
+                                        />
+                                    )}
                                 />
                             </Form.Group>
                         </Col>
@@ -108,12 +58,11 @@ export const WorkScheduleAddCustomFields = ({ control }) => {
                                     control={control}
                                     name={`custom_field[${index}].ends_at`}
                                     render={({
-                                        field: { value, onChange, onBlur },
+                                        field: { value, onChange },
                                     }) => (
                                         <DatePicker
-                                            // selected={value}
-                                            // onChange={onChange}
-                                            dateFormat="MM/yyyy"
+                                            selected={value}
+                                            onChange={onChange}
                                             className="form-control"
                                         />
                                     )}
