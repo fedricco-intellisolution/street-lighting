@@ -1,7 +1,40 @@
+import React, { forwardRef, useEffect, useRef } from "react";
 import { Col, Form, Pagination, Row, Table } from "react-bootstrap";
-import { useTable, usePagination } from "react-table";
+import { useTable, usePagination, useRowSelect } from "react-table";
+
+
 
 const DynamicTable = (props) => {
+
+  const {
+    columns,
+    data,
+    className,
+    withCheckbox,
+    setSelectedFlatRows,
+    hiddenColumns
+  } = props
+
+  const IndeterminateCheckbox = forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = useRef();
+    const resolvedRef = ref || defaultRef;
+
+    useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate;
+    }, [resolvedRef, indeterminate]);
+    
+    return (
+      <>
+        <Form.Check
+          type="checkbox"
+          ref={resolvedRef}
+          {...rest}
+        />
+      </>
+    );
+  }
+  );
   const {
     getTableProps,
     getTableBodyProps,
@@ -16,19 +49,57 @@ const DynamicTable = (props) => {
     nextPage,
     previousPage,
     setPageSize,
-    state: { pageIndex, pageSize },
+    selectedFlatRows,
+    state: { pageIndex, pageSize},
   } = useTable(
     {
-      columns: props.columns,
-      data: props.data,
-      initialState: { pageIndex: 0 },
+      columns: columns,
+      data: data,
+      initialState: {
+        pageIndex: 0,
+        hiddenColumns: hiddenColumns ? hiddenColumns : []
+      },
     },
-    usePagination
-  );
+    usePagination,
+    useRowSelect,
+    (hooks) => {
+        if (withCheckbox) {
+            hooks.visibleColumns.push((columns) => [
+              // Let's make a column for selection
+              {
+                id: "selection",
+                // The header can use the table's getToggleAllRowsSelectedProps method
+                // to render a checkbox
+                Header: ({ getToggleAllRowsSelectedProps }) => (
+                  <div>
+                    <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+                  </div>
+                ),
+                // The cell can use the individual row's getToggleRowSelectedProps method
+                // to the render a checkbox
+                Cell: ({ row }) => (
+                  <div>
+                    <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+                  </div>
+                ),
+              },
+              ...columns,
+            ]);
+        }
 
+      }
+    );
+  
+  useEffect(() => {
+    if (setSelectedFlatRows) {
+          setSelectedFlatRows(selectedFlatRows)
+    } 
+  
+  },[setSelectedFlatRows, selectedFlatRows])
+  
   return (
     <>
-      <Table striped bordered responsive {...getTableProps()} className={props.className}>
+      <Table striped bordered responsive {...getTableProps()} className={className}>
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -39,9 +110,9 @@ const DynamicTable = (props) => {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {props.data && props.data.length < 1 && (
+          {data && data.length < 1 && (
             <tr>
-              <td colSpan={props.columns.length}>No records found</td>
+              <td colSpan={columns.length}>No records found</td>
             </tr>
           )}
           {page.map((row, i) => {

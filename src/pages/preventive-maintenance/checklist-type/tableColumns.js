@@ -16,13 +16,13 @@ const tableColumns = [
             );
         },
     },
+	{
+		Header: "Checklist type",
+		accessor: "name",
+	},
     {
         Header: "Sequence no",
         accessor: "sequence_no",
-    },
-    {
-        Header: "Checklist type",
-        accessor: "name",
     },
 ];
 

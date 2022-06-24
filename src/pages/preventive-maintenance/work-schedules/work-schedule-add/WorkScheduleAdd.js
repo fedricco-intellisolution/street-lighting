@@ -13,6 +13,7 @@ import DynamicTableNoPagination from "components/ui/DynamicTableNoPagination";
 import * as yup from "yup";
 import "react-datepicker/dist/react-datepicker.css";
 import NotyfContext from "contexts/NotyfContext";
+import { ErrorMessage } from "@hookform/error-message";
 
 const schema = yup.object().shape({
     site: yup.string().required("This field is required"),
@@ -96,8 +97,19 @@ export const WorkScheduleAdd = () => {
     }, []);
 
     const submitWorkSchedule = async (data) => {
-		data.excluded_checklists = excludedChecklistItems;
-		
+        data.excluded_checklists = excludedChecklistItems;
+        data.custom_field.map((value, index) => {
+            return [
+                ...data.custom_field,
+                (data.custom_field[index].ends_at = value.ends_at
+                    ? new Date(value.ends_at).toLocaleDateString("en-CA")
+                    : null),
+                (data.custom_field[index].starts_at = value.starts_at
+                    ? new Date(value.starts_at).toLocaleDateString("en-CA")
+                    : null),
+            ];
+        });
+
         try {
             const response = await preventiveMaintenanceApi.createWorkSchedule(
                 data
@@ -135,7 +147,7 @@ export const WorkScheduleAdd = () => {
                 { subItem: "BI-MONTHLY", starts_at: new Date(), ends_at: null },
                 { subItem: "QUARTERLY", starts_at: new Date(), ends_at: null },
                 {
-                    subItem: "HALF-YEARLY",
+                    subItem: "HALF YEARLY",
                     starts_at: new Date(),
                     ends_at: null,
                 },
@@ -181,6 +193,15 @@ export const WorkScheduleAdd = () => {
                                                 );
                                             })}
                                         </Form.Select>
+                                    )}
+                                />
+                                <ErrorMessage
+                                    errors={errors}
+                                    name="site"
+                                    render={({ message }) => (
+                                        <small className="text-danger">
+                                            {message}
+                                        </small>
                                     )}
                                 />
                             </Col>

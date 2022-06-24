@@ -133,15 +133,17 @@ export const ChecklistSubItemsAddEdit = () => {
         const response = await preventiveMaintenanceApi.getChecklistSubItem(
             action
         );
+        const data = response.data.data;
+
         reset({
-            checklist_id: response.data.data.checklist_item.checklist.id,
-            checklist_item_id: response.data.data.checklist_item_id || "",
-            header: response.data.data.header || "",
-            name: response.data.data.name || "",
-            sequence_no: response.data.data.sequence_no || "",
-            frequency: response.data.data.frequency || "",
-            is_custom_field: response.data.data.is_custom_field ? "Yes" : "No",
-            custom_field: JSON.parse(response.data.data.custom_field),
+            checklist_id: data.checklist_item.checklist.id,
+            checklist_item_id: data.checklist_item.id || "",
+            header: data.header || "",
+            name: data.name || "",
+            sequence_no: data.sequence_no || "",
+            frequency: data.frequency.code || "",
+            is_custom_field: data.is_custom_field ? "Yes" : "No",
+            custom_field: JSON.parse(data.custom_field),
         });
         setIsCustomField(response.data.data.is_custom_field);
     }, [action, reset]);

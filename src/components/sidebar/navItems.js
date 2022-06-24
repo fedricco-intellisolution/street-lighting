@@ -143,9 +143,25 @@ const pagesSection = [
 	//     href: "/preventive-maintenance/checklist-build",
 	//     title: "Build checklist",
 	//   },
-	  {
+	    {
         href: "/preventive-maintenance/work-schedule",
         title: "Work schedule",
+      },
+      {
+        href: "/preventive-maintenance/defects/register",
+        title: "Register defect",
+      },
+      {
+        href: "/preventive-maintenance/defects/assignment",
+        title: "Assign technician",
+      },
+      {
+        href: "/preventive-maintenance/defects/rectify",
+        title: "Rectify defects",
+      },
+      {
+        href: "/preventive-maintenance/defects",
+        title: "Defects",
       },
     ],
   },
