@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { Col, Form, Row } from "react-bootstrap";
 import { Controller } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
-import { FREQUENCY } from "../config/options";
+import * as lookUpApi from "@api/lookUpApi";
 
 export const ChecklistSubItemsAddMain = ({
     control,
@@ -11,6 +11,27 @@ export const ChecklistSubItemsAddMain = ({
     checklistTypes,
     checklistItems,
 }) => {
+    const [frequencyCategory, setFrequencyCategory] = useState([]);
+
+    const getFrequencyCategory = async () => {
+        const response = await lookUpApi.getLookUp({
+            search: { category: "FREQUENCY" },
+        });
+        const data = response.data.data;
+        const options = [];
+        data.forEach((item) => {
+            options.push({
+                label: item.name,
+                value: item.code,
+            });
+        });
+        setFrequencyCategory(options);
+    };
+
+    useEffect(() => {
+        getFrequencyCategory();
+    }, []);
+
     return (
         <>
             <Row>
@@ -163,10 +184,13 @@ export const ChecklistSubItemsAddMain = ({
                                     value={value}
                                 >
                                     <option></option>
-                                    {FREQUENCY.map((data, index) => {
+                                    {frequencyCategory.map((data, index) => {
                                         return (
-                                            <option key={index} value={data}>
-                                                {data}
+                                            <option
+                                                key={index}
+                                                value={data.value}
+                                            >
+                                                {data.label}
                                             </option>
                                         );
                                     })}

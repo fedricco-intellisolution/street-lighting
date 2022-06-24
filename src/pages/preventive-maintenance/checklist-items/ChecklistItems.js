@@ -61,7 +61,7 @@ export const ChecklistItems = () => {
                                         className="align-middle me-1"
                                         size={16}
                                     />
-                                    Add checklist sub items
+                                    Add checklist items
                                 </Button>
                             </Col>
                         </Row>

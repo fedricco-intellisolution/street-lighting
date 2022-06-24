@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { Card, Col, Form, Row } from "react-bootstrap";
 import { Controller, useForm } from "react-hook-form";
 
-import { tableColumns, tableData } from "./tableColumns";
+import { tableColumns } from "./tableColumns";
 import DynamicTable from "@components/ui/DynamicTable";
 
 import DatePicker from "react-datepicker";

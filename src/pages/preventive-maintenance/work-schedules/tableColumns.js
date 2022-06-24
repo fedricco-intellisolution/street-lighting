@@ -12,7 +12,7 @@ const tableColumns = [
     },
     {
         Header: "Frequency",
-        accessor: "frequency",
+        accessor: "frequency.name",
     },
     {
         Header: "Status",
