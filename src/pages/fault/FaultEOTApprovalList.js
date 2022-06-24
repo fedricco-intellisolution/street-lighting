@@ -62,7 +62,7 @@ const FaultEOTApprovalList = () => {
                                 className="align-middle me-2"
                                 size={16}
                                 onClick={() => navigate(location.pathname+'/'+fault.id)}
-                                />
+                            />
                         </OverlayTrigger>
                     </>
                 ),
