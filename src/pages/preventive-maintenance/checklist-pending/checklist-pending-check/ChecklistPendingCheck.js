@@ -49,9 +49,6 @@ export const ChecklistPendingCheck = () => {
         (response) => {
             let tableColumns = [
                 {
-                    Header: "S/N",
-                },
-                {
                     Header: "Checklist sub item",
                     accessor: "checklist_subitem.name",
                 },

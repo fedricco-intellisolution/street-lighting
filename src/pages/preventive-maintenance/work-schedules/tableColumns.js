@@ -2,15 +2,15 @@ import React from "react";
 import { Badge } from "react-bootstrap";
 
 const tableColumns = [
-	{
-		Header: "Site",
-		accessor: "site.name",
-	},
+    {
+        Header: "Site",
+        accessor: "site.name",
+    },
     {
         Header: "Checklist item",
         accessor: "checklist_item.name",
     },
-	{
+    {
         Header: "Frequency",
         accessor: "frequency",
     },
@@ -18,8 +18,15 @@ const tableColumns = [
         Header: "Status",
         Cell: ({ row }) => {
             return (
-                <Badge pill bg="warning" text="dark">
-                    On-going
+                <Badge
+                    pill
+                    bg={
+                        row.original.status === "ON GOING"
+                            ? "warning"
+                            : "secondary"
+                    }
+                >
+                    {row.original.status}
                 </Badge>
             );
         },
