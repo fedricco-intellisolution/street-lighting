@@ -32,27 +32,24 @@ const EmailNotification = () => {
       Header: "Body",
       accessor: "body",
       Cell: ({ cell: { value } }) => {
-        // return React.createElement("div", {
-        //   dangerouslySetInnerHTML: { __html: value },
-        // });
         const [height, setHeight] = useState("100px");
         const [overflowY, setOverflowy] = useState("hidden");
         const [readMore, setReadMore] = useState(0);
 
-        const loadMore = () => {
+        const loadMore = (e) => {
           setHeight(null);
           setOverflowy();
           setReadMore(1);
 
-          return false;
+          e.preventDefault();
         };
 
-        const loadLess = () => {
+        const loadLess = (e) => {
           setHeight("100px");
           setOverflowy("hidden");
           setReadMore(0);
 
-          return false;
+          e.preventDefault();
         };
 
         const content = React.createElement("div", {
