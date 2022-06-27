@@ -20,7 +20,10 @@ import ResetPassword from "@auth/ResetPassword";
 //Settings
 import Users from "@users/Users";
 import AddEditUser from "@users/AddEditUser";
+
 import Groups from "@groups/Groups";
+import AddEditGroup from "@groups/AddEditGroup";
+
 import Permissions from "@permissions/Permissions";
 import EmailTemplates from "@emailtemplates/EmailTemplates";
 import AddEditEmailTemplate from "@emailtemplates/AddEditEmailTemplate";
@@ -226,6 +229,10 @@ const routes = [
       {
         path: "groups",
         element: <Groups />,
+      },
+      {
+        path: "groups/:id",
+        element: <AddEditGroup />,
       },
       {
         path: "permissions",
