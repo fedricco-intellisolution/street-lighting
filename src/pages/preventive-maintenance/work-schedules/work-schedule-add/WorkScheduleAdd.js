@@ -14,6 +14,7 @@ import * as yup from "yup";
 import "react-datepicker/dist/react-datepicker.css";
 import NotyfContext from "contexts/NotyfContext";
 import { ErrorMessage } from "@hookform/error-message";
+import { dateTomorrow } from "utils/dateHelper";
 
 const schema = yup.object().shape({
     site: yup.string().required("This field is required"),
@@ -139,19 +140,20 @@ export const WorkScheduleAdd = () => {
     }, [getWorkSchedule, getSites]);
 
     useEffect(() => {
+
         reset({
             custom_field: [
-                { subItem: "DAILY", starts_at: new Date(), ends_at: null },
-                { subItem: "WEEKLY", starts_at: new Date(), ends_at: null },
-                { subItem: "MONTHLY", starts_at: new Date(), ends_at: null },
-                { subItem: "BI-MONTHLY", starts_at: new Date(), ends_at: null },
-                { subItem: "QUARTERLY", starts_at: new Date(), ends_at: null },
+                { subItem: "DAILY", starts_at: dateTomorrow(), ends_at: null },
+                { subItem: "WEEKLY", starts_at: dateTomorrow(), ends_at: null },
+                { subItem: "MONTHLY", starts_at: dateTomorrow(), ends_at: null },
+                { subItem: "BI-MONTHLY", starts_at: dateTomorrow(), ends_at: null },
+                { subItem: "QUARTERLY", starts_at: dateTomorrow(), ends_at: null },
                 {
                     subItem: "HALF YEARLY",
-                    starts_at: new Date(),
+                    starts_at: dateTomorrow(),
                     ends_at: null,
                 },
-                { subItem: "YEARLY", starts_at: new Date(), ends_at: null },
+                { subItem: "YEARLY", starts_at: dateTomorrow(), ends_at: null },
             ],
         });
     }, [reset]);
