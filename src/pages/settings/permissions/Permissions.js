@@ -66,6 +66,10 @@ const Permissions = () => {
       Header: "Slug",
       accessor: "slug",
     },
+    {
+      Header: "Category",
+      accessor: "category.name",
+    },
   ];
 
   //get permission api
