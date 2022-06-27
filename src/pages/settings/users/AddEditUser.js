@@ -13,11 +13,11 @@ const AddEditUser = () => {
 
     return (
         <React.Fragment>
-            <Helmet title="Create new user" />
+            <Helmet title={ add_page ? 'Create user' : 'Edit user'} />
             <Container fluid className="p-0">
                 <Breadcrumb>
                     <Breadcrumb.Item onClick={ () => navigate('/settings/users')}>Users</Breadcrumb.Item>
-                    <Breadcrumb.Item active>{add_page ? 'Add user' : 'Edit user'}</Breadcrumb.Item>
+                    <Breadcrumb.Item active>{add_page ? 'Add' : 'Edit'}</Breadcrumb.Item>
                 </Breadcrumb>
                 <div className="tab custom-tab tab-vertical">
                     <Tab.Container defaultActiveKey="basic_information">

@@ -1,15 +1,41 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import { UserPlus } from "react-feather";
+import { Button, Card, Col, Container, Form, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
+import { Edit2, UserPlus } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
-import UsersTable from "./components/UsersTable";
 import * as usersApi from "@api/usersApi";
+import DynamicTable from "@components/ui/DynamicTable";
 
-const tableColumns = [
+
+const Users = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [filter, setFilter] = useState("");
+  const [users, setUsers] = useState([]);
+
+  const tableColumns = [
   {
     Header: "Actions",
     accessor: "actions",
+    width: '80px',
+        Cell: ({ row }) => {
+            return (
+                <>
+                    <OverlayTrigger
+                        placement="top"
+                        overlay={<Tooltip>Edit user</Tooltip>}
+                    >
+                        <Edit2
+                            className="align-middle me-1"
+                            size={16}
+                            onClick={() => navigate(location.pathname + '/' + row.original.id)}
+                        />
+                    </OverlayTrigger>
+              
+                </>
+            
+            );
+        },
   },
   {
     Header: "Name",
@@ -24,11 +50,6 @@ const tableColumns = [
     accessor: "designation",
   },
 ];
-const Users = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [filter, setFilter] = useState("");
-  const [users, setUsers] = useState([]);
 
   const getUsers = useCallback(async () => {
     const response = await usersApi.getUsers();
@@ -70,7 +91,7 @@ const Users = () => {
             </Row>
           </Card.Header>
           <Card.Body>
-            <UsersTable data={users} columns={tableColumns} />
+          <DynamicTable data={users} columns={tableColumns} />
           </Card.Body>
         </Card>
       </Container>

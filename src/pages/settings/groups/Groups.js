@@ -1,68 +1,73 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Button, Card, Col, Container, Form, Pagination, Row, Table } from "react-bootstrap";
-import { Briefcase, Edit2, Trash } from "react-feather";
-import { useTable, usePagination} from "react-table";
+import { Badge, Button, Card, Col, Container, Form, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
+import { Briefcase, Edit2 } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
-
-const tableColumns = [
-    {
-        Header: "S/N",
-        accessor: "sequence_no",
-        
-    },
-    {
-        Header: "Name",
-        accessor: "name",
-    },
-    {
-        Header: "Actions",
-        accessor: "actions",
-    }
-]
-
-const users = [
-    {
-        id: 1,
-        name: 'Admins'
-    },
-    {
-        id: 2,
-        name: 'Technicians'
-    },
-    {
-        id: 3,
-        name: 'Trade Managers'
-    }
-]
+import * as groupsApi from "@api/groupsApi";
+import DynamicTable from "../../../components/ui/DynamicTable";
 
 const Groups = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const [filter, setFilter] = useState('')
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        prepareRow,
-        page,
-        canPreviousPage,
-        canNextPage,
-        pageOptions,
-        pageCount,
-        gotoPage,
-        nextPage,
-        previousPage,
-        setPageSize,
-        state: { pageIndex, pageSize },
-    } = useTable(
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [filter, setFilter] = useState("");
+  const [groups, setGroups] = useState([]); 
+    const tableColumns = [
         {
-            columns : tableColumns,
-            data : users,
-            initialState: { pageIndex: 0 },
+            Header: "Actions",
+            accessor: "actions",
+            width: '80px',
+            Cell: ({ row }) => {
+                return (
+                    <>
+                        <OverlayTrigger
+                            placement="top"
+                            overlay={<Tooltip>Edit group</Tooltip>}
+                        >
+                            <Edit2
+                                className="align-middle me-1"
+                                size={16}
+                                onClick={() => navigate(location.pathname + '/' + row.original.id)}
+                            />
+                        </OverlayTrigger>
+                  
+                    </>
+                
+                );
+            },
         },
-        usePagination
-    );
+        {
+            Header: "Name",
+            accessor: "name"
+        },
+        {
+            Header: "Code",
+            accessor: "code"
+        },
+        {
+            Header: "Description",
+            accessor: "description",
+            width: '200px'
+
+        },
+        {
+            Header: "Users",
+            width: '300px',
+            accessor: data =>
+                data.users.map((user, index) => (
+                    <Badge key={index} className="me-2" bg="secondary">{user.full_name}</Badge>
+                ))
+        }
+    ];
+
+    const getGroups = useCallback(async () => {
+        const response = await groupsApi.getGroups();
+        setGroups(response.data.data);
+    }, []);
+
+    useEffect(() => {
+        getGroups();
+    }, [getGroups]);
+    
     return (
         <React.Fragment>
             <Helmet title="Users" />
@@ -94,114 +99,12 @@ const Groups = () => {
                         </Row>
                     </Card.Header>
                     <Card.Body>
-                        <Table striped bordered {...getTableProps()}>
-                            <thead>
-                                {headerGroups.map((headerGroup) => (
-                                    <tr {...headerGroup.getHeaderGroupProps()}>
-                                        {headerGroup.headers.map((column) => (
-                                        <th {...column.getHeaderProps()}>
-                                                {column.render("Header")}
-                                        </th>
-                                        ))}
-                                    </tr>
-                                ))}
-                            </thead>
-                            <tbody {...getTableBodyProps()}>
-                                {users && users.length < 1 && 
-                                    <tr className='text-center'>
-                                        <td colSpan={4}>No records found</td>
-                                    </tr>
-                                }
-                                {page.map((row, i) => {
-                                    prepareRow(row);
-                                    return (
-                                        <tr {...row.getRowProps()}>
-                                            {row.cells.map((cell) => {
-                                            
-                                                if (cell.column.id === 'sequence_no') {
-                                                    return <td key={cell.column.id}>{cell.row.index + 1}</td>
-                                                }
-
-                                                if (cell.column.id === 'actions') {
-                                                    return (
-                                                        <td className = "table-action" key = { cell.column.id } >
-                                                            <Edit2
-                                                                className="align-middle me-1"
-                                                                size={18}
-                                                                onClick={() => navigate(location.pathname+'/'+cell.row.original.id)}
-                                                            />
-                                                            <Trash className="align-middle" size={18} />
-                                                        </td>
-                                                    )
-                                                       
-                                                }
-
-                                                return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        })}
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </Table>
+                        <DynamicTable
+                            data={groups}
+                            columns={tableColumns}
+                            className="table-layout-fixed"
+                        />
                     </Card.Body>
-                    <Card.Footer>
-                        <Row>
-                            <Col md="6">
-                                <span className="mx-2">
-                                    Page{" "}
-                                    <strong>
-                                        {pageIndex + 1} of {pageOptions.length}
-                                    </strong>
-                                </span>
-                                <span className="ms-3 me-2">Show:</span>
-                                <Form.Select
-                                    className="d-inline-block w-auto"
-                                    value={pageSize}
-                                    onChange={(e) => {
-                                        setPageSize(Number(e.target.value));
-                                    }}
-                                    >
-                                    {[10, 20, 30, 40, 50].map((pageSize) => (
-                                        <option key={pageSize} value={pageSize}>
-                                        {pageSize}
-                                        </option>
-                                    ))}
-                                </Form.Select>
-
-                                <span className="ms-3 me-2">Go to page:</span>
-                                <Form.Control
-                                    className="d-inline-block"
-                                    type="number"
-                                    defaultValue={pageIndex + 1}
-                                    onChange={(e) => {
-                                        const page = e.target.value ? Number(e.target.value) - 1 : 0;
-                                        gotoPage(page);
-                                    }}
-                                    style={{ width: "75px" }}
-                                />
-                            </Col>
-                            <Col md="6">
-                                <Pagination className="float-end">
-                                <Pagination.First
-                                    onClick={() => gotoPage(0)}
-                                    disabled={!canPreviousPage}
-                                />
-                                <Pagination.Prev
-                                    onClick={() => previousPage()}
-                                    disabled={!canPreviousPage}
-                                />
-                                <Pagination.Next
-                                    onClick={() => nextPage()}
-                                    disabled={!canNextPage}
-                                />
-                                <Pagination.Last
-                                    onClick={() => gotoPage(pageCount - 1)}
-                                    disabled={!canNextPage}
-                                />
-                                </Pagination>
-                            </Col>
-                        </Row>
-                    </Card.Footer>
                 </Card>
             </Container>
            
