@@ -104,7 +104,12 @@ const AddEditPermission = () => {
   //get permission
   const getPermission = useCallback(async () => {
     const response = await permissionApi.getPermission(id);
-    reset(response.data.data);
+    reset({
+      name: response.data.data?.name,
+      slug: response.data.data?.slug,
+      category: response.data.data?.category.name,
+      description: response.data.data?.description,
+    });
   }, [id, reset]);
 
   useEffect(() => {
