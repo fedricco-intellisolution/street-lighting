@@ -88,9 +88,7 @@ import Defects from "@preventive/defects/Defects";
 
 //email notification
 import EmailNotification from "@emailnotification/EmailNotification";
-
-
-
+import AddEditPermission from "./pages/settings/permissions/AddEditPermission";
 
 const routes = [
   {
@@ -230,6 +228,10 @@ const routes = [
       {
         path: "permissions",
         element: <Permissions />,
+      },
+      {
+        path: "permissions/:id",
+        element: <AddEditPermission />,
       },
       {
         path: "email-templates",

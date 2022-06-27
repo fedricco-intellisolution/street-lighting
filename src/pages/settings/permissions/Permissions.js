@@ -1,225 +1,130 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { Button, Card, Col, Container, Form, Pagination, Row, Table } from "react-bootstrap";
-import { Briefcase, Edit2, Trash } from "react-feather";
-import { useTable, usePagination} from "react-table";
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  Row,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
+import { Key, Edit2, Trash } from "react-feather";
 import { useNavigate, useLocation } from "react-router-dom";
-
-const tableColumns = [
-    {
-        Header: "S/N",
-        accessor: "sequence_no",
-        
-    },
-    {
-        Header: "Name",
-        accessor: "name",
-    },
-    {
-        Header: "Slug",
-        accessor: "slug",
-    },
-    {
-        Header: "Actions",
-        accessor: "actions",
-    }
-]
-
-const users = [
-    {
-        id: 1,
-        name: 'Create fault',
-        slug: 'fault-create'
-    },
-    {
-        id: 2,
-        name: 'Read fault',
-        slug: 'fault-read'
-    },
-    {
-        id: 3,
-        name: 'Update fault',
-        slug: 'fault-update'
-    },
-    {
-        id: 4,
-        name: 'Delete fault',
-        slug: 'fault-delete'
-    }
-]
+import DynamicTable from "../../../components/ui/DynamicTable";
+import * as permissionApi from "@api/permissionApi";
+import DeleteModal from "../users/components/DeleteModal";
 
 const Permissions = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const [filter, setFilter] = useState('')
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        prepareRow,
-        page,
-        canPreviousPage,
-        canNextPage,
-        pageOptions,
-        pageCount,
-        gotoPage,
-        nextPage,
-        previousPage,
-        setPageSize,
-        state: { pageIndex, pageSize },
-    } = useTable(
-        {
-            columns : tableColumns,
-            data : users,
-            initialState: { pageIndex: 0 },
-        },
-        usePagination
-    );
-    return (
-        <React.Fragment>
-            <Helmet title="Users" />
-            <Container fluid className="p-0">
-                <h1 className="h3 mb-3">Permissions</h1>
-                <Card>
-                    <Card.Header className="pb-0">
-                        <Row>
-                            <Col md={3}>
-                                <Form.Control
-                                    value={filter || ""}
-                                    onChange={(e) => {
-                                        setFilter(e.target.value || undefined);
-                                    }}
-                                    placeholder="Search keyword"
-                                    className="d-inline-block"
-                                />
-                            </Col>
-                            <Col md={{ span: 3, offset: 6 }} className="text-end">
-                                <Button
-                                    variant="primary"
-                                    className="me-1 mb-1"
-                                    onClick={() => navigate(location.pathname+'/add')}
-                                >
-                                    <Briefcase className="align-middle me-1" size={15} />
-                                    Create new group
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Card.Header>
-                    <Card.Body>
-                        <Table striped bordered {...getTableProps()}>
-                            <thead>
-                                {headerGroups.map((headerGroup) => (
-                                    <tr {...headerGroup.getHeaderGroupProps()}>
-                                        {headerGroup.headers.map((column) => (
-                                        <th {...column.getHeaderProps()}>
-                                                {column.render("Header")}
-                                        </th>
-                                        ))}
-                                    </tr>
-                                ))}
-                            </thead>
-                            <tbody {...getTableBodyProps()}>
-                                {users && users.length < 1 && 
-                                    <tr className='text-center'>
-                                        <td colSpan={4}>No records found</td>
-                                    </tr>
-                                }
-                                {page.map((row, i) => {
-                                    prepareRow(row);
-                                    return (
-                                        <tr {...row.getRowProps()}>
-                                            {row.cells.map((cell) => {
-                                            
-                                                if (cell.column.id === 'sequence_no') {
-                                                    return <td key={cell.column.id}>{cell.row.index + 1}</td>
-                                                }
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [filter, setFilter] = useState();
+  const [permissions, setPermissions] = useState([]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletePermission, setDeletePermission] = useState();
 
-                                                if (cell.column.id === 'actions') {
-                                                    return (
-                                                        <td className = "table-action" key = { cell.column.id } >
-                                                            <Edit2
-                                                                className="align-middle me-1"
-                                                                size={18}
-                                                                onClick={() => navigate(location.pathname+'/'+cell.row.original.id)}
-                                                            />
-                                                            <Trash className="align-middle" size={18} />
-                                                        </td>
-                                                    )
-                                                       
-                                                }
+  const tableColumns = [
+    {
+      Header: "Actions",
+      accessor: "actions",
+      Cell: (cell) => (
+        <div>
+          <OverlayTrigger
+            placement="bottom"
+            overlay={<Tooltip>Edit permission</Tooltip>}
+          >
+            <Edit2
+              className="align-middle me-1"
+              size={18}
+              onClick={() =>
+                navigate(location.pathname + "/" + cell.row.original.id)
+              }
+            />
+          </OverlayTrigger>
+          <OverlayTrigger
+            placement="bottom"
+            overlay={<Tooltip>Delete permission</Tooltip>}
+          >
+            <Trash
+              className="align-middle me-1"
+              size={18}
+              onClick={() => {
+                setShowDeleteModal(true);
+                setDeletePermission(cell.row.original.id);
+              }}
+            />
+          </OverlayTrigger>
+        </div>
+      ),
+    },
+    {
+      Header: "Name",
+      accessor: "name",
+    },
+    {
+      Header: "Slug",
+      accessor: "slug",
+    },
+  ];
 
-                                                return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        })}
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </Table>
-                    </Card.Body>
-                    <Card.Footer>
-                        <Row>
-                            <Col md="6">
-                                <span className="mx-2">
-                                    Page{" "}
-                                    <strong>
-                                        {pageIndex + 1} of {pageOptions.length}
-                                    </strong>
-                                </span>
-                                <span className="ms-3 me-2">Show:</span>
-                                <Form.Select
-                                    className="d-inline-block w-auto"
-                                    value={pageSize}
-                                    onChange={(e) => {
-                                        setPageSize(Number(e.target.value));
-                                    }}
-                                    >
-                                    {[10, 20, 30, 40, 50].map((pageSize) => (
-                                        <option key={pageSize} value={pageSize}>
-                                        {pageSize}
-                                        </option>
-                                    ))}
-                                </Form.Select>
+  //get permission api
+  const getPermissionApi = useCallback(async () => {
+    const response = await permissionApi.getPermissions(filter);
+    setPermissions(response.data.data);
+  }, [filter]);
 
-                                <span className="ms-3 me-2">Go to page:</span>
-                                <Form.Control
-                                    className="d-inline-block"
-                                    type="number"
-                                    defaultValue={pageIndex + 1}
-                                    onChange={(e) => {
-                                        const page = e.target.value ? Number(e.target.value) - 1 : 0;
-                                        gotoPage(page);
-                                    }}
-                                    style={{ width: "75px" }}
-                                />
-                            </Col>
-                            <Col md="6">
-                                <Pagination className="float-end">
-                                <Pagination.First
-                                    onClick={() => gotoPage(0)}
-                                    disabled={!canPreviousPage}
-                                />
-                                <Pagination.Prev
-                                    onClick={() => previousPage()}
-                                    disabled={!canPreviousPage}
-                                />
-                                <Pagination.Next
-                                    onClick={() => nextPage()}
-                                    disabled={!canNextPage}
-                                />
-                                <Pagination.Last
-                                    onClick={() => gotoPage(pageCount - 1)}
-                                    disabled={!canNextPage}
-                                />
-                                </Pagination>
-                            </Col>
-                        </Row>
-                    </Card.Footer>
-                </Card>
-            </Container>
-           
-        </React.Fragment>
-    )
-    
-}
+  //use effect
+  useEffect(() => {
+    getPermissionApi();
+  }, [getPermissionApi]);
+
+  return (
+    <React.Fragment>
+      <Helmet title="Users" />
+      <Container fluid className="p-0">
+        <h1 className="h3 mb-3">Permissions</h1>
+        <Card>
+          <Card.Header className="pb-0">
+            <Row>
+              <Col md={3}>
+                <Form.Control
+                  value={filter || ""}
+                  onChange={(e) => {
+                    setFilter(e.target.value || undefined);
+                  }}
+                  placeholder="Search keyword"
+                  className="d-inline-block"
+                />
+              </Col>
+              <Col md={{ span: 3, offset: 6 }} className="text-end">
+                <Button
+                  variant="primary"
+                  className="me-1 mb-1"
+                  onClick={() => navigate(location.pathname + "/add")}
+                >
+                  <Key className="align-middle me-1" size={15} />
+                  Create new permission
+                </Button>
+              </Col>
+            </Row>
+          </Card.Header>
+          <Card.Body>
+            <DynamicTable data={permissions} columns={tableColumns} />
+            <DeleteModal
+              show={showDeleteModal}
+              title={"Delete permission"}
+              body={"Are you sure you want to delete this permission?"}
+              module={"permission"}
+              id={deletePermission}
+              onHide={() => setShowDeleteModal(false)}
+              variant="danger"
+            />
+          </Card.Body>
+        </Card>
+      </Container>
+    </React.Fragment>
+  );
+};
 
 export default Permissions;
