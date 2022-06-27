@@ -1,14 +1,16 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useContext, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
+import { ErrorMessage } from "@hookform/error-message";
 import DynamicTableNoPagination from "components/ui/DynamicTableNoPagination";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import * as preventiveMaintenanceApi from "@api/preventiveMaintenanceApi";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import NotyfContext from "../../../../contexts/NotyfContext";
 
 export const JointInspectionAdd = () => {
   const navigate = useNavigate();
@@ -20,10 +22,13 @@ export const JointInspectionAdd = () => {
   const [dynamicTableColumn, setDynamicTableColumn] = useState([]);
   const schema = yup.object().shape({
     technical_officer: yup.string().required("This field is required"),
+    joint_inspection_date: yup.string().required("This field is required"),
   });
+  const notyf = useContext(NotyfContext);
   const {
     control,
     reset,
+    handleSubmit,
     formState: { errors },
   } = useForm({
     mode: "onTouched",
@@ -34,6 +39,37 @@ export const JointInspectionAdd = () => {
   // Functions
   //
 
+  //update joint inspection
+  const updateJointInspection = async (data) => {
+    data.inspection_date = new Date(data.inspection_date).toLocaleDateString(
+      "en-CA"
+    );
+    data.joint_inspection_date = new Date(
+      data.joint_inspection_date
+    ).toLocaleDateString("en-CA");
+    data.status = "SUBMITTED_CHECKLIST";
+
+    try {
+      const response = await preventiveMaintenanceApi.updatePendingChecklist(
+        action,
+        data
+      );
+      if (response.data.status === "SUCCESS") {
+        notyf.open({
+          type: "success",
+          message: response.data.message,
+        });
+        navigate("/preventive-maintenance/joint-inspection");
+      }
+    } catch (error) {
+      notyf.open({
+        type: "danger",
+        message: "Something went wrong with the server",
+      });
+    }
+  };
+
+  //get dynamic columns
   const generateDynamicColumns = useCallback((response) => {
     let tableColumns = [
       {
@@ -54,25 +90,18 @@ export const JointInspectionAdd = () => {
         return tableColumns.push({
           Header: element.column,
           Cell: ({ row }) => {
-            const [isChecked, setIsChecked] = useState(
-              row.original.inspection[element.column]
-            );
-            const handleOnChange = () => {
-              setIsChecked(!isChecked);
-            };
-
             return (
               <Controller
                 control={control}
                 defaultValue=""
-                name={`pm_submitted_checklist_subitems.${element.column}`}
+                name={`checklist_subitems.${row.original.id}.${element.column}`}
                 render={({ field: { onChange, value } }) => {
                   return (
                     <Form.Check
                       type="checkbox"
-                      onChange={handleOnChange}
-                      value={value}
-                      checked={isChecked}
+                      onChange={onChange}
+                      value={value || ""}
+                      checked={value || ""}
                     />
                   );
                 }}
@@ -85,6 +114,17 @@ export const JointInspectionAdd = () => {
     setDynamicTableColumn(tableColumns);
   }, []);
 
+  const formatChecklistItemsResults = (checklistSubItem) => {
+    let checklistItemsResult = {};
+
+    checklistSubItem.forEach((element) => {
+      checklistItemsResult[element.id] = element.inspection;
+    });
+
+    return checklistItemsResult;
+  };
+
+  //get joint inspection
   const getJointInspection = useCallback(async () => {
     const response = await preventiveMaintenanceApi.getPendingChecklist(action);
 
@@ -92,6 +132,11 @@ export const JointInspectionAdd = () => {
       reset({
         inspection_date: new Date(response.data.data?.inspection_date),
         technician: response.data.data?.technician,
+        checklist_subitems: response.data.data?.pm_submitted_checklist_subitem
+          ? formatChecklistItemsResults(
+              response.data.data?.pm_submitted_checklist_subitem
+            )
+          : "",
       });
       setTableData(response.data.data.pm_submitted_checklist_subitem);
       generateDynamicColumns(response.data.data);
@@ -140,16 +185,26 @@ export const JointInspectionAdd = () => {
                 <Controller
                   control={control}
                   defaultValue=""
-                  name="frequency"
-                  render={({ field: { onChange, value } }) => (
+                  name="joint_inspection_date"
+                  render={({ field: { value, onChange, onBlur } }) => (
                     <DatePicker
-                      // selected={value}
-                      // onChange={onChange}
-                      className="form-control"
+                      dateFormat="MM/dd/yyyy"
+                      selected={value}
+                      onChange={onChange}
+                      className={`form-control ${
+                        errors.joint_inspection_date && "is-invalid"
+                      }`}
                       placeholderText="Checklist month / year"
                     />
                   )}
-                />{" "}
+                />
+                <ErrorMessage
+                  errors={errors}
+                  name="joint_inspection_date"
+                  render={({ message }) => (
+                    <small className="text-danger">{message}</small>
+                  )}
+                />
               </Col>
             </Row>
           </Card.Header>
@@ -172,12 +227,11 @@ export const JointInspectionAdd = () => {
                   control={control}
                   defaultValue=""
                   name="remarks"
-                  render={({ field: { onChange, value } }) => (
+                  render={({ field: { onChange } }) => (
                     <Form.Control
                       className={errors.remarks}
-                      // onChange={onChange}
+                      onChange={onChange}
                       as="textarea"
-                      value={value}
                       rows={6}
                     />
                   )}
@@ -207,12 +261,21 @@ export const JointInspectionAdd = () => {
                   control={control}
                   defaultValue=""
                   name="technical_officer"
-                  render={({ field: { onChange, value } }) => (
+                  render={({ field: { value, onChange, onBlur } }) => (
                     <Form.Control
-                      className={errors.technical_officer}
+                      className={errors.technical_officer && "is-invalid"}
                       type="text"
                       value={value}
+                      onChange={onChange}
+                      onBlur={onBlur}
                     />
+                  )}
+                />
+                <ErrorMessage
+                  errors={errors}
+                  name="technical_officer"
+                  render={({ message }) => (
+                    <small className="text-danger">{message}</small>
                   )}
                 />
               </Col>
@@ -236,7 +299,11 @@ export const JointInspectionAdd = () => {
                 >
                   Cancel
                 </Button>
-                <Button className="me-2" variant="primary">
+                <Button
+                  className="me-2"
+                  variant="primary"
+                  onClick={handleSubmit(updateJointInspection)}
+                >
                   Save
                 </Button>
               </Col>
