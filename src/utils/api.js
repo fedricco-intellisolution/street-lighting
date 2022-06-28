@@ -1,9 +1,9 @@
-import axios from 'axios';
+import axios from "axios";
 
-const requestHandler = request => {
+const requestHandler = (request) => {
     const accessToken = window.localStorage.getItem("accessToken");
     if (accessToken != null) {
-        request.headers.Authorization = 'Bearer ' + accessToken;
+        request.headers.Authorization = "Bearer " + accessToken;
     }
     return request;
 };
@@ -17,16 +17,16 @@ const errorHandler = (error) => {
 };
 
 const api = () => {
-    let _baseURL = '';
+    let _baseURL = "";
 
     var base_url = window.location.origin;
 
     if (base_url.includes("localhost")) {
-        _baseURL = process.env.REACT_APP_DEV_API
+        _baseURL = process.env.REACT_APP_DEV_API;
     } else {
-        _baseURL = process.env.REACT_APP_PROD_API
+        _baseURL = process.env.REACT_APP_PROD_API;
     }
-    
+
     const instance = axios.create({
         baseURL: _baseURL,
     });

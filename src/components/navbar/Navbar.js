@@ -1,6 +1,6 @@
 import React from "react";
 import { Navbar, Nav } from "react-bootstrap";
-import {AlertCircle, Bell, Home,UserPlus,} from "react-feather";
+import {AlertCircle, Bell, Home,UserPlus } from "react-feather";
 import useSidebar from "../../hooks/useSidebar";
 import NavbarDropdown from "./NavbarDropdown";
 import NavbarDropdownItem from "./NavbarDropdownItem";

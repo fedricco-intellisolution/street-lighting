@@ -13,29 +13,26 @@ import { SettingsProvider } from "./contexts/SettingsContext";
 import { LayoutProvider } from "./contexts/LayoutContext";
 import { AuthProvider } from "./contexts/JWTContext";
 
-import "./assets/custom-style.css"
+import "./assets/custom-style.css";
 const App = () => {
-  const content = useRoutes(routes);
+    const content = useRoutes(routes);
 
-  return (
-    <HelmetProvider>
-      <Helmet
-        titleTemplate="%s | NEA-IFM"
-        defaultTitle="NEA-IFM"
-      />
-      <Provider store={store}>
-        <ThemeProvider>
-          <SettingsProvider>
-            <SidebarProvider>
-              <LayoutProvider>
-                <AuthProvider>{content}</AuthProvider>
-              </LayoutProvider>
-            </SidebarProvider>
-          </SettingsProvider>
-        </ThemeProvider>
-      </Provider>
-    </HelmetProvider>
-  );
+    return (
+        <HelmetProvider>
+            <Helmet titleTemplate="%s | FONDA" defaultTitle="FONDA" />
+            <Provider store={store}>
+                <ThemeProvider>
+                    <SettingsProvider>
+                        <SidebarProvider>
+                            <LayoutProvider>
+                                <AuthProvider>{content}</AuthProvider>
+                            </LayoutProvider>
+                        </SidebarProvider>
+                    </SettingsProvider>
+                </ThemeProvider>
+            </Provider>
+        </HelmetProvider>
+    );
 };
 
 export default App;

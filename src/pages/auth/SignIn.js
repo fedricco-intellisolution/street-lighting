@@ -2,7 +2,7 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 import { Card } from "react-bootstrap";
 
-import Logo from "../../assets/img/nea-logo.png"
+import Logo from "../../assets/img/fonda-logo.png"
 import SignInForm from "./components/SignInForm";
 
 const SignInPage = () => (
@@ -14,7 +14,7 @@ const SignInPage = () => (
           <div className="text-center">
             <img
               src={Logo}
-              alt="NEA Logo"
+              alt="Fonda Logo"
               className="img-fluid rounded-circle"
               width="132"
               height="132"
