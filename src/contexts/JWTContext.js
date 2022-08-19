@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer } from "react";
 import api from "../utils/api";
-import { setSession, setUID } from "../utils/jwt";
-import * as authApi from "../api/authApi";
+// import { setSession, setUID } from "../utils/jwt";
+// import * as authApi from "../api/authApi";
 import NotyfContext from "../contexts/NotyfContext";
 import { useNavigate } from "react-router-dom";
 
@@ -101,44 +101,50 @@ function AuthProvider({ children }) {
     //   }, [initialize]);
 
     const signIn = async (data) => {
-        const response = await authApi.logIn(data);
-        if (response.data.status === "SUCCESS") {
-            setSession(response.data.data.token);
-            setUID(response.data.data.uid);
-            const uid = response.data.data.uid;
-            dispatch({
-                type: SIGN_IN,
-                payload: {
-                    uid,
-                },
-            });
-            navigate("/");
-            //   initialize()
-        }
+        navigate("/");
+        // const response = await authApi.logIn(data);
+        // if (response.data.status === "SUCCESS") {
+        //     setSession(response.data.data.token);
+        //     setUID(response.data.data.uid);
+        //     const uid = response.data.data.uid;
+        //     dispatch({
+        //         type: SIGN_IN,
+        //         payload: {
+        //             uid,
+        //         },
+        //     });
+        //     navigate("/");
+        //     //   initialize()
+        // }
 
-        if (response.data.status === "ERROR") {
-            notyf.open({
-                type: "danger",
-                message: response.data.message,
-            });
-        }
+        // if (response.data.status === "ERROR") {
+        //     notyf.open({
+        //         type: "danger",
+        //         message: response.data.message,
+        //     });
+        // }
     };
 
     const signOut = async () => {
-        try {
-            // const response = await authApi.logOut()
-            setSession(null);
-            setUID(null);
-            dispatch({ type: SIGN_OUT });
-            const accessToken = window.localStorage.getItem("accessToken");
-            if (!accessToken) {
-                navigate("/auth/sign-in");
-                notyf.open({
-                    type: "success",
-                    message: "You've successfully logout",
-                });
-            }
-        } catch (error) {}
+        navigate("/auth/sign-in");
+        notyf.open({
+            type: "success",
+            message: "You've successfully logged out.",
+        });
+        // try {
+        //     // const response = await authApi.logOut()
+        //     setSession(null);
+        //     setUID(null);
+        //     dispatch({ type: SIGN_OUT });
+        //     const accessToken = window.localStorage.getItem("accessToken");
+        //     if (!accessToken) {
+        //         navigate("/auth/sign-in");
+        //         notyf.open({
+        //             type: "success",
+        //             message: "You've successfully logout",
+        //         });
+        //     }
+        // } catch (error) {}
     };
 
     const signUp = async (email, password, firstName, lastName) => {

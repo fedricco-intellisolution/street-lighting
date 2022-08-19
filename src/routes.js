@@ -7,6 +7,7 @@ import PrivateLayout from "@layouts/PrivateLayout";
 // Auth
 import Page500 from "@auth/Page500";
 import Page404 from "@auth/Page404";
+import SignInPage from "pages/auth/SignInPage";
 
 // Sub module
 import SubModule from "@sub-module/SubModule";
@@ -20,6 +21,10 @@ const routes = [
         path: "auth",
         element: <AuthLayout />,
         children: [
+            {
+                path: "sign-in",
+                element: <SignInPage />,
+            },
             {
                 path: "404",
                 element: <Page404 />,
