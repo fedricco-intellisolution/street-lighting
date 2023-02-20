@@ -678,7 +678,7 @@ const ChecklistForm = ({ type = null }) => {
                         <Col md={12} className="text-center">
                             <Button
                                 variant="link"
-                                onClick={() => navigate("/asset/list")}
+                                onClick={() => navigate("/checklist/list")}
                                 className="me-2"
                             >
                                 Cancel
