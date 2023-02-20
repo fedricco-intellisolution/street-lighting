@@ -9,12 +9,20 @@ import Page500 from "@auth/Page500";
 import Page404 from "@auth/Page404";
 import SignInPage from "pages/auth/SignInPage";
 
-// Sub module
-import SubModule from "@sub-module/SubModule";
-import SubModuleAddEdit from "@sub-module/SubModuleAddEdit";
-
 // Settings
 import Settings from "@settings/Settings";
+import Checklist from "./pages/Checklist/Checklist";
+import ChecklistForm from "./pages/Checklist/ChecklistForm";
+import ChecklistCreate from "./pages/Checklist/ChecklistCreate";
+import ChecklistPhotos from "./pages/Checklist/ChecklistPhotos";
+import { Dashboard } from "./pages/Dashboard/Dashboard";
+
+import Fault from "./pages/Fault/Fault";
+import FaultForm from "./pages/Fault/FaultForm";
+import FaultCreate from "./pages/Fault/FaultCreate";
+import Asset from "./pages/Assets/Asset";
+import AssetCreate from "./pages/Assets/AssetCreate";
+import AssetForm from "./pages/Assets/AssetForm";
 
 const routes = [
     {
@@ -47,19 +55,79 @@ const routes = [
     },
     {
         path: "/",
-        element: <PrivateLayout />,
+        element: (
+            <PrivateLayout>
+                <Dashboard />
+            </PrivateLayout>
+        ),
     },
     {
-        path: "module",
+        path: "checklist",
         element: <PrivateLayout />,
         children: [
             {
-                path: "sub",
-                element: <SubModule />,
+                path: "list",
+                element: <Checklist />,
             },
             {
-                path: "sub/:id",
-                element: <SubModuleAddEdit />,
+                path: "list/create",
+                element: <ChecklistCreate />,
+            },
+            {
+                path: "list/edit/:id/photos/:checklist_item_id",
+                element: <ChecklistPhotos />,
+            },
+            {
+                path: "list/edit/:id",
+                element: <ChecklistForm />,
+            },
+            {
+                path: "list/view/:id",
+                element: <ChecklistForm type="View" />,
+            },
+        ],
+    },
+    {
+        path: "fault",
+        element: <PrivateLayout />,
+        children: [
+            {
+                path: "list",
+                element: <Fault />,
+            },
+            {
+                path: "list/create",
+                element: <FaultCreate />,
+            },
+            {
+                path: "list/edit/:id",
+                element: <FaultForm />,
+            },
+            {
+                path: "list/view/:id",
+                element: <FaultForm type="View" />,
+            },
+        ],
+    },
+    {
+        path: "asset",
+        element: <PrivateLayout />,
+        children: [
+            {
+                path: "list",
+                element: <Asset />,
+            },
+            {
+                path: "list/create",
+                element: <AssetCreate />,
+            },
+            {
+                path: "list/edit/:id",
+                element: <AssetForm />,
+            },
+            {
+                path: "list/view/:id",
+                element: <AssetForm type="View" />,
             },
         ],
     },

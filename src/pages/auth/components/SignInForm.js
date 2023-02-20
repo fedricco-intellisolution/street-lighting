@@ -1,47 +1,34 @@
-import React, { useContext } from "react";
+import React from "react";
+
 import { Button, Form } from "react-bootstrap";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ErrorMessage } from "@hookform/error-message";
+import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import useAuth from "../../../hooks/useAuth";
-import NotyfContext from "contexts/NotyfContext";
 
 const schema = yup.object().shape({
-    // email: yup.string().required("This field is required"),
-    // password: yup.string().required("This field is required"),
+    email: yup
+        .string()
+        .email("Must be a valid email address")
+        .required("This field is required"),
+    password: yup.string().required("This field is required"),
 });
 
 const SignInForm = () => {
-    const { signIn } = useAuth();
+    // const { signIn } = useAuth();
     const {
-        handleSubmit,
         control,
         formState: { errors },
     } = useForm({
         mode: "onTouched",
         resolver: yupResolver(schema),
     });
-    const notyf = useContext(NotyfContext);
+    const navigate = useNavigate();
 
     //
     // Functions
     //
-
-    const signInHandler = async (data) => {
-        try {
-            await signIn(data);
-            notyf.open({
-                type: "success",
-                message: "Login successful, welcome back.",
-            });
-        } catch (error) {
-            notyf.open({
-                type: "danger",
-                message: error.response.data.message,
-            });
-        }
-    };
 
     return (
         <Form>
@@ -55,7 +42,7 @@ const SignInForm = () => {
                         <Form.Control
                             size="lg"
                             type="text"
-                            placeholder="Enter your email"
+                            placeholder="Enter your email in lower case"
                             value={value}
                             onChange={onChange}
                             onBlur={onBlur}
@@ -72,7 +59,7 @@ const SignInForm = () => {
                 />
             </Form.Group>
 
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-1">
                 <Form.Label>Password</Form.Label>
                 <Controller
                     control={control}
@@ -98,12 +85,21 @@ const SignInForm = () => {
                     )}
                 />
             </Form.Group>
+            <Form.Group className="text-start">
+                <Button
+                    variant="link"
+                    className="ps-0"
+                    onClick={() => navigate("/forgot-password")}
+                >
+                    Reset password
+                </Button>
+            </Form.Group>
 
             <div className="text-end mt-3">
                 <Button
                     variant="primary"
                     size="lg"
-                    onClick={handleSubmit(signInHandler)}
+                    onClick={() => navigate("/")}
                 >
                     Sign in
                 </Button>
