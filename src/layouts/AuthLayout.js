@@ -8,8 +8,11 @@ import Settings from "../components/Settings";
 
 const Auth = ({ children }) => (
     <React.Fragment>
-        <Main className="d-flex w-100 justify-content-center">
-            <Container className="d-flex flex-column">
+        <Main className="d-flex w-100 justify-content-center fg-bg">
+            <Container
+                className="d-flex flex-column"
+                style={{ zIndex: 100000 }}
+            >
                 <Row className="h-100">
                     <Col
                         sm="10"
