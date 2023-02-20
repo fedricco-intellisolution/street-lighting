@@ -3,7 +3,7 @@
     "version": "2.2.0",
     "description": "AppStack - React Admin & Dashboard Template",
     "author": "Paul Laros <support@bootlab.io>",
-    "private": true,
+    "private": false,
     "homepage": "https://fedricco-intellisolution.github.io/street-lighting-fonda",
     "scripts": {
         "sass:build": "sass src/assets/scss:public/css --load-path node_modules",
