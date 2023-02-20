@@ -38,7 +38,8 @@ const pagesSection = [
     {
         icon: CheckSquare,
         title: "Servicing checklist",
-        href: "installation",
+        href: "404",
+        // href: "installation",
         // children: [
         //     {
         //         href: "/servicing/list",
@@ -60,12 +61,13 @@ const pagesSection = [
     {
         icon: Settings,
         title: "Settings",
-        children: [
-            {
-                href: "/settings",
-                title: "Settings",
-            },
-        ],
+        href: "404",
+        // children: [
+        //     {
+        //         href: "/settings",
+        //         title: "Settings",
+        //     },
+        // ],
     },
 ];
 
