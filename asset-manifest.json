@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/street-lighting/static/css/main.bdfb98a7.chunk.css",
-    "main.js": "/street-lighting/static/js/main.1584a426.chunk.js",
-    "main.js.map": "/street-lighting/static/js/main.1584a426.chunk.js.map",
+    "main.js": "/street-lighting/static/js/main.c37aa17b.chunk.js",
+    "main.js.map": "/street-lighting/static/js/main.c37aa17b.chunk.js.map",
     "runtime-main.js": "/street-lighting/static/js/runtime-main.942821ca.js",
     "runtime-main.js.map": "/street-lighting/static/js/runtime-main.942821ca.js.map",
     "static/css/2.d689b076.chunk.css": "/street-lighting/static/css/2.d689b076.chunk.css",
@@ -24,6 +24,6 @@
     "static/css/2.d689b076.chunk.css",
     "static/js/2.752592a8.chunk.js",
     "static/css/main.bdfb98a7.chunk.css",
-    "static/js/main.1584a426.chunk.js"
+    "static/js/main.c37aa17b.chunk.js"
   ]
 }
