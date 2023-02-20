@@ -2,16 +2,16 @@ import "react-app-polyfill/stable";
 
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 
 import reportWebVitals from "./utils/reportWebVitals";
 import App from "./App";
 
 ReactDOM.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
-  document.getElementById("root")
+    <HashRouter>
+        <App />
+    </HashRouter>,
+    document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function
