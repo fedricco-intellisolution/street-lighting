@@ -4,7 +4,7 @@
     "description": "AppStack - React Admin & Dashboard Template",
     "author": "Paul Laros <support@bootlab.io>",
     "private": true,
-    "homepage": "http://fedricco-intellisolution.github.io/street-lighting",
+    "homepage": "http://fedricco-intellisolution.github.io",
     "scripts": {
         "sass:build": "sass src/assets/scss:public/css --load-path node_modules",
         "sass:watch": "sass --watch src/assets/scss:public/css --load-path node_modules",
