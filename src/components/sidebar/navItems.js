@@ -35,18 +35,18 @@ const pagesSection = [
             },
         ],
     },
-    {
-        icon: CheckSquare,
-        title: "Servicing checklist",
-        href: "404",
-        // href: "installation",
-        // children: [
-        //     {
-        //         href: "/servicing/list",
-        //         title: "Checklist items",
-        //     },
-        // ],
-    },
+    // {
+    //     icon: CheckSquare,
+    //     title: "Servicing checklist",
+    //     href: "404",
+    //     // href: "installation",
+    //     // children: [
+    //     //     {
+    //     //         href: "/servicing/list",
+    //     //         title: "Checklist items",
+    //     //     },
+    //     // ],
+    // },
     {
         icon: Database,
         title: "Assets management",
@@ -58,17 +58,17 @@ const pagesSection = [
             },
         ],
     },
-    {
-        icon: Settings,
-        title: "Settings",
-        href: "404",
-        // children: [
-        //     {
-        //         href: "/settings",
-        //         title: "Settings",
-        //     },
-        // ],
-    },
+    // {
+    //     icon: Settings,
+    //     title: "Settings",
+    //     href: "404",
+    //     // children: [
+    //     //     {
+    //     //         href: "/settings",
+    //     //         title: "Settings",
+    //     //     },
+    //     // ],
+    // },
 ];
 
 const navItems = [
